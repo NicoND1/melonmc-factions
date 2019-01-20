@@ -39,4 +39,8 @@ public interface DatabaseSaver {
 
     void loadFaction(Faction faction, Consumer<Optional<Faction>> consumer);
 
+    void saveDefaultConfigurations(DefaultConfigurations defaultConfigurations, Runnable runnable);
+
+    void loadDefaultConfigurations(Consumer<DefaultConfigurations> consumer);
+
 }
