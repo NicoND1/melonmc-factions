@@ -13,6 +13,7 @@ import de.melonmc.factions.database.DefaultConfigurations;
 import de.melonmc.factions.faction.Faction;
 import de.melonmc.factions.home.Home;
 import de.melonmc.factions.player.FactionsPlayer;
+import de.melonmc.factions.stats.Stats;
 import de.melonmc.factions.util.ConfigurableLocation;
 import org.bson.Document;
 import org.bson.UuidRepresentation;
@@ -21,6 +22,7 @@ import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.conversions.Bson;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
 import java.util.*;
 import java.util.concurrent.ExecutorService;
@@ -36,6 +38,7 @@ import java.util.function.Consumer;
 public class DefaultDatabaseSaver implements DatabaseSaver {
 
     private static final String HOMES_COLLECTION = "factory-homes";
+    private static final String PLAYERS_COLLECTION = "factory-players";
 
     private final MongoDatabase mongoDatabase;
     private final ExecutorService executorService = Executors.newFixedThreadPool(3, new ThreadFactory() {
@@ -55,6 +58,7 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
         .expireAfterWrite(5, TimeUnit.HOURS)
         .build();
     private final Map<UUID, List<Home>> homes = new HashMap<>();
+    private final List<FactionsPlayer> factionsPlayers = new ArrayList<>();
 
     public DefaultDatabaseSaver(MongoConfig mongoConfig) {
         final CodecRegistry codecRegistry = CodecRegistries.fromRegistries(
@@ -95,6 +99,15 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
             return Filters.eq(nameField, factionsPlayer.getName());
         else
             return Filters.eq(uuidField, factionsPlayer.getUuid());
+    }
+
+    private Document createStatsDocument(Stats stats) {
+        return new Document("kills", stats.getKills())
+            .append("deaths", stats.getDeaths());
+    }
+
+    private Stats fromStatsDocument(Document document) {
+        return new Stats(document.getLong("kills"), document.getLong("deaths"));
     }
 
     @Override
@@ -138,7 +151,7 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
             }
 
             final Home home = new Home(
-                new FactionsPlayer(document.get("uuid", UUID.class), this.getName(document.get("uuid", UUID.class)), null, null),
+                new FactionsPlayer(document.get("uuid", UUID.class), this.getName(document.get("uuid", UUID.class)), null, null, 0),
                 name,
                 new ConfigurableLocation(document.get("location", Document.class))
             );
@@ -158,7 +171,7 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
             final List<Home> homes = new ArrayList<>();
 
             findIterable.forEach((Block<Document>) document -> homes.add(new Home(
-                new FactionsPlayer(document.get("uuid", UUID.class), this.getName(document.get("uuid", UUID.class)), null, null),
+                new FactionsPlayer(document.get("uuid", UUID.class), this.getName(document.get("uuid", UUID.class)), null, null, 0),
                 document.getString("name"),
                 new ConfigurableLocation(document.get("location", Document.class))
             )));
@@ -170,17 +183,61 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
 
     @Override
     public void savePlayer(FactionsPlayer factionsPlayer, Runnable runnable) {
+        this.runAction(() -> {
+            final MongoCollection<Document> collection = this.mongoDatabase.getCollection(PLAYERS_COLLECTION);
+            final Document document = new Document("uuid", factionsPlayer.getUuid())
+                .append("name", factionsPlayer.getName())
+                .append("coins", factionsPlayer.getCoins())
+                .append("stats", this.createStatsDocument(factionsPlayer.getStats()));
 
+            collection.updateOne(
+                this.createPlayerFilter("name", "uuid", factionsPlayer),
+                document,
+                new UpdateOptions().upsert(true)
+            );
+        });
     }
 
     @Override
     public void deletePlayer(FactionsPlayer factionsPlayer, Runnable runnable) {
-
+        this.runAction(() -> {
+            final MongoCollection<Document> collection = this.mongoDatabase.getCollection(PLAYERS_COLLECTION);
+            collection.deleteOne(this.createPlayerFilter("name", "uuid", factionsPlayer));
+        });
     }
 
     @Override
     public void findPlayer(FactionsPlayer currentFactionsPlayer, Consumer<Optional<FactionsPlayer>> consumer) {
+        final Optional<FactionsPlayer> optionalFactionsPlayer = this.factionsPlayers.stream()
+            .filter(factionsPlayer -> factionsPlayer.getUuid().equals(currentFactionsPlayer.getUuid()) || factionsPlayer.getName().equals(currentFactionsPlayer.getName()))
+            .findAny();
+        if (optionalFactionsPlayer.isPresent()) {
+            consumer.accept(optionalFactionsPlayer);
+            return;
+        }
+        this.runAction(() -> {
+            final MongoCollection<Document> collection = this.mongoDatabase.getCollection(PLAYERS_COLLECTION);
+            final FindIterable<Document> findIterable = collection.find(this.createPlayerFilter("name", "uuid", currentFactionsPlayer));
+            final Document document = findIterable.first();
+            if (document == null) {
+                consumer.accept(Optional.empty());
+                return;
+            }
 
+            final Player player = currentFactionsPlayer.getName() == null ?
+                Bukkit.getPlayer(currentFactionsPlayer.getUuid()) :
+                Bukkit.getPlayer(currentFactionsPlayer.getName());
+            final FactionsPlayer factionsPlayer = new FactionsPlayer(
+                document.get("uuid", UUID.class),
+                document.getString("name"),
+                player,
+                this.fromStatsDocument(document.get("stats", Document.class)),
+                document.getLong("coins")
+            );
+            consumer.accept(Optional.of(factionsPlayer));
+
+            if (player != null) this.factionsPlayers.add(factionsPlayer);
+        });
     }
 
     @Override

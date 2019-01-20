@@ -19,7 +19,7 @@ public class FactionsPlayer {
 
     private final UUID uuid;
     private final String name;
-    private final Player player;
+    private Player player;
     private final Stats stats;
     private long coins;
 
