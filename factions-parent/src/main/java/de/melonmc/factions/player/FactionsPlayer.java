@@ -13,6 +13,8 @@ import java.util.UUID;
 @Data
 public class FactionsPlayer {
 
+    public static final int HOMES_PER_PLAYER = 3;
+
     private final UUID uuid;
     private final String name;
     private final Player player;
