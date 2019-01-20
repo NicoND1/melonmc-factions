@@ -64,6 +64,14 @@
       <version>1.8.8-R0.1-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
+
+    <!-- Imported from local jar -->
+    <dependency>
+      <groupId>de.bergwerklabs</groupId>
+      <artifactId>BergwerkLABS-NPC</artifactId>
+      <version>1.0</version>
+      <scope>provided</scope>
+    </dependency>
   </dependencies>
 
   <build>
