@@ -7,6 +7,9 @@
   <groupId>de.melonmc</groupId>
   <artifactId>factions</artifactId>
   <version>0.0.1</version>
+  <modules>
+    <module>factions-parent</module>
+  </modules>
   <packaging>pom</packaging>
 
   <properties>
