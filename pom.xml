@@ -9,6 +9,7 @@
   <version>0.0.1</version>
   <modules>
     <module>factions-parent</module>
+    <module>factions-defaults</module>
   </modules>
   <packaging>pom</packaging>
 

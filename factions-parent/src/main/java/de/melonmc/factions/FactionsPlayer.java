@@ -1,6 +1,7 @@
 package de.melonmc.factions;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.bukkit.entity.Player;
 
 import java.util.UUID;
 
@@ -13,6 +14,7 @@ public class FactionsPlayer {
 
     private final UUID uuid;
     private final String name;
-    private final Player
+    private final Player player;
+    private long coins;
 
 }

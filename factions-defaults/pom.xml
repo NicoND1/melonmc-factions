@@ -9,7 +9,7 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>factions-parent</artifactId>
-  <version>0.0.3</version>
+  <artifactId>factions-defaults</artifactId>
+
 
 </project>
