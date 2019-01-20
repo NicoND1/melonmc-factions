@@ -16,6 +16,8 @@ import java.util.Map;
 @Data
 public class Faction {
 
+    public static final int CHUNKS_PER_PLAYER = 10;
+
     public enum Rank {
 
         ADMIN, MODERATOR, PLAYER;
