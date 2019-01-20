@@ -14,11 +14,15 @@ public interface DatabaseSaver {
 
     void saveHome(Home home, Runnable runnable);
 
+    void deleteHome(Home home, Runnable runnable);
+
     void findHome(FactionsPlayer factionsPlayer, Consumer<Optional<Home>> consumer);
 
     void findHomes(FactionsPlayer factionsPlayer, Consumer<Optional<List<Home>>> consumer);
 
     void savePlayer(FactionsPlayer factionsPlayer, Runnable runnable);
+
+    void deletePlayer(FactionsPlayer factionsPlayer, Runnable runnable);
 
     /**
      * Searches for a {@link FactionsPlayer} in the database.
@@ -30,6 +34,8 @@ public interface DatabaseSaver {
     void findPlayer(FactionsPlayer currentFactionsPlayer, Consumer<Optional<FactionsPlayer>> consumer);
 
     void saveFaction(Faction faction, Runnable runnable);
+
+    void deleteFaction(Faction faction, Runnable runnable);
 
     void loadFaction(Faction faction, Consumer<Optional<Faction>> consumer);
 

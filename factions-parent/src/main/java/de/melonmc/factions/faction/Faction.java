@@ -1,4 +1,5 @@
 package de.melonmc.factions.faction;
+import de.melonmc.factions.chunks.ClaimableChunk;
 import de.melonmc.factions.player.FactionsPlayer;
 import de.melonmc.factions.stats.Stats;
 import de.melonmc.factions.util.ConfigurableLocation;
@@ -26,6 +27,7 @@ public class Faction {
     private final String name;
     private final String tag;
     private final Stats stats;
+    private final List<ClaimableChunk> chunks;
     private ConfigurableLocation location;
     private long eloPoints;
 
