@@ -17,9 +17,9 @@ public interface DatabaseSaver {
 
     void deleteHome(Home home, Runnable runnable);
 
-    void findHome(FactionsPlayer factionsPlayer, Consumer<Optional<Home>> consumer);
+    void findHome(FactionsPlayer factionsPlayer, String name, Consumer<Optional<Home>> consumer);
 
-    void findHomes(FactionsPlayer factionsPlayer, Consumer<Optional<List<Home>>> consumer);
+    void findHomes(FactionsPlayer factionsPlayer, Consumer<List<Home>> consumer);
 
     void savePlayer(FactionsPlayer factionsPlayer, Runnable runnable);
 
