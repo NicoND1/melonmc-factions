@@ -1,6 +1,7 @@
 package de.melonmc.factions.database;
-import de.melonmc.factions.player.FactionsPlayer;
+import de.melonmc.factions.faction.Faction;
 import de.melonmc.factions.home.Home;
+import de.melonmc.factions.player.FactionsPlayer;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,6 +27,10 @@ public interface DatabaseSaver {
      *                              or {@link FactionsPlayer#uuid}
      * @param consumer              The {@link Consumer<Optional<FactionsPlayer>>} which will be called when the player was found
      */
-    void findPlayer(FactionsPlayer currentFactionsPlayer, Consumer<FactionsPlayer> consumer);
+    void findPlayer(FactionsPlayer currentFactionsPlayer, Consumer<Optional<FactionsPlayer>> consumer);
+
+    void saveFaction(Faction faction, Runnable runnable);
+
+    void loadFaction(Faction faction, Consumer<Optional<Faction>> consumer);
 
 }
