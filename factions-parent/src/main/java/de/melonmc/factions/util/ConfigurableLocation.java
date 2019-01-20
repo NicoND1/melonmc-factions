@@ -1,6 +1,7 @@
 package de.melonmc.factions.util;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.bson.Document;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
@@ -27,6 +28,15 @@ public class ConfigurableLocation {
         this.pitch = location.getPitch();
     }
 
+    public ConfigurableLocation(Document document) {
+        this.worldName = document.getString("worldName");
+        this.x = document.getDouble("x");
+        this.y = document.getDouble("y");
+        this.z = document.getDouble("z");
+        this.yaw = document.get("yaw", Float.class);
+        this.pitch = document.get("pitch", Float.class);
+    }
+
     public Location toLocation() {
         return new Location(
             Bukkit.getWorld(this.worldName),
@@ -36,6 +46,15 @@ public class ConfigurableLocation {
             this.yaw,
             this.pitch
         );
+    }
+
+    public Document createDocument() {
+        return new Document("worldName", this.worldName)
+            .append("x", this.x)
+            .append("y", this.y)
+            .append("z", this.z)
+            .append("yaw", this.yaw)
+            .append("pitch", this.pitch);
     }
 
 }
