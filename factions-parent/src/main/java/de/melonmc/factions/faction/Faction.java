@@ -17,6 +17,9 @@ import java.util.Map;
 public class Faction {
 
     public static final int CHUNKS_PER_PLAYER = 10;
+    public static final int MAX_TAG_LENGTH = 5;
+    public static final int MIN_TAG_LENGTH = 3;
+    public static final int MAX_INVITES = 5;
 
     public enum Rank {
 
