@@ -1,4 +1,5 @@
 package de.melonmc.factions.database;
+import de.melonmc.factions.chestshop.Chestshop;
 import de.melonmc.factions.faction.Faction;
 import de.melonmc.factions.home.Home;
 import de.melonmc.factions.player.FactionsPlayer;
@@ -42,5 +43,9 @@ public interface DatabaseSaver {
     void saveDefaultConfigurations(DefaultConfigurations defaultConfigurations, Runnable runnable);
 
     void loadDefaultConfigurations(Consumer<DefaultConfigurations> consumer);
+
+    void saveChestshop(Chestshop chestshop, Runnable runnable);
+
+    void loadChestshops(FactionsPlayer factionsPlayer, Consumer<Optional<List<Chestshop>>> consumer);
 
 }
