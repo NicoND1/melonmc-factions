@@ -1,4 +1,4 @@
-package de.melonmc.factions;
+package de.melonmc.factions.player;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.bukkit.entity.Player;

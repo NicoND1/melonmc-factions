@@ -1,5 +1,5 @@
 package de.melonmc.factions.home;
-import de.melonmc.factions.FactionsPlayer;
+import de.melonmc.factions.player.FactionsPlayer;
 import de.melonmc.factions.util.ConfigurableLocation;
 
 import java.util.List;
