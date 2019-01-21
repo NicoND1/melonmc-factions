@@ -10,6 +10,8 @@
   <modules>
     <module>factions-parent</module>
     <module>factions-defaults</module>
+    <module>factions-bukkit</module>
+    <module>factions-bootstrap</module>
   </modules>
   <packaging>pom</packaging>
 
