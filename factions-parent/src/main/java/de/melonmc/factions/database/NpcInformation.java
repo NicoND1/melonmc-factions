@@ -12,7 +12,7 @@ public class NpcInformation {
 
     private final String nameHeader;
     private final String nameFooter;
-    private final ConfigurableLocation location;
-    private final ConfigurableLocation teleportLocation;
+    private ConfigurableLocation location;
+    private ConfigurableLocation teleportLocation;
 
 }
