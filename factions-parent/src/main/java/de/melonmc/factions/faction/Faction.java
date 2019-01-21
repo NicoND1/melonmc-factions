@@ -1,5 +1,5 @@
 package de.melonmc.factions.faction;
-import de.melonmc.factions.chunks.ClaimableChunk;
+import de.melonmc.factions.chunk.ClaimableChunk;
 import de.melonmc.factions.player.FactionsPlayer;
 import de.melonmc.factions.stats.Stats;
 import de.melonmc.factions.util.ConfigurableLocation;

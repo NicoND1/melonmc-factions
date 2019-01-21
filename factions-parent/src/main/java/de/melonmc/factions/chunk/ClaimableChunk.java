@@ -1,4 +1,4 @@
-package de.melonmc.factions.chunks;
+package de.melonmc.factions.chunk;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
