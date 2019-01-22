@@ -26,7 +26,9 @@ import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.conversions.Bson;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
 import java.util.concurrent.ExecutorService;
@@ -46,6 +48,7 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
     private static final String PLAYERS_COLLECTION = "factory-players";
     private static final String FACTORY_COLLECTION = "factory-factories";
     private static final String DEFAULT_CONFIGURATION_COLLECTION = "factory-configuration";
+    private static final String CHESTSHOP_COLLECTION = "factory-chestshop";
 
     private final MongoDatabase mongoDatabase;
     private final ExecutorService executorService = Executors.newFixedThreadPool(3, new ThreadFactory() {
@@ -65,6 +68,7 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
         .expireAfterWrite(5, TimeUnit.HOURS)
         .build();
     private final Map<UUID, List<Home>> homes = new HashMap<>();
+    private final Map<UUID, List<Chestshop>> chestshops = new HashMap<>();
     private final List<FactionsPlayer> factionsPlayers = new ArrayList<>();
     private final List<Faction> factions = new ArrayList<>();
     private DefaultConfigurations defaultConfigurations;
@@ -132,6 +136,7 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
         });
         this.nameCache.invalidate(uuid);
         this.homes.remove(uuid);
+        this.chestshops.remove(uuid);
     }
 
     @Override
@@ -422,11 +427,51 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
 
     @Override
     public void saveChestshop(Chestshop chestshop, Runnable runnable) {
-
+        this.runAction(() -> {
+            final MongoCollection<Document> collection = this.mongoDatabase.getCollection(CHESTSHOP_COLLECTION);
+            collection.updateOne(Filters.eq("id", chestshop.getId()), new Document("id", chestshop.getId())
+                .append("owner", new Document("uuid", chestshop.getOwner().getUuid()).append("name", chestshop.getOwner().getName()))
+                .append("amont", chestshop.getAmount())
+                .append("costs", chestshop.getCosts())
+                .append("displayname", chestshop.getDisplayName())
+                .append("chest-location", chestshop.getChestLocation().createDocument())
+                .append("sign-location", chestshop.getSignLocation().createDocument())
+                .append("itemstack", new Document("type", chestshop.getItemStack().getType().name())
+                    .append("data", chestshop.getItemStack().getData().getData())
+                ), new UpdateOptions().upsert(true));
+        });
     }
 
     @Override
-    public void loadChestshops(FactionsPlayer factionsPlayer, Consumer<Optional<List<Chestshop>>> consumer) {
+    public void loadChestshops(FactionsPlayer factionsPlayer, Consumer<List<Chestshop>> consumer) {
+        if (this.chestshops.containsKey(factionsPlayer.getUuid())) {
+            consumer.accept(this.chestshops.get(factionsPlayer.getUuid()));
+            return;
+        }
 
+        this.runAction(() -> {
+            final MongoCollection<Document> collection = this.mongoDatabase.getCollection(CHESTSHOP_COLLECTION);
+            final FindIterable<Document> findIterable = collection.find(this.createPlayerFilter("owner.name", "owner.uuid", factionsPlayer));
+            final List<Chestshop> chestshops = new ArrayList<>();
+
+            findIterable.forEach((Block<Document>) document -> {
+                chestshops.add(new Chestshop(
+                    document.getString("id"),
+                    factionsPlayer,
+                    new ItemStack(
+                        Material.valueOf(document.get("itemstack", Document.class).getString("type")),
+                        1,
+                        Short.valueOf(document.get("itemstack", Document.class).getInteger("data").toString())
+                    ), document.getString("displayname"),
+                    document.getInteger("amount"),
+                    document.getInteger("costs"),
+                    new ConfigurableLocation(document.get("sign-location", Document.class)),
+                    new ConfigurableLocation(document.get("chest-location", Document.class))
+                ));
+            });
+
+            consumer.accept(chestshops);
+            this.chestshops.put(factionsPlayer.getUuid(), chestshops);
+        });
     }
 }

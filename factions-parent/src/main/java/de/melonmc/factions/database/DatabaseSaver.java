@@ -49,6 +49,6 @@ public interface DatabaseSaver {
 
     void saveChestshop(Chestshop chestshop, Runnable runnable);
 
-    void loadChestshops(FactionsPlayer factionsPlayer, Consumer<Optional<List<Chestshop>>> consumer);
+    void loadChestshops(FactionsPlayer factionsPlayer, Consumer<List<Chestshop>> consumer);
 
 }

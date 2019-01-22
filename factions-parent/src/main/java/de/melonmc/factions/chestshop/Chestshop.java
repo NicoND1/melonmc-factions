@@ -3,7 +3,7 @@ import de.melonmc.factions.player.FactionsPlayer;
 import de.melonmc.factions.util.ConfigurableLocation;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
 
 /**
  * @author Nico_ND1
@@ -12,8 +12,9 @@ import org.bukkit.Material;
 @Data
 public class Chestshop {
 
+    private final String id;
     private final FactionsPlayer owner;
-    private final Material material;
+    private final ItemStack itemStack;
     private final String displayName;
     private final int amount;
     private final int costs;
