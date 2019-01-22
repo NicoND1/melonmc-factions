@@ -6,12 +6,15 @@ import de.melonmc.factions.player.FactionsPlayer;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.function.Consumer;
 
 /**
  * @author Nico_ND1
  */
 public interface DatabaseSaver {
+
+    void notifyPlayerQuit(UUID uuid);
 
     void saveHome(Home home, Runnable runnable);
 
