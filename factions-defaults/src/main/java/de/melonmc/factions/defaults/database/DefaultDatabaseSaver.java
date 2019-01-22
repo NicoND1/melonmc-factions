@@ -8,9 +8,12 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.UpdateOptions;
 import de.melonmc.factions.chestshop.Chestshop;
+import de.melonmc.factions.chunk.ClaimableChunk;
+import de.melonmc.factions.chunk.ClaimableChunk.Flag;
 import de.melonmc.factions.database.DatabaseSaver;
 import de.melonmc.factions.database.DefaultConfigurations;
 import de.melonmc.factions.faction.Faction;
+import de.melonmc.factions.faction.Faction.Rank;
 import de.melonmc.factions.home.Home;
 import de.melonmc.factions.player.FactionsPlayer;
 import de.melonmc.factions.stats.Stats;
@@ -31,6 +34,7 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 /**
  * @author Nico_ND1
@@ -39,6 +43,7 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
 
     private static final String HOMES_COLLECTION = "factory-homes";
     private static final String PLAYERS_COLLECTION = "factory-players";
+    private static final String FACTORY_COLLECTION = "factory-factories";
 
     private final MongoDatabase mongoDatabase;
     private final ExecutorService executorService = Executors.newFixedThreadPool(3, new ThreadFactory() {
@@ -59,6 +64,7 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
         .build();
     private final Map<UUID, List<Home>> homes = new HashMap<>();
     private final List<FactionsPlayer> factionsPlayers = new ArrayList<>();
+    private final List<Faction> factions = new ArrayList<>();
 
     public DefaultDatabaseSaver(MongoConfig mongoConfig) {
         final CodecRegistry codecRegistry = CodecRegistries.fromRegistries(
@@ -242,17 +248,107 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
 
     @Override
     public void saveFaction(Faction faction, Runnable runnable) {
+        this.runAction(() -> {
+            final MongoCollection<Document> collection = this.mongoDatabase.getCollection(FACTORY_COLLECTION);
+            final Document document = new Document("name", faction.getName())
+                .append("tag", faction.getTag())
+                .append("stats", this.createStatsDocument(faction.getStats()))
+                .append("elo-points", faction.getEloPoints())
+                .append("invited-players", faction.getInvitedPlayers().stream().map(factionsPlayer -> new Document("uuid", factionsPlayer.getUuid())
+                    .append("name", factionsPlayer.getName()))
+                    .collect(Collectors.toList()))
+                .append("members", faction.getMembers().entrySet().stream().map(entry -> new Document("player", new Document("uuid", entry.getKey().getUuid())
+                    .append("name", entry.getKey().getName()))
+                    .append("rank", entry.getValue().ordinal()))
+                    .collect(Collectors.toList()))
+                .append("location", faction.getLocation().createDocument())
+                .append("chunks", faction.getChunks().stream().map(claimableChunk -> new Document("x", claimableChunk.getX())
+                    .append("z", claimableChunk.getZ())
+                    .append("worldName", claimableChunk.getWorldName())
+                    .append("flags", claimableChunk.getFlags().entrySet().stream().map(entry -> new Document("flag", entry.getKey().ordinal())
+                        .append("value", entry.getValue()))
+                        .collect(Collectors.toList())
+                    )).collect(Collectors.toList())
+                );
 
+            collection.updateOne(Filters.eq("name", faction.getName()), document, new UpdateOptions().upsert(true));
+
+            runnable.run();
+        });
     }
 
     @Override
     public void deleteFaction(Faction faction, Runnable runnable) {
+        this.runAction(() -> {
+            final MongoCollection<Document> collection = this.mongoDatabase.getCollection(FACTORY_COLLECTION);
+            collection.deleteOne(Filters.or(
+                Filters.eq("name", faction.getName()),
+                Filters.eq("tag", faction.getTag())
+            ));
 
+            runnable.run();
+        });
     }
 
     @Override
-    public void loadFaction(Faction faction, Consumer<Optional<Faction>> consumer) {
+    public void loadFaction(Faction originFaction, Consumer<Optional<Faction>> consumer) {
+        final Optional<Faction> optionalFaction = this.factions.stream()
+            .filter(faction -> faction.getName().equalsIgnoreCase(originFaction.getName()))
+            .findAny();
+        if (optionalFaction.isPresent()) {
+            consumer.accept(optionalFaction);
+            return;
+        }
 
+        this.runAction(() -> {
+            final MongoCollection<Document> collection = this.mongoDatabase.getCollection(FACTORY_COLLECTION);
+            final FindIterable<Document> findIterable = collection.find(Filters.or(
+                Filters.eq("name", originFaction.getName()),
+                Filters.eq("tag", originFaction.getTag())
+            ));
+            final Document document = findIterable.first();
+            if (document == null) {
+                consumer.accept(Optional.empty());
+                return;
+            }
+
+            final Map<FactionsPlayer, Rank> members = new HashMap<FactionsPlayer, Rank>() {{
+                document.get("members", List.class).forEach((Consumer<Document>) doc -> this.put(new FactionsPlayer(
+                    doc.get("player", Document.class).get("uuid", UUID.class),
+                    doc.get("player", Document.class).getString("name"),
+                    null
+                ), Rank.values()[Math.min(doc.getInteger("rank"), Rank.values().length - 1)]));
+            }};
+            final List<FactionsPlayer> invitedPlayers = new ArrayList<FactionsPlayer>() {{
+                document.get("invited-players", List.class).forEach((Consumer<Document>) doc -> this.add(new FactionsPlayer(
+                    doc.get("uuid", UUID.class),
+                    doc.getString("name"),
+                    null
+                )));
+            }};
+            final String name = document.getString("name");
+            final String tag = document.getString("tag");
+            final Stats stats = this.fromStatsDocument(document.get("stats", Document.class));
+            final List<ClaimableChunk> chunks = new ArrayList<ClaimableChunk>() {{
+                document.get("chunks", List.class).forEach((Consumer<Document>) doc -> this.add(new ClaimableChunk(
+                    doc.getInteger("x"),
+                    doc.getInteger("z"),
+                    doc.getString("worldName"),
+                    new HashMap<Flag, Boolean>() {{
+                        doc.get("flags", List.class).forEach((Consumer<Document>) doc1 -> this.put(
+                            Flag.values()[Math.min(doc1.getInteger("flag"), Flag.values().length - 1)],
+                            doc1.getBoolean("value")
+                        ));
+                    }}, null
+                )));
+            }};
+            final ConfigurableLocation location = new ConfigurableLocation(document.get("location", Document.class));
+            final long eloPoints = document.getLong("elo-points");
+            final Faction faction = new Faction(members, invitedPlayers, name, tag, stats, chunks, location, eloPoints);
+
+            consumer.accept(Optional.of(faction));
+            this.factions.add(faction);
+        });
     }
 
     @Override
