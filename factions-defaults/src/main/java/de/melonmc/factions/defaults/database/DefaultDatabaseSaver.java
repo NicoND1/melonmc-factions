@@ -443,6 +443,31 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
     }
 
     @Override
+    public void deleteChestshop(FactionsPlayer factionsPlayer, String id, Runnable runnable) {
+        this.runAction(() -> {
+            final MongoCollection<Document> collection = this.mongoDatabase.getCollection(CHESTSHOP_COLLECTION);
+            collection.deleteOne(Filters.and(
+                Filters.eq("id", id),
+                this.createPlayerFilter("owner.name", "owner.uuid", factionsPlayer)
+            ));
+            final List<Chestshop> chestshops = this.chestshops.get(factionsPlayer.getUuid());
+            final Optional<Chestshop> optionalChestshop = chestshops.stream()
+                .filter(chestshop -> chestshop.getId().equalsIgnoreCase(id))
+                .findAny();
+            optionalChestshop.ifPresent(chestshop -> {
+                synchronized (chestshops) {
+                    chestshops.remove(chestshop);
+                }
+            });
+            if (!optionalChestshop.isPresent()) {
+                // TODO: Add debug message that it's strange that there is no chestshop in the list
+            }
+
+            runnable.run();
+        });
+    }
+
+    @Override
     public void loadChestshops(FactionsPlayer factionsPlayer, Consumer<List<Chestshop>> consumer) {
         if (this.chestshops.containsKey(factionsPlayer.getUuid())) {
             consumer.accept(this.chestshops.get(factionsPlayer.getUuid()));
