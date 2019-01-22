@@ -43,6 +43,12 @@ public class Bootstrapable implements IBootstrapable {
 
     @Override
     public void onStop() {
-
+        this.ncps.forEach((npcInformation, npc) -> {
+            try {
+                npc.despawn();
+            } catch (InvocationTargetException | NoSuchMethodException | InstantiationException | IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        });
     }
 }
