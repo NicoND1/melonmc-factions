@@ -12,6 +12,7 @@ import de.melonmc.factions.chunk.ClaimableChunk;
 import de.melonmc.factions.chunk.ClaimableChunk.Flag;
 import de.melonmc.factions.database.DatabaseSaver;
 import de.melonmc.factions.database.DefaultConfigurations;
+import de.melonmc.factions.database.NpcInformation;
 import de.melonmc.factions.faction.Faction;
 import de.melonmc.factions.faction.Faction.Rank;
 import de.melonmc.factions.home.Home;
@@ -44,6 +45,7 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
     private static final String HOMES_COLLECTION = "factory-homes";
     private static final String PLAYERS_COLLECTION = "factory-players";
     private static final String FACTORY_COLLECTION = "factory-factories";
+    private static final String DEFAULT_CONFIGURATION_COLLECTION = "factory-configuration";
 
     private final MongoDatabase mongoDatabase;
     private final ExecutorService executorService = Executors.newFixedThreadPool(3, new ThreadFactory() {
@@ -65,6 +67,7 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
     private final Map<UUID, List<Home>> homes = new HashMap<>();
     private final List<FactionsPlayer> factionsPlayers = new ArrayList<>();
     private final List<Faction> factions = new ArrayList<>();
+    private DefaultConfigurations defaultConfigurations;
 
     public DefaultDatabaseSaver(MongoConfig mongoConfig) {
         final CodecRegistry codecRegistry = CodecRegistries.fromRegistries(
@@ -353,12 +356,53 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
 
     @Override
     public void saveDefaultConfigurations(DefaultConfigurations defaultConfigurations, Runnable runnable) {
-
+        this.runAction(() -> {
+            final MongoCollection<Document> collection = this.mongoDatabase.getCollection(DEFAULT_CONFIGURATION_COLLECTION);
+            collection.updateOne(Filters.not(Filters.eq("Im not needed", "LOL")),
+                new Document("spawn-location", defaultConfigurations.getSpawnLocation().createDocument())
+                    .append("npcs", defaultConfigurations.getNpcInformations().stream()
+                        .map(npcInformation -> new Document("location", npcInformation.getLocation().createDocument())
+                            .append("teleport-location", npcInformation.getTeleportLocation().createDocument())
+                            .append("name-header", npcInformation.getNameHeader())
+                            .append("name-footer", npcInformation.getNameFooter()))
+                        .collect(Collectors.toList())
+                    ));
+        });
     }
 
     @Override
     public void loadDefaultConfigurations(Consumer<DefaultConfigurations> consumer) {
+        if (this.defaultConfigurations != null) {
+            consumer.accept(this.defaultConfigurations);
+            return;
+        }
 
+        this.runAction(() -> {
+            final MongoCollection<Document> collection = this.mongoDatabase.getCollection(DEFAULT_CONFIGURATION_COLLECTION);
+            final FindIterable<Document> findIterable = collection.find(Filters.not(Filters.eq("Im not needed", "LOL")));
+            final Document document = findIterable.first();
+            if (document == null) {
+                consumer.accept(new DefaultConfigurations(
+                    new ConfigurableLocation("world", 0, 0, 0, 0, 0),
+                    new ArrayList<>()
+                ));
+                return;
+            }
+
+            final DefaultConfigurations defaultConfigurations = new DefaultConfigurations(
+                new ConfigurableLocation(document.get("spawn-location", Document.class)),
+                new ArrayList<NpcInformation>() {{
+                    document.get("npcs", List.class).forEach((Consumer<Document>) doc -> this.add(new NpcInformation(
+                        doc.getString("name-header"),
+                        doc.getString("name-footer"),
+                        new ConfigurableLocation(doc.get("location", Document.class)),
+                        new ConfigurableLocation(doc.get("teleport-location", Document.class))
+                    )));
+                }}
+            );
+            consumer.accept(defaultConfigurations);
+            this.defaultConfigurations = defaultConfigurations;
+        });
     }
 
     @Override
