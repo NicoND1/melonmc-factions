@@ -386,7 +386,7 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
                             .append("name-header", npcInformation.getNameHeader())
                             .append("name-footer", npcInformation.getNameFooter()))
                         .collect(Collectors.toList())
-                    ));
+                    ), new UpdateOptions().upsert(true));
         });
     }
 
