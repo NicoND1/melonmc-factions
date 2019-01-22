@@ -439,6 +439,8 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
                 .append("itemstack", new Document("type", chestshop.getItemStack().getType().name())
                     .append("data", chestshop.getItemStack().getData().getData())
                 ), new UpdateOptions().upsert(true));
+
+            runnable.run();
         });
     }
 
