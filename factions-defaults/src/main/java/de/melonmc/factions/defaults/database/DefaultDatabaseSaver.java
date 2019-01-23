@@ -162,6 +162,10 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
                 Filters.eq("name", home.getName()),
                 Filters.eq("uuid", home.getFactionsPlayer().getUuid())
             ));
+
+            this.homes.forEach((uuid, homes1) -> homes1.removeIf(home1 -> home1.getName().equalsIgnoreCase(home.getName())
+                && (home1.getFactionsPlayer().getUuid().equals(home.getFactionsPlayer().getUuid()) ||
+                home1.getFactionsPlayer().getName().equalsIgnoreCase(home.getFactionsPlayer().getName()))));
         });
     }
 
@@ -232,6 +236,9 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
         this.runAction(() -> {
             final MongoCollection<Document> collection = this.mongoDatabase.getCollection(PLAYERS_COLLECTION);
             collection.deleteOne(this.createPlayerFilter("name", "uuid", factionsPlayer));
+
+            this.factionsPlayers.removeIf(factionsPlayer1 -> factionsPlayer.getName().equalsIgnoreCase(factionsPlayer1.getName())
+                || factionsPlayer.getUuid().equals(factionsPlayer1.getUuid()));
         });
     }
 
@@ -308,6 +315,8 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
                 Filters.eq("name", faction.getName()),
                 Filters.eq("tag", faction.getTag())
             ));
+
+            this.factions.removeIf(faction1 -> faction.getName().equalsIgnoreCase(faction1.getName()));
 
             runnable.run();
         });
@@ -453,17 +462,7 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
                 this.createPlayerFilter("owner.name", "owner.uuid", factionsPlayer)
             ));
             final List<Chestshop> chestshops = this.chestshops.get(factionsPlayer.getUuid());
-            final Optional<Chestshop> optionalChestshop = chestshops.stream()
-                .filter(chestshop -> chestshop.getId().equalsIgnoreCase(id))
-                .findAny();
-            optionalChestshop.ifPresent(chestshop -> {
-                synchronized (chestshops) {
-                    chestshops.remove(chestshop);
-                }
-            });
-            if (!optionalChestshop.isPresent()) {
-                // TODO: Add debug message that it's strange that there is no chestshop in the list
-            }
+            chestshops.removeIf(chestshop -> chestshop.getId().equalsIgnoreCase(id));
 
             runnable.run();
         });
