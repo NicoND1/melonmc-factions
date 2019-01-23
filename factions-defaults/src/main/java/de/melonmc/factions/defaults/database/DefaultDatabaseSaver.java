@@ -151,6 +151,8 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
                 Filters.eq("name", home.getName()),
                 Filters.eq("uuid", home.getFactionsPlayer().getUuid())
             ), document, new UpdateOptions().upsert(true));
+
+            runnable.run();
         });
     }
 
@@ -166,6 +168,8 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
             this.homes.forEach((uuid, homes1) -> homes1.removeIf(home1 -> home1.getName().equalsIgnoreCase(home.getName())
                 && (home1.getFactionsPlayer().getUuid().equals(home.getFactionsPlayer().getUuid()) ||
                 home1.getFactionsPlayer().getName().equalsIgnoreCase(home.getFactionsPlayer().getName()))));
+
+            runnable.run();
         });
     }
 
@@ -209,8 +213,8 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
                 new ConfigurableLocation(document.get("location", Document.class))
             )));
 
-            consumer.accept(homes);
             this.homes.put(factionsPlayer.getUuid(), homes);
+            consumer.accept(homes);
         });
     }
 
@@ -228,6 +232,8 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
                 document,
                 new UpdateOptions().upsert(true)
             );
+
+            runnable.run();
         });
     }
 
@@ -239,6 +245,8 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
 
             this.factionsPlayers.removeIf(factionsPlayer1 -> factionsPlayer.getName().equalsIgnoreCase(factionsPlayer1.getName())
                 || factionsPlayer.getUuid().equals(factionsPlayer1.getUuid()));
+
+            runnable.run();
         });
     }
 
@@ -270,9 +278,9 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
                 this.fromStatsDocument(document.get("stats", Document.class)),
                 document.getLong("coins")
             );
-            consumer.accept(Optional.of(factionsPlayer));
 
             if (player != null) this.factionsPlayers.add(factionsPlayer);
+            consumer.accept(Optional.of(factionsPlayer));
         });
     }
 
@@ -378,8 +386,8 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
             final long eloPoints = document.getLong("elo-points");
             final Faction faction = new Faction(members, invitedPlayers, name, tag, stats, chunks, location, eloPoints);
 
-            consumer.accept(Optional.of(faction));
             this.factions.add(faction);
+            consumer.accept(Optional.of(faction));
         });
     }
 
@@ -396,6 +404,8 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
                             .append("name-footer", npcInformation.getNameFooter()))
                         .collect(Collectors.toList())
                     ), new UpdateOptions().upsert(true));
+
+            runnable.run();
         });
     }
 
@@ -429,8 +439,8 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
                     )));
                 }}
             );
-            consumer.accept(defaultConfigurations);
             this.defaultConfigurations = defaultConfigurations;
+            consumer.accept(defaultConfigurations);
         });
     }
 
@@ -496,8 +506,8 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
                 ));
             });
 
-            consumer.accept(chestshops);
             this.chestshops.put(factionsPlayer.getUuid(), chestshops);
+            consumer.accept(chestshops);
         });
     }
 }
