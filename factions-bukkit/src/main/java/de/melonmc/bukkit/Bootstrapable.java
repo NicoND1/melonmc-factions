@@ -1,14 +1,18 @@
 package de.melonmc.bukkit;
 import de.bergwerklabs.util.NPC;
+import de.melonmc.bukkit.listener.SpawnWorldListener;
 import de.melonmc.factions.Factions;
 import de.melonmc.factions.IBootstrapable;
 import de.melonmc.factions.database.NpcInformation;
 import lombok.Data;
 import lombok.Getter;
+import org.bukkit.Bukkit;
+import org.bukkit.World;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
 
 /**
  * @author Nico_ND1
@@ -38,6 +42,14 @@ public class Bootstrapable implements IBootstrapable {
                     e.printStackTrace();
                 }
             });
+
+            final World world = Bukkit.getWorld(defaultConfigurations.getSpawnLocation().getWorldName());
+            if (world == null) {
+                Factions.getPlugin().getLogger().log(Level.WARNING, "Spawn location is null, can't apply flags!");
+                return;
+            }
+
+            Bukkit.getPluginManager().registerEvents(new SpawnWorldListener(world), Factions.getPlugin());
         });
     }
 
