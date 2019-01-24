@@ -7,7 +7,8 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public enum Messages {
 
-    EMPTY_MESSAGE("%TXT%Hello, I am Nico and I am %NUM%16 %TXT%years old%PNC%.", true, true);
+    EMPTY_MESSAGE("%TXT%Hello, I am Nico and I am %NUM%16 %TXT%years old%PNC%.", true, true),
+    TOO_MANY_HOMES("%ERR%Du hast bereits %NUM%{0} %ERR%Homes.", true, true);
 
     private final String message;
     private final boolean prefix;
@@ -23,6 +24,7 @@ public enum Messages {
             message = message.replaceAll("%NUM%", Statics.NUMBERS);
             message = message.replaceAll("%TXT%", Statics.DEFAULT_TEXT);
             message = message.replaceAll("%PNC%", Statics.PUNCTUATION_MARK);
+            message = message.replaceAll("%ERR%", Statics.ERROR);
         }
 
         return message;
@@ -34,6 +36,7 @@ public enum Messages {
         static final String NUMBERS = "§e";
         static final String DEFAULT_TEXT = "§7";
         static final String PUNCTUATION_MARK = "§8";
+        static final String ERROR = "§c";
 
     }
 

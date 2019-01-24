@@ -23,4 +23,11 @@ public class FactionsPlayer {
     private final Stats stats;
     private long coins;
 
+    public FactionsPlayer(Player player) {
+        this.uuid = player.getUniqueId();
+        this.name = player.getName();
+        this.player = player;
+        this.stats = null;
+    }
+
 }
