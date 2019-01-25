@@ -397,40 +397,7 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
                 return;
             }
 
-            final Map<FactionsPlayer, Rank> members = new HashMap<FactionsPlayer, Rank>() {{
-                document.get("members", List.class).forEach((Consumer<Document>) doc -> this.put(new FactionsPlayer(
-                    doc.get("player", Document.class).get("uuid", UUID.class),
-                    doc.get("player", Document.class).getString("name"),
-                    null
-                ), Rank.values()[Math.min(doc.getInteger("rank"), Rank.values().length - 1)]));
-            }};
-            final List<FactionsPlayer> invitedPlayers = new ArrayList<FactionsPlayer>() {{
-                document.get("invited-players", List.class).forEach((Consumer<Document>) doc -> this.add(new FactionsPlayer(
-                    doc.get("uuid", UUID.class),
-                    doc.getString("name"),
-                    null
-                )));
-            }};
-            final String name = document.getString("name");
-            final String tag = document.getString("tag");
-            final Stats stats = this.fromStatsDocument(document.get("stats", Document.class));
-            final List<ClaimableChunk> chunks = new ArrayList<ClaimableChunk>() {{
-                document.get("chunks", List.class).forEach((Consumer<Document>) doc -> this.add(new ClaimableChunk(
-                    doc.getInteger("x"),
-                    doc.getInteger("z"),
-                    doc.getString("worldName"),
-                    new HashMap<Flag, Boolean>() {{
-                        doc.get("flags", List.class).forEach((Consumer<Document>) doc1 -> this.put(
-                            Flag.values()[Math.min(doc1.getInteger("flag"), Flag.values().length - 1)],
-                            doc1.getBoolean("value")
-                        ));
-                    }}, null
-                )));
-            }};
-            final ConfigurableLocation location = new ConfigurableLocation(document.get("location", Document.class));
-            final long eloPoints = document.getLong("elo-points");
-            final Faction faction = new Faction(members, invitedPlayers, name, tag, stats, chunks, location, eloPoints);
-
+            final Faction faction = this.fromFactionsDocument(document);
             this.factions.add(faction);
             consumer.accept(Optional.of(faction));
         });
@@ -479,9 +446,51 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
                 Filters.eq("members.player.name", factionsPlayer.getName()),
                 Filters.eq("members.player.uuid", factionsPlayer.getUuid())
             ));
+            final Document document = findIterable.first();
+            if (document == null) {
+                consumer.accept(Optional.empty());
+                return;
+            }
 
-            // TODO: Dont do duplicated code when implementing the rest of this method
+            consumer.accept(Optional.of(this.fromFactionsDocument(document)));
         });
+    }
+
+    private Faction fromFactionsDocument(Document document) {
+        final Map<FactionsPlayer, Rank> members = new HashMap<FactionsPlayer, Rank>() {{
+            document.get("members", List.class).forEach((Consumer<Document>) doc -> this.put(new FactionsPlayer(
+                doc.get("player", Document.class).get("uuid", UUID.class),
+                doc.get("player", Document.class).getString("name"),
+                null
+            ), Rank.values()[Math.min(doc.getInteger("rank"), Rank.values().length - 1)]));
+        }};
+        final List<FactionsPlayer> invitedPlayers = new ArrayList<FactionsPlayer>() {{
+            document.get("invited-players", List.class).forEach((Consumer<Document>) doc -> this.add(new FactionsPlayer(
+                doc.get("uuid", UUID.class),
+                doc.getString("name"),
+                null
+            )));
+        }};
+        final String name = document.getString("name");
+        final String tag = document.getString("tag");
+        final Stats stats = this.fromStatsDocument(document.get("stats", Document.class));
+        final List<ClaimableChunk> chunks = new ArrayList<ClaimableChunk>() {{
+            document.get("chunks", List.class).forEach((Consumer<Document>) doc -> this.add(new ClaimableChunk(
+                doc.getInteger("x"),
+                doc.getInteger("z"),
+                doc.getString("worldName"),
+                new HashMap<Flag, Boolean>() {{
+                    doc.get("flags", List.class).forEach((Consumer<Document>) doc1 -> this.put(
+                        Flag.values()[Math.min(doc1.getInteger("flag"), Flag.values().length - 1)],
+                        doc1.getBoolean("value")
+                    ));
+                }}, null
+            )));
+        }};
+        final ConfigurableLocation location = new ConfigurableLocation(document.get("location", Document.class));
+        final long eloPoints = document.getLong("elo-points");
+
+        return new Faction(members, invitedPlayers, name, tag, stats, chunks, location, eloPoints);
     }
 
     @Override
