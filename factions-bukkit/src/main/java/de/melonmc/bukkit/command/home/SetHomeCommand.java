@@ -20,7 +20,7 @@ public class SetHomeCommand implements ICommand<Player> {
 
     @Override
     public String[] getAliases() {
-        return new String[0];
+        return new String[]{"set", "update"};
     }
 
     @Override

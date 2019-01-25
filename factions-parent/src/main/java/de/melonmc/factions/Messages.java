@@ -11,6 +11,8 @@ public enum Messages {
     HOME_UPDATED("%TXT%Du hast den Homepunkt (%NUM%{0}%TXT%) aktualisiert.", true, true),
     HOME_SET("%TXT%Du hast einen neuen Homepunkt gesetzt (%NUM%{0}%TXT%)", true, true),
     HOME_NOT_FOUND("Home nicht gefunden", true, true),
+    HOMES_EMPTY("Du bist obdachlos", true, true),
+    HOMES_EMPTY_OTHER("Er ist obdachlos", true, true),
     EMPTY_MESSAGE("%TXT%Hello, I am Nico and I am %NUM%16 %TXT%years old%PNC%.", true, true);
 
     private final String message;
