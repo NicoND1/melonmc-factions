@@ -189,6 +189,19 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
 
     @Override
     public void findHome(FactionsPlayer factionsPlayer, String name, Consumer<Optional<Home>> consumer) {
+        final Optional<List<Home>> optionalHomes = Optional.ofNullable(this.homes.get(factionsPlayer.getUuid()));
+        if (optionalHomes.isPresent()) {
+            final List<Home> homes = optionalHomes.get();
+            final Optional<Home> homeOptional = homes.stream()
+                .filter(home -> home.getName().equalsIgnoreCase(name))
+                .findAny();
+
+            if (homeOptional.isPresent()) {
+                consumer.accept(homeOptional);
+                return;
+            }
+        }
+
         this.runAction(() -> {
             final MongoCollection<Document> collection = this.mongoDatabase.getCollection(HOMES_COLLECTION);
             final FindIterable<Document> findIterable = collection.find(Filters.and(
