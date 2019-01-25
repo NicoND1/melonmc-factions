@@ -18,10 +18,22 @@ public class FactionsPlayer {
     public static final int HOMES_PER_PLAYER = 3;
 
     private final UUID uuid;
-    private final String name;
+    private String name;
     private Player player;
     private final Stats stats;
     private long coins;
+
+    public FactionsPlayer(UUID uuid, String name) {
+        this.uuid = uuid;
+        this.name = name;
+        this.stats = null;
+    }
+
+    public FactionsPlayer(UUID uuid, String name, Stats stats) {
+        this.uuid = uuid;
+        this.name = name;
+        this.stats = stats;
+    }
 
     public FactionsPlayer(Player player) {
         this.uuid = player.getUniqueId();
