@@ -30,7 +30,7 @@ public class HomeListCommand implements ICommand<Player> {
         if (args.length == 1 && player.hasPermission(LIST_OTHER_PERMISSION)) {
             final String name = args[0];
 
-            Factions.getInstance().getDatabaseSaver().findPlayer(new FactionsPlayer(null, name, null), optionalPlayer -> {
+            Factions.getInstance().getDatabaseSaver().findPlayerUuid(name, optionalPlayer -> {
                 if (!optionalPlayer.isPresent()) {
                     // TODO: Send message that player wasn't found
                     return;

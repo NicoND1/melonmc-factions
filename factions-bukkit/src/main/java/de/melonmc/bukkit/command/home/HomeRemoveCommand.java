@@ -27,7 +27,7 @@ public class HomeRemoveCommand implements ICommand<CommandSender> {
         final String playerName = args[0];
         final String homeName = args[1];
 
-        Factions.getInstance().getDatabaseSaver().findPlayer(new FactionsPlayer(null, playerName, null), optionalFactionsPlayer -> {
+        Factions.getInstance().getDatabaseSaver().findPlayerUuid(playerName, optionalFactionsPlayer -> {
             if (optionalFactionsPlayer.isPresent() && optionalFactionsPlayer.get().getUuid() != null) {
                 final FactionsPlayer factionsPlayer = optionalFactionsPlayer.get();
 
