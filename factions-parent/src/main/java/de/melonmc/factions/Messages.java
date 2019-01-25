@@ -20,7 +20,7 @@ public enum Messages {
     ALREADY_IN_FACTION("Du schon in faction", true, true),
     FACTION_ALREADY_EXISTS("Faction existiert bereits du noob", true, true),
     FACTION_CREATED("Faction created! HGW DU NOOB {0} {1}", true, true),
-    EMPTY_MESSAGE("%TXT%Hello, I am Nico and I am %NUM%{0} %TXT%years old%PNC%.", true, true);
+    EMPTY_MESSAGE("%TXT%Hello, I am Nico and I am %NUM%{0} %TXT%years old%PNC%.", false, true);
 
     private final String message;
     private final boolean prefix;
