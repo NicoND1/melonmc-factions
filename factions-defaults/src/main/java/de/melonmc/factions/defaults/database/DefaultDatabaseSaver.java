@@ -6,6 +6,7 @@ import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Projections;
 import com.mongodb.client.model.UpdateOptions;
 import de.melonmc.factions.chestshop.Chestshop;
 import de.melonmc.factions.chunk.ClaimableChunk;
@@ -280,6 +281,31 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
             );
 
             if (player != null) this.factionsPlayers.add(factionsPlayer);
+            consumer.accept(Optional.of(factionsPlayer));
+        });
+    }
+
+    @Override
+    public void findPlayerUuid(String name, Consumer<Optional<FactionsPlayer>> consumer) {
+        final Optional<FactionsPlayer> optionalFactionsPlayer = this.factionsPlayers.stream()
+            .filter(factionsPlayer -> factionsPlayer.getName().equals(name))
+            .findAny();
+        if (optionalFactionsPlayer.isPresent()) {
+            consumer.accept(optionalFactionsPlayer);
+            return;
+        }
+
+        this.runAction(() -> {
+            final MongoCollection<Document> collection = this.mongoDatabase.getCollection(PLAYERS_COLLECTION);
+            final FindIterable<Document> findIterable = collection.find(Filters.eq("name", name))
+                .projection(Projections.include("uuid"));
+            final Document document = findIterable.first();
+            if (document == null) {
+                consumer.accept(Optional.empty());
+                return;
+            }
+
+            final FactionsPlayer factionsPlayer = new FactionsPlayer(document.get("uuid", UUID.class), name, null);
             consumer.accept(Optional.of(factionsPlayer));
         });
     }

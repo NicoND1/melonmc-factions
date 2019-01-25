@@ -37,6 +37,8 @@ public interface DatabaseSaver {
      */
     void findPlayer(FactionsPlayer currentFactionsPlayer, Consumer<Optional<FactionsPlayer>> consumer);
 
+    void findPlayerUuid(String name, Consumer<Optional<FactionsPlayer>> consumer);
+
     void saveFaction(Faction faction, Runnable runnable);
 
     void deleteFaction(Faction faction, Runnable runnable);
