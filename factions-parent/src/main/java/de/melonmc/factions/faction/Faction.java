@@ -45,6 +45,15 @@ public class Faction {
     private ConfigurableLocation location;
     private long eloPoints;
 
+    public Faction(String name, String tag) {
+        this.name = name;
+        this.tag = tag;
+        this.members = null;
+        this.invitedPlayers = null;
+        this.stats = null;
+        this.chunks = null;
+    }
+
     public void incrementEloPoints(int increment) {
         this.eloPoints += increment;
     }

@@ -17,7 +17,10 @@ public enum Messages {
     PLAYER_NOT_FOUND("Spieler nicht am leben oder so", true, true),
     NOT_IN_A_FACTION("Du nicht in faction", true, true),
     FACTION_LIST_PREFIX("Folgende Spieler sind in der Fraktion:", true, true),
-    EMPTY_MESSAGE("%TXT%Hello, I am Nico and I am %NUM%16 %TXT%years old%PNC%.", true, true);
+    ALREADY_IN_FACTION("Du schon in faction", true, true),
+    FACTION_ALREADY_EXISTS("Faction existiert bereits du noob", true, true),
+    FACTION_CREATED("Faction created! HGW DU NOOB {0} {1}", true, true),
+    EMPTY_MESSAGE("%TXT%Hello, I am Nico and I am %NUM%{0} %TXT%years old%PNC%.", true, true);
 
     private final String message;
     private final boolean prefix;
