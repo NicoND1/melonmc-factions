@@ -45,6 +45,8 @@ public interface DatabaseSaver {
 
     void saveFaction(Faction faction, Runnable runnable);
 
+    void saveFactionInvites(Faction faction, Runnable runnable);
+
     void deleteFaction(Faction faction, Runnable runnable);
 
     void loadFaction(Faction faction, Consumer<Optional<Faction>> consumer);

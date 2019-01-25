@@ -20,6 +20,10 @@ public enum Messages {
     ALREADY_IN_FACTION("Du schon in faction", true, true),
     FACTION_ALREADY_EXISTS("Faction existiert bereits du noob", true, true),
     FACTION_CREATED("Faction created! HGW DU NOOB {0} {1}", true, true),
+    FACTION_PLAYER_ALREADY_INVITED("Der isch schon invited", true, true),
+    FACTION_PLAYER_INVITED("Du hast ihn invited!", true, true),
+    FACTION_PLAYER_INVITE_RECEIVED("Du wurdest von der Faction {0} ({1}) eingeladen", true, true),
+    FACTION_PLAYER_INVITES_NOTIFY("Du wurdest von {0} Faction{1} eingeladen.", true, true),
     EMPTY_MESSAGE("%TXT%Hello, I am Nico and I am %NUM%{0} %TXT%years old%PNC%.", false, true);
 
     private final String message;
