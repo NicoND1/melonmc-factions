@@ -166,7 +166,7 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
                 .append("location", home.getLocation().createDocument())
                 .append("uuid", home.getFactionsPlayer().getUuid());
 
-            collection.updateOne(Filters.and(
+            collection.replaceOne(Filters.and(
                 Filters.eq("name", home.getName()),
                 Filters.eq("uuid", home.getFactionsPlayer().getUuid())
             ), document, new UpdateOptions().upsert(true));
@@ -266,7 +266,7 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
                 .append("coins", factionsPlayer.getCoins())
                 .append("stats", this.createStatsDocument(factionsPlayer.getStats()));
 
-            collection.updateOne(
+            collection.replaceOne(
                 this.createPlayerFilter("name", "uuid", factionsPlayer),
                 document,
                 new UpdateOptions().upsert(true)
@@ -376,7 +376,7 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
                     )).collect(Collectors.toList())
                 );
 
-            collection.updateOne(Filters.eq("name", faction.getName()), document, new UpdateOptions().upsert(true));
+            collection.replaceOne(Filters.eq("name", faction.getName()), document, new UpdateOptions().upsert(true));
 
             this.factions.removeIf(faction1 -> faction.getName().equalsIgnoreCase(faction1.getName()));
             this.factions.add(faction);
@@ -389,7 +389,7 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
     public void saveFactionInvites(Faction faction, Runnable runnable) {
         this.runAction(() -> {
             final MongoCollection<Document> collection = this.mongoDatabase.getCollection(FACTORY_COLLECTION);
-            collection.updateOne(Filters.eq("name", faction.getName()), new Document("$set",
+            collection.replaceOne(Filters.eq("name", faction.getName()), new Document("$set",
                 new Document("invited-players", faction.getInvitedPlayers().stream().map(factionsPlayer -> new Document("uuid", factionsPlayer.getUuid())
                     .append("name", factionsPlayer.getName()))
                     .collect(Collectors.toList()))));
@@ -595,7 +595,7 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
     public void saveChestshop(Chestshop chestshop, Runnable runnable) {
         this.runAction(() -> {
             final MongoCollection<Document> collection = this.mongoDatabase.getCollection(CHESTSHOP_COLLECTION);
-            collection.updateOne(Filters.eq("id", chestshop.getId()), new Document("id", chestshop.getId())
+            collection.replaceOne(Filters.eq("id", chestshop.getId()), new Document("id", chestshop.getId())
                 .append("owner", new Document("uuid", chestshop.getOwner().getUuid()).append("name", chestshop.getOwner().getName()))
                 .append("amont", chestshop.getAmount())
                 .append("costs", chestshop.getCosts())
