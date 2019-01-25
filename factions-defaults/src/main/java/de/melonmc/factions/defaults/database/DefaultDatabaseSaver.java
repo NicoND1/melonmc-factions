@@ -159,6 +159,13 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
                 Filters.eq("uuid", home.getFactionsPlayer().getUuid())
             ), document, new UpdateOptions().upsert(true));
 
+            if (this.factionsPlayers.stream().anyMatch(factionsPlayer -> this.playerMatches(factionsPlayer, home.getFactionsPlayer()))) {
+                final List<Home> homes = this.homes.getOrDefault(home.getFactionsPlayer().getUuid(), new ArrayList<>());
+                homes.removeIf(home1 -> home.getName().equalsIgnoreCase(home1.getName()));
+                homes.add(home);
+                this.homes.put(home.getFactionsPlayer().getUuid(), homes);
+            }
+
             runnable.run();
         });
     }
@@ -239,6 +246,10 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
                 document,
                 new UpdateOptions().upsert(true)
             );
+
+            if (this.factionsPlayers.stream().noneMatch(factionsPlayer1 -> this.playerMatches(factionsPlayer, factionsPlayer1))
+                && Bukkit.getPlayer(factionsPlayer.getUuid()) != null)
+                this.factionsPlayers.add(factionsPlayer);
 
             runnable.run();
         });
@@ -341,6 +352,9 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
                 );
 
             collection.updateOne(Filters.eq("name", faction.getName()), document, new UpdateOptions().upsert(true));
+
+            this.factions.removeIf(faction1 -> faction.getName().equalsIgnoreCase(faction1.getName()));
+            this.factions.add(faction);
 
             runnable.run();
         });
@@ -484,6 +498,8 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
                         .collect(Collectors.toList())
                     ), new UpdateOptions().upsert(true));
 
+            this.defaultConfigurations = defaultConfigurations;
+
             runnable.run();
         });
     }
@@ -538,10 +554,18 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
                     .append("data", chestshop.getItemStack().getData().getData())
                 ), new UpdateOptions().upsert(true));
 
+            if (this.factionsPlayers.stream().anyMatch(factionsPlayer -> this.playerMatches(factionsPlayer, chestshop.getOwner()))) {
+                final List<Chestshop> chestshops = this.chestshops.getOrDefault(chestshop.getOwner().getUuid(), new ArrayList<>());
+                chestshops.removeIf((chestshop1 -> chestshop1.getId().equalsIgnoreCase(chestshop.getId())));
+                chestshops.add(chestshop);
+                this.chestshops.put(chestshop.getOwner().getUuid(), chestshops);
+            }
+
             runnable.run();
         });
     }
 
+    @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
     @Override
     public void deleteChestshop(FactionsPlayer factionsPlayer, String id, Runnable runnable) {
         this.runAction(() -> {
@@ -550,7 +574,7 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
                 Filters.eq("id", id),
                 this.createPlayerFilter("owner.name", "owner.uuid", factionsPlayer)
             ));
-            final List<Chestshop> chestshops = this.chestshops.get(factionsPlayer.getUuid());
+            final List<Chestshop> chestshops = this.chestshops.getOrDefault(factionsPlayer.getUuid(), new ArrayList<>());
             chestshops.removeIf(chestshop -> chestshop.getId().equalsIgnoreCase(id));
 
             runnable.run();
