@@ -12,6 +12,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 /**
  * @author Nico_ND1
@@ -49,6 +50,13 @@ public class FactionInvitesListener implements Listener {
 
             player.spigot().sendMessage(componentBuilder.create());
         });
+    }
+
+    @EventHandler
+    public void onQuit(PlayerQuitEvent event) {
+        final Player player = event.getPlayer();
+
+        Factions.getInstance().getDatabaseSaver().notifyPlayerQuit(player.getUniqueId());
     }
 
 }
