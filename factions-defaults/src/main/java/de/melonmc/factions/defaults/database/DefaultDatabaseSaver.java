@@ -101,7 +101,8 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
             return this.nameCache.getIfPresent(uuid);
     }
 
-    private void runAction(Runnable runnable) {
+    @Override
+    public void runAction(Runnable runnable) {
         if (Thread.currentThread().getName().startsWith("Database Thread #"))
             runnable.run();
         else
@@ -113,6 +114,11 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
             return Filters.eq(nameField, factionsPlayer.getName());
         else
             return Filters.eq(uuidField, factionsPlayer.getUuid());
+    }
+
+    private boolean playerMatches(FactionsPlayer factionsPlayer, FactionsPlayer factionsPlayer2) {
+        return factionsPlayer.getName().equalsIgnoreCase(factionsPlayer2.getName())
+            || factionsPlayer.getUuid().equals(factionsPlayer2.getUuid());
     }
 
     private Document createStatsDocument(Stats stats) {
@@ -253,36 +259,35 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
 
     @Override
     public void findPlayer(FactionsPlayer currentFactionsPlayer, Consumer<Optional<FactionsPlayer>> consumer) {
+        this.runAction(() -> consumer.accept(this.findPlayerSync(currentFactionsPlayer)));
+    }
+
+    @Override
+    public Optional<FactionsPlayer> findPlayerSync(FactionsPlayer currentFactionsPlayer) {
         final Optional<FactionsPlayer> optionalFactionsPlayer = this.factionsPlayers.stream()
             .filter(factionsPlayer -> factionsPlayer.getUuid().equals(currentFactionsPlayer.getUuid()) || factionsPlayer.getName().equals(currentFactionsPlayer.getName()))
             .findAny();
-        if (optionalFactionsPlayer.isPresent()) {
-            consumer.accept(optionalFactionsPlayer);
-            return;
-        }
-        this.runAction(() -> {
-            final MongoCollection<Document> collection = this.mongoDatabase.getCollection(PLAYERS_COLLECTION);
-            final FindIterable<Document> findIterable = collection.find(this.createPlayerFilter("name", "uuid", currentFactionsPlayer));
-            final Document document = findIterable.first();
-            if (document == null) {
-                consumer.accept(Optional.empty());
-                return;
-            }
+        if (optionalFactionsPlayer.isPresent()) return optionalFactionsPlayer;
 
-            final Player player = currentFactionsPlayer.getName() == null ?
-                Bukkit.getPlayer(currentFactionsPlayer.getUuid()) :
-                Bukkit.getPlayer(currentFactionsPlayer.getName());
-            final FactionsPlayer factionsPlayer = new FactionsPlayer(
-                document.get("uuid", UUID.class),
-                document.getString("name"),
-                player,
-                this.fromStatsDocument(document.get("stats", Document.class)),
-                document.getLong("coins")
-            );
+        final MongoCollection<Document> collection = this.mongoDatabase.getCollection(PLAYERS_COLLECTION);
+        final FindIterable<Document> findIterable = collection.find(this.createPlayerFilter("name", "uuid", currentFactionsPlayer));
+        final Document document = findIterable.first();
+        if (document == null) return Optional.empty();
 
-            if (player != null) this.factionsPlayers.add(factionsPlayer);
-            consumer.accept(Optional.of(factionsPlayer));
-        });
+        final Player player = currentFactionsPlayer.getName() == null ?
+            Bukkit.getPlayer(currentFactionsPlayer.getUuid()) :
+            Bukkit.getPlayer(currentFactionsPlayer.getName());
+        final FactionsPlayer factionsPlayer = new FactionsPlayer(
+            document.get("uuid", UUID.class),
+            document.getString("name"),
+            player,
+            this.fromStatsDocument(document.get("stats", Document.class)),
+            document.getLong("coins")
+        );
+
+        if (player != null) this.factionsPlayers.add(factionsPlayer);
+
+        return Optional.of(factionsPlayer);
     }
 
     @Override
@@ -414,6 +419,54 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
 
             this.factions.add(faction);
             consumer.accept(Optional.of(faction));
+        });
+    }
+
+    @Override
+    public void findFactionInvites(FactionsPlayer factionsPlayer, Consumer<List<String>> consumer) {
+        final List<String> invitedFactionNames = new ArrayList<>();
+        this.factions.stream()
+            .filter(faction -> faction.getInvitedPlayers().stream()
+                .anyMatch(factionsPlayer1 -> this.playerMatches(factionsPlayer, factionsPlayer1)))
+            .forEach(faction -> invitedFactionNames.add(faction.getName()));
+        if (!invitedFactionNames.isEmpty()) {
+            consumer.accept(invitedFactionNames);
+            return;
+        }
+
+        this.runAction(() -> {
+            final MongoCollection<Document> collection = this.mongoDatabase.getCollection(FACTORY_COLLECTION);
+            final FindIterable<Document> findIterable = collection.find(Filters.or(
+                Filters.eq("invited-players.name", factionsPlayer.getName()),
+                Filters.eq("invited-players.uuid", factionsPlayer.getUuid())
+            )).projection(Projections.include("name"));
+
+            findIterable.forEach((Block<Document>) document -> invitedFactionNames.add(document.getString("name")));
+            consumer.accept(invitedFactionNames);
+
+            // TODO: Add cache for invites
+        });
+    }
+
+    @Override
+    public void findFaction(FactionsPlayer factionsPlayer, Consumer<Optional<Faction>> consumer) {
+        final Optional<Faction> optionalFaction = this.factions.stream()
+            .filter(faction -> faction.getMembers().keySet().stream()
+                .anyMatch(factionsPlayer1 -> this.playerMatches(factionsPlayer, factionsPlayer1)))
+            .findAny();
+        if (optionalFaction.isPresent()) {
+            consumer.accept(optionalFaction);
+            return;
+        }
+
+        this.runAction(() -> {
+            final MongoCollection<Document> collection = this.mongoDatabase.getCollection(FACTORY_COLLECTION);
+            final FindIterable<Document> findIterable = collection.find(Filters.or(
+                Filters.eq("members.player.name", factionsPlayer.getName()),
+                Filters.eq("members.player.uuid", factionsPlayer.getUuid())
+            ));
+
+            // TODO: Dont do duplicated code when implementing the rest of this method
         });
     }
 

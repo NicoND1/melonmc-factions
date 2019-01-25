@@ -15,6 +15,8 @@ public enum Messages {
     HOMES_EMPTY("Du bist obdachlos", true, true),
     HOMES_EMPTY_OTHER("Er ist obdachlos", true, true),
     PLAYER_NOT_FOUND("Spieler nicht am leben oder so", true, true),
+    NOT_IN_A_FACTION("Du nicht in faction", true, true),
+    FACTION_LIST_PREFIX("Folgende Spieler sind in der Fraktion:", true, true),
     EMPTY_MESSAGE("%TXT%Hello, I am Nico and I am %NUM%16 %TXT%years old%PNC%.", true, true);
 
     private final String message;

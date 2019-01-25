@@ -5,6 +5,7 @@ import de.melonmc.factions.stats.Stats;
 import de.melonmc.factions.util.ConfigurableLocation;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 
 import java.util.List;
 import java.util.Map;
@@ -21,9 +22,17 @@ public class Faction {
     public static final int MIN_TAG_LENGTH = 3;
     public static final int MAX_INVITES = 5;
 
+    @AllArgsConstructor
     public enum Rank {
 
-        ADMIN, MODERATOR, PLAYER;
+        ADMIN("§c", "Admin"), MODERATOR("§a", "Mod"), PLAYER("§7", "Spieler");
+
+        @Getter private final String colorCode;
+        @Getter private final String prefix;
+
+        public String buildPrefix() {
+            return this.colorCode + this.prefix;
+        }
 
     }
 

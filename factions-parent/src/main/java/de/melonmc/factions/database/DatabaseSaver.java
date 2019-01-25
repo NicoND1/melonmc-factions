@@ -14,6 +14,8 @@ import java.util.function.Consumer;
  */
 public interface DatabaseSaver {
 
+    void runAction(Runnable runnable);
+
     void notifyPlayerQuit(UUID uuid);
 
     void saveHome(Home home, Runnable runnable);
@@ -37,6 +39,8 @@ public interface DatabaseSaver {
      */
     void findPlayer(FactionsPlayer currentFactionsPlayer, Consumer<Optional<FactionsPlayer>> consumer);
 
+    Optional<FactionsPlayer> findPlayerSync(FactionsPlayer currentFactionsPlayer);
+
     void findPlayerUuid(String name, Consumer<Optional<FactionsPlayer>> consumer);
 
     void saveFaction(Faction faction, Runnable runnable);
@@ -44,6 +48,17 @@ public interface DatabaseSaver {
     void deleteFaction(Faction faction, Runnable runnable);
 
     void loadFaction(Faction faction, Consumer<Optional<Faction>> consumer);
+
+    /**
+     * Searches for all invites from {@code factionsPlayer} and gives back a list of names from
+     * {@link Faction factions} that invited him.
+     *
+     * @param factionsPlayer
+     * @param consumer
+     */
+    void findFactionInvites(FactionsPlayer factionsPlayer, Consumer<List<String>> consumer);
+
+    void findFaction(FactionsPlayer factionsPlayer, Consumer<Optional<Faction>> consumer);
 
     void saveDefaultConfigurations(DefaultConfigurations defaultConfigurations, Runnable runnable);
 
