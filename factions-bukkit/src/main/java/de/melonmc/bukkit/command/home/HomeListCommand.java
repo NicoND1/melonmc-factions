@@ -32,7 +32,7 @@ public class HomeListCommand implements ICommand<Player> {
 
             Factions.getInstance().getDatabaseSaver().findPlayerUuid(name, optionalPlayer -> {
                 if (!optionalPlayer.isPresent()) {
-                    // TODO: Send message that player wasn't found
+                    player.sendMessage(Messages.PLAYER_NOT_FOUND.getMessage());
                     return;
                 }
 
