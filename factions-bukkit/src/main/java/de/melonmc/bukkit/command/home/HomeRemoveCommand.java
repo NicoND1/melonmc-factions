@@ -45,6 +45,6 @@ public class HomeRemoveCommand implements ICommand<CommandSender> {
             }
         });
 
-        return null;
+        return Result.SUCCESSFUL;
     }
 }
