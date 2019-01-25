@@ -25,6 +25,7 @@ public class FactionsPlugin extends JavaPlugin {
     public void onEnable() {
         MongoConfig mongoConfig = new MongoConfig("localhost", 27017, "username", "password", "database", "collection");
         final File file = new File(this.getDataFolder(), "config.json");
+        if (!this.getDataFolder().exists()) this.getDataFolder().mkdir();
         try {
             if (file.createNewFile()) mongoConfig.save(file);
             mongoConfig = MongoConfig.GSON.fromJson(new InputStreamReader(new FileInputStream(file), Charset.forName("UTF-8")), MongoConfig.class);

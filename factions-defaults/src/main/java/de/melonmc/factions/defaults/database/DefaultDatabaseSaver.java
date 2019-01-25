@@ -45,11 +45,11 @@ import java.util.stream.Collectors;
  */
 public class DefaultDatabaseSaver implements DatabaseSaver {
 
-    private static final String HOMES_COLLECTION = "factory-homes";
-    private static final String PLAYERS_COLLECTION = "factory-players";
-    private static final String FACTORY_COLLECTION = "factory-factories";
-    private static final String DEFAULT_CONFIGURATION_COLLECTION = "factory-configuration";
-    private static final String CHESTSHOP_COLLECTION = "factory-chestshop";
+    private static final String HOMES_COLLECTION = "factory_homes";
+    private static final String PLAYERS_COLLECTION = "factory_players";
+    private static final String FACTORY_COLLECTION = "factory_factories";
+    private static final String DEFAULT_CONFIGURATION_COLLECTION = "factory_configuration";
+    private static final String CHESTSHOP_COLLECTION = "factory_chestshop";
 
     private final MongoDatabase mongoDatabase;
     private final ExecutorService executorService = Executors.newFixedThreadPool(3, new ThreadFactory() {
@@ -83,14 +83,22 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
             .codecRegistry(codecRegistry)
             .build();
 
-        final MongoClient mongoClient = new MongoClient(new ServerAddress(
-            mongoConfig.getHost(),
-            mongoConfig.getPort()
-        ), Collections.singletonList(MongoCredential.createCredential(
-            mongoConfig.getUsername(),
-            mongoConfig.getDatabase(),
-            mongoConfig.getPassword().toCharArray()
-        )), mongoClientOptions);
+        final MongoClient mongoClient;
+        if (mongoConfig.getPassword() == null || mongoConfig.getPassword().equalsIgnoreCase("null")) {
+            mongoClient = new MongoClient(new ServerAddress(
+                mongoConfig.getHost(),
+                mongoConfig.getPort()
+            ));
+        } else {
+            mongoClient = new MongoClient(new ServerAddress(
+                mongoConfig.getHost(),
+                mongoConfig.getPort()
+            ), Collections.singletonList(MongoCredential.createCredential(
+                mongoConfig.getUsername(),
+                mongoConfig.getDatabase(),
+                mongoConfig.getPassword().toCharArray()
+            )), mongoClientOptions);
+        }
         this.mongoDatabase = mongoClient.getDatabase(mongoConfig.getDatabase());
     }
 
@@ -103,8 +111,12 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
 
     @Override
     public void runAction(Runnable runnable) {
-        if (Thread.currentThread().getName().startsWith("Database Thread #"))
-            runnable.run();
+        if (Thread.currentThread().getName().startsWith("Database Thread #") || true) // TODO: Remove || true
+            try {
+                runnable.run();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         else
             this.executorService.submit(runnable);
     }
@@ -523,7 +535,7 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
     public void saveDefaultConfigurations(DefaultConfigurations defaultConfigurations, Runnable runnable) {
         this.runAction(() -> {
             final MongoCollection<Document> collection = this.mongoDatabase.getCollection(DEFAULT_CONFIGURATION_COLLECTION);
-            collection.updateOne(Filters.not(Filters.eq("Im not needed", "LOL")),
+            collection.replaceOne(Filters.not(Filters.eq("Im not needed", "LOL")),
                 new Document("spawn-location", defaultConfigurations.getSpawnLocation().createDocument())
                     .append("npcs", defaultConfigurations.getNpcInformations().stream()
                         .map(npcInformation -> new Document("location", npcInformation.getLocation().createDocument())
@@ -548,29 +560,34 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
 
         this.runAction(() -> {
             final MongoCollection<Document> collection = this.mongoDatabase.getCollection(DEFAULT_CONFIGURATION_COLLECTION);
-            final FindIterable<Document> findIterable = collection.find(Filters.not(Filters.eq("Im not needed", "LOL")));
-            final Document document = findIterable.first();
-            if (document == null) {
-                consumer.accept(new DefaultConfigurations(
-                    new ConfigurableLocation("world", 0, 0, 0, 0, 0),
-                    new ArrayList<>()
-                ));
-                return;
-            }
+            try {
+                final FindIterable<Document> findIterable = collection.find(Filters.not(Filters.eq("Im not needed", "LOL")));
+                final Document document = findIterable.first();
+                if (document == null) {
+                    consumer.accept(new DefaultConfigurations(
+                        new ConfigurableLocation("world", 0, 0, 0, 0, 0),
+                        new ArrayList<>()
+                    ));
+                    return;
+                }
 
-            final DefaultConfigurations defaultConfigurations = new DefaultConfigurations(
-                new ConfigurableLocation(document.get("spawn-location", Document.class)),
-                new ArrayList<NpcInformation>() {{
-                    document.get("npcs", List.class).forEach((Consumer<Document>) doc -> this.add(new NpcInformation(
-                        doc.getString("name-header"),
-                        doc.getString("name-footer"),
-                        new ConfigurableLocation(doc.get("location", Document.class)),
-                        new ConfigurableLocation(doc.get("teleport-location", Document.class))
-                    )));
-                }}
-            );
-            this.defaultConfigurations = defaultConfigurations;
-            consumer.accept(defaultConfigurations);
+                final DefaultConfigurations defaultConfigurations = new DefaultConfigurations(
+                    new ConfigurableLocation(document.get("spawn-location", Document.class)),
+                    new ArrayList<NpcInformation>() {{
+                        document.get("npcs", List.class).forEach((Consumer<Document>) doc -> this.add(new NpcInformation(
+                            doc.getString("name-header"),
+                            doc.getString("name-footer"),
+                            new ConfigurableLocation(doc.get("location", Document.class)),
+                            new ConfigurableLocation(doc.get("teleport-location", Document.class))
+                        )));
+                    }}
+                );
+
+                this.defaultConfigurations = defaultConfigurations;
+                consumer.accept(defaultConfigurations);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         });
     }
 

@@ -16,7 +16,7 @@ public class NpcInteractListener implements Listener {
         final Bootstrapable bootstrapable = Bootstrapable.getInstance();
 
         bootstrapable.getNcps().forEach((npcInformation, npc) -> {
-            if(npc.equals(event.getInteracted())) {
+            if (npc.equals(event.getInteracted())) {
                 player.teleport(npcInformation.getTeleportLocation().toLocation());
                 // TODO: Add super cool and fancy animation
             }

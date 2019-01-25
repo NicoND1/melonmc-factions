@@ -1,8 +1,17 @@
 package de.melonmc.bukkit;
 import de.bergwerklabs.util.NPC;
+import de.melonmc.bukkit.command.home.HomeCommand;
+import de.melonmc.bukkit.command.home.HomeListCommand;
+import de.melonmc.bukkit.command.home.HomeRemoveCommand;
+import de.melonmc.bukkit.command.home.SetHomeCommand;
+import de.melonmc.bukkit.command.npc.NpcSetCommand;
+import de.melonmc.bukkit.command.spawn.SpawnCommand;
+import de.melonmc.bukkit.listener.FactionInvitesListener;
+import de.melonmc.bukkit.listener.NpcInteractListener;
 import de.melonmc.bukkit.listener.SpawnWorldListener;
 import de.melonmc.factions.Factions;
 import de.melonmc.factions.IBootstrapable;
+import de.melonmc.factions.command.ICommand;
 import de.melonmc.factions.database.NpcInformation;
 import lombok.Data;
 import lombok.Getter;
@@ -10,8 +19,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Level;
 
 /**
@@ -27,20 +35,43 @@ public class Bootstrapable implements IBootstrapable {
     public void onStart() {
         instance = this;
 
+        Bukkit.getPluginManager().registerEvents(new FactionInvitesListener(), Factions.getPlugin());
+        Bukkit.getPluginManager().registerEvents(new NpcInteractListener(), Factions.getPlugin());
+
+        Factions.getPlugin().getServer().getPluginCommand("spawn").setExecutor(new SpawnCommand());
+
+        Factions.getPlugin().getServer().getPluginCommand("npc").setExecutor(Factions.getInstance().createCommandExecutor(
+            Collections.singletonList(new NpcSetCommand())
+        ));
+
+        final List<ICommand> homeCommands = Arrays.asList(
+            new HomeListCommand(),
+            new HomeRemoveCommand(),
+            new SetHomeCommand()
+        );
+        Factions.getPlugin().getServer().getPluginCommand("home").setExecutor(new HomeCommand(
+            homeCommands,
+            Factions.getInstance().createCommandExecutor(homeCommands)
+        ));
+
         Factions.getInstance().getDatabaseSaver().loadDefaultConfigurations(defaultConfigurations -> {
             defaultConfigurations.getNpcInformations().forEach(npcInformation -> {
-                try {
-                    final NPC npc = new NPC(
-                        npcInformation.getNameHeader(),
-                        npcInformation.getNameFooter(),
-                        true,
-                        true,
-                        npcInformation.getLocation().toLocation()
-                    );
-                    npc.spawn();
-                } catch (IllegalAccessException | NoSuchMethodException | InstantiationException | InvocationTargetException e) {
-                    e.printStackTrace();
-                }
+                Bukkit.getScheduler().runTask(Factions.getPlugin(), () -> {
+                    try {
+                        final NPC npc = new NPC(
+                            npcInformation.getNameHeader(),
+                            npcInformation.getNameFooter(),
+                            true,
+                            true,
+                            npcInformation.getLocation().toLocation()
+                        );
+                        npc.spawn();
+
+                        this.ncps.put(npcInformation, npc);
+                    } catch (IllegalAccessException | NoSuchMethodException | InstantiationException | InvocationTargetException e) {
+                        e.printStackTrace();
+                    }
+                });
             });
 
             final World world = Bukkit.getWorld(defaultConfigurations.getSpawnLocation().getWorldName());

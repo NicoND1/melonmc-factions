@@ -5,13 +5,13 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.lang.reflect.ParameterizedType;
 import java.util.List;
 import java.util.Optional;
 
 /**
  * @author Nico_ND1
  */
+@SuppressWarnings("ALL")
 public class DefaultCommandExecutor extends AbstractCommandExecutor {
     public DefaultCommandExecutor(List<ICommand> commands) {
         super(commands);
@@ -35,9 +35,10 @@ public class DefaultCommandExecutor extends AbstractCommandExecutor {
         if (optionalICommand.isPresent())
             optionalICommand.ifPresent(subCommand -> {
                 final String newArgs[] = new String[args.length - 1];
-                System.arraycopy(args, 1, newArgs, 0, args.length);
+                System.arraycopy(args, 1, newArgs, 0, args.length - 1);
 
-                try {
+                /*try {
+                    // TODO: Update to it won't throw a class cast exception
                     final Class<? extends CommandSender> persistentClass = (Class<? extends CommandSender>) Class.forName(((ParameterizedType) subCommand.getClass().getGenericSuperclass()).getActualTypeArguments()[0].getTypeName());
 
                     if (persistentClass == Player.class && !(commandSender instanceof Player)) {
@@ -47,7 +48,8 @@ public class DefaultCommandExecutor extends AbstractCommandExecutor {
                     subCommand.onExecute(persistentClass.cast(commandSender), subCommandName, newArgs);
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
-                }
+                }*/
+                subCommand.onExecute((Player) commandSender, subCommandName, newArgs);
             });
         else
             this.sendHelpMessage(commandSender, label);

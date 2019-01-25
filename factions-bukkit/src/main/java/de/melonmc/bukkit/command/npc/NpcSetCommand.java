@@ -13,7 +13,7 @@ import java.util.Optional;
 public class NpcSetCommand implements ICommand<Player> {
     @Override
     public String getName() {
-        return "set <Name>";
+        return "set";
     }
 
     @Override
@@ -41,15 +41,16 @@ public class NpcSetCommand implements ICommand<Player> {
                         nameHeader,
                         nameFooter,
                         new ConfigurableLocation(sender.getLocation()),
-                        null
+                        new ConfigurableLocation("world", 0, 0, 0, 0, 0)
                     ));
-                    sender.sendMessage("Hinzugefügt.");
+
+                    Factions.getInstance().getDatabaseSaver().saveDefaultConfigurations(defaultConfigurations, () -> sender.sendMessage("Hinzugefügt."));
                 }
             });
 
             return Result.SUCCESSFUL;
         }
 
-        return Result.OTHER;
+        return Result.WRONG_ARGUMENTS;
     }
 }

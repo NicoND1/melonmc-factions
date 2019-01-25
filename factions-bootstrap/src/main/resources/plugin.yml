@@ -2,3 +2,10 @@ name: ${project.name}
 author: Nico_ND1
 version: ${project.version}
 main: de.melonmc.bootstrap.FactionsPlugin
+
+commands:
+    spawn:
+    npc:
+        permission: lol.much.permissions
+        # TODO: Add permissions
+    home:

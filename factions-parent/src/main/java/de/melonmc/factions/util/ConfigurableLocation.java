@@ -33,8 +33,8 @@ public class ConfigurableLocation {
         this.x = document.getDouble("x");
         this.y = document.getDouble("y");
         this.z = document.getDouble("z");
-        this.yaw = document.get("yaw", Float.class);
-        this.pitch = document.get("pitch", Float.class);
+        this.yaw = Float.valueOf(Double.toString(document.getDouble("yaw")));
+        this.pitch = Float.valueOf(Double.toString(document.getDouble("pitch")));
     }
 
     public Location toLocation() {
