@@ -55,6 +55,8 @@ public enum Messages {
     FACTION_CHUNK_INFO("Legende:\n§cRot%TXT%=Von andere Faction\n§aGrün%TXT%=Von deiner Faction\n§fWeiß%TXT%=Frei\n{0}#{1}#{2}#\n{3}#{4}#{5}#\n{6}#{7}#{8}#", false, true),
     FACTION_CHUNK_ALREADY_CLAIMED("Schon für coolere Menschen", true, true),
     FACTION_CHUNK_CLAIMED("Chunk geclaimt", true, true),
+    FACTION_CHUNK_NOT_CLAIMED("Chunk nicht geclaimt", true, true),
+    FACTION_CHUNK_NOT_OWN("Nicht deins", true, true),
 
     EMPTY_MESSAGE("%TXT%Hello, I am Nico and I am %NUM%{0} %TXT%years old%PNC%.", false, true);
 
