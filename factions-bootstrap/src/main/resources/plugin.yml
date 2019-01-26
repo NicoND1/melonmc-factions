@@ -10,3 +10,4 @@ commands:
         # TODO: Add permissions
     home:
     faction:
+        aliases: [factions, f, fraktion, fraktionen]
