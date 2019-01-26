@@ -62,4 +62,20 @@ public class Faction {
         this.eloPoints -= decrement;
     }
 
+    public void broadcast(String message, Rank... ranks) {
+        this.members.entrySet().stream()
+            .filter(entry -> {
+                for (Rank rank : ranks) {
+                    if (rank == entry.getValue())
+                        return true;
+                }
+                return ranks.length == 0;
+            }).forEach(entry -> {
+            final FactionsPlayer factionsPlayer = entry.getKey();
+            if (factionsPlayer.getPlayer() == null || !factionsPlayer.getPlayer().isOnline()) return;
+
+            factionsPlayer.getPlayer().sendMessage(message);
+        });
+    }
+
 }

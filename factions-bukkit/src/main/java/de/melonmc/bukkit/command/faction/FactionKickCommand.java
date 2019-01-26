@@ -67,10 +67,7 @@ public class FactionKickCommand implements ICommand<Player> {
             faction.getMembers().remove(factionsPlayer);
             Factions.getInstance().getDatabaseSaver().saveFaction(faction, () -> {
                 player.sendMessage(Messages.FACTION_PLAYER_KICK_SUCCESSFUL.getMessage(factionsPlayer.getName()));
-                faction.getMembers().forEach((factionsPlayer1, rank1) -> {
-                    if (factionsPlayer1.getPlayer() != null && factionsPlayer1.getPlayer().isOnline())
-                        factionsPlayer1.getPlayer().sendMessage(Messages.FACTION_PLAYER_KICK.getMessage(factionsPlayer.getName(), player.getName()));
-                });
+                faction.broadcast(Messages.FACTION_PLAYER_KICK.getMessage(factionsPlayer.getName(), player.getName()));
                 if (Bukkit.getPlayer(factionsPlayer.getUuid()) != null)
                     Bukkit.getPlayer(factionsPlayer.getUuid()).sendMessage(Messages.FACTION_PLAYER_KICKED.getMessage());
             });

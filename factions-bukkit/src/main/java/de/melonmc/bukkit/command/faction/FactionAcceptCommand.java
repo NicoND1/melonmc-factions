@@ -44,10 +44,7 @@ public class FactionAcceptCommand implements ICommand<Player> {
 
                 Factions.getInstance().getDatabaseSaver().saveFaction(faction, () -> {
                     player.sendMessage(Messages.FACTION_INVITE_ACCEPTED.getMessage(faction.getName()));
-                    faction.getMembers().forEach((factionsPlayer, rank) -> {
-                        if (factionsPlayer.getPlayer() != null && factionsPlayer.getPlayer().isOnline())
-                            factionsPlayer.getPlayer().sendMessage(Messages.FACTION_PLAYER_JOIN.getMessage(player.getName()));
-                    });
+                    faction.broadcast(Messages.FACTION_PLAYER_JOIN.getMessage(player.getName()));
                 });
             });
         });

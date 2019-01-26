@@ -14,14 +14,18 @@ public enum Messages {
     HOME_DELETED("Home gelöscht", true, true),
     HOMES_EMPTY("Du bist obdachlos", true, true),
     HOMES_EMPTY_OTHER("Er ist obdachlos", true, true),
+
     PLAYER_NOT_FOUND("Spieler nicht am leben oder so", true, true),
+
     NOT_IN_A_FACTION("Du nicht in faction", true, true),
     FACTION_LIST_PREFIX("Folgende Spieler sind in der Fraktion ({0}):", true, true),
     ALREADY_IN_FACTION("Du schon in faction", true, true),
     FACTION_ALREADY_EXISTS("Faction existiert bereits du noob", true, true),
     FACTION_CREATED("Faction created! HGW DU NOOB {0} {1}", true, true),
+    FACTION_DELETED("Faction gelöscht, lol", true, true),
     FACTION_PLAYER_ALREADY_INVITED("Der isch schon invited", true, true),
     FACTION_PLAYER_INVITED("Du hast ihn invited!", true, true),
+    FACTION_PLAYER_INVITED_BROADCAST("{0} wurde invited", true, true),
     FACTION_PLAYER_INVITE_SELF("Du = dumm", true, true),
     FACTION_PLAYER_IN_FACTION("Er in Faction", true, true),
     FACTION_PLAYER_INVITE_RECEIVED("Du wurdest von der Faction {0} ({1}) eingeladen", true, true),
@@ -35,7 +39,12 @@ public enum Messages {
     FACTION_PLAYER_KICK_SUCCESSFUL("du hast {0} gekickt", true, true),
     FACTION_PLAYER_KICK("player {0} kick from {1}", true, true),
     FACTION_PLAYER_KICKED("du wurdest gekickt", true, true),
+    FACTION_LEAVE("Du hast verlassen", true, true),
+    FACTION_LEAVE_REQUEST("Willst du wirklich leaven?", true, true),
+    FACTION_LEAVE_REQUEST_REJECT("Ok, dann nicht", true, true),
     FACTION_KICK_NOT_ENOUGH_PERMISSIONS("haha, du lappen (frau) hast zu wenig rechte", true, true),
+    FACTION_PLAYER_PROMOTE("{0} ist nun {1}", true, true),
+
     EMPTY_MESSAGE("%TXT%Hello, I am Nico and I am %NUM%{0} %TXT%years old%PNC%.", false, true);
 
     private final String message;

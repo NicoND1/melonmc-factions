@@ -42,4 +42,11 @@ public class FactionsPlayer {
         this.stats = null;
     }
 
+    @Override
+    public boolean equals(Object other) {
+        if (other == null || !(other instanceof FactionsPlayer)) return false;
+
+        return ((FactionsPlayer) other).getName().equalsIgnoreCase(this.name) || ((FactionsPlayer) other).getUuid().equals(this.uuid);
+    }
+
 }

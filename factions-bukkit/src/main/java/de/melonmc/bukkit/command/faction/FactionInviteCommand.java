@@ -63,7 +63,10 @@ public class FactionInviteCommand implements ICommand<Player> {
                         if (targetPlayer != null)
                             targetPlayer.sendMessage(Messages.FACTION_PLAYER_INVITE_RECEIVED.getMessage(faction.getName(), faction.getTag()));
 
-                        Factions.getInstance().getDatabaseSaver().saveFactionInvites(faction, () -> player.sendMessage(Messages.FACTION_PLAYER_INVITED.getMessage()));
+                        Factions.getInstance().getDatabaseSaver().saveFactionInvites(faction, () -> {
+                            player.sendMessage(Messages.FACTION_PLAYER_INVITED.getMessage());
+                            faction.broadcast(Messages.FACTION_PLAYER_INVITED_BROADCAST.getMessage());
+                        });
                     });
                 });
             });
