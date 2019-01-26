@@ -44,6 +44,8 @@ public class FactionInvitesListener implements Listener {
         });
 
         Factions.getInstance().getDatabaseSaver().findFactionInvites(new FactionsPlayer(player), factionNames -> {
+            if (factionNames.isEmpty()) return;
+
             final ComponentBuilder componentBuilder = new ComponentBuilder(Messages.FACTION_PLAYER_INVITES_NOTIFY.getMessage(
                 factionNames.size(), factionNames.size() == 1 ? "" : "en"
             )).event(new HoverEvent(Action.SHOW_TEXT, new BaseComponent[]{new TextComponent("TEXT")}));
