@@ -1,6 +1,7 @@
 package de.melonmc.bukkit;
 import de.bergwerklabs.util.NPC;
 import de.melonmc.bukkit.command.chunk.ChunkClaimCommand;
+import de.melonmc.bukkit.command.chunk.ChunkSettingsCommand;
 import de.melonmc.bukkit.command.chunk.ChunkUnclaimCommand;
 import de.melonmc.bukkit.command.faction.*;
 import de.melonmc.bukkit.command.home.HomeCommand;
@@ -71,7 +72,8 @@ public class Bootstrapable implements IBootstrapable {
 
         Factions.getInstance().createCommandExecutor("chunk", Arrays.asList(
             new ChunkClaimCommand(),
-            new ChunkUnclaimCommand()
+            new ChunkUnclaimCommand(),
+            new ChunkSettingsCommand()
         ));
 
         Factions.getInstance().getDatabaseSaver().loadDefaultConfigurations(defaultConfigurations -> {

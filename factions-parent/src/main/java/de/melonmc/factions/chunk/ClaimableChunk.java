@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
+import org.bukkit.Material;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,9 +19,10 @@ public class ClaimableChunk {
     @AllArgsConstructor
     public enum Flag {
 
-        PVP(true);
+        PVP(true, Material.IRON_SWORD);
 
         @Getter private final boolean defaultValue;
+        @Getter private final Material material;
 
     }
 
