@@ -75,6 +75,10 @@ public class FactionPromoteCommand implements ICommand<Player> {
                     player.sendMessage(Messages.FACTION_KICK_NOT_ENOUGH_PERMISSIONS.getMessage());
                     return;
                 }
+                if (entry.getValue() == rank) {
+                    player.sendMessage(Messages.FACTION_PLAYER_RANK_NEEDS_CHANGE.getMessage());
+                    return;
+                }
 
                 entry.setValue(rank);
                 Factions.getInstance().getDatabaseSaver().saveFaction(faction, () -> {

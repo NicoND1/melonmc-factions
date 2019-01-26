@@ -47,6 +47,7 @@ public enum Messages {
     FACTION_PLAYER_PROMOTE_SUCCESS("Du hast {0} zu {1} promoted", true, true),
     FACTION_PLAYER_PROMOTE("{0} ist nun {1}", true, true),
     FACTION_RANK_NOT_FOUND("Der Rang wurde nicht gefunden.", true, true),
+    FACTION_PLAYER_RANK_NEEDS_CHANGE("Der Spieler hat doch eh schon den Rang", true, true),
 
     EMPTY_MESSAGE("%TXT%Hello, I am Nico and I am %NUM%{0} %TXT%years old%PNC%.", false, true);
 
