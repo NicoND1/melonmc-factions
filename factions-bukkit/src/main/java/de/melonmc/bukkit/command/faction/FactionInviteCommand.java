@@ -26,6 +26,10 @@ public class FactionInviteCommand implements ICommand<Player> {
         if (args.length != 1) return Result.WRONG_ARGUMENTS;
 
         final String playerName = args[0];
+        if (playerName.equalsIgnoreCase(player.getName())) {
+            player.sendMessage(Messages.FACTION_PLAYER_INVITE_SELF.getMessage());
+            return Result.SUCCESSFUL;
+        }
 
         Factions.getInstance().getDatabaseSaver().findPlayer(new FactionsPlayer(null, playerName, null), optionalFactionsPlayer -> {
             if (!optionalFactionsPlayer.isPresent()) {
@@ -34,26 +38,33 @@ public class FactionInviteCommand implements ICommand<Player> {
             }
 
             final FactionsPlayer factionsPlayer = optionalFactionsPlayer.get();
-            Factions.getInstance().getDatabaseSaver().findFaction(new FactionsPlayer(player), optionalFactions -> {
-                if (!optionalFactions.isPresent()) {
-                    player.sendMessage(Messages.NOT_IN_A_FACTION.getMessage());
+            Factions.getInstance().getDatabaseSaver().findFaction(factionsPlayer, optionalFaction -> {
+                if (optionalFaction.isPresent()) {
+                    player.sendMessage(Messages.FACTION_PLAYER_IN_FACTION.getMessage());
                     return;
                 }
 
-                final Faction faction = optionalFactions.get();
-                Factions.getInstance().getDatabaseSaver().findFactionInvites(factionsPlayer, factionNames -> {
-                    if (factionNames.contains(faction.getName())) {
-                        player.sendMessage(Messages.FACTION_PLAYER_ALREADY_INVITED.getMessage());
+                Factions.getInstance().getDatabaseSaver().findFaction(new FactionsPlayer(player), optionalFactions -> {
+                    if (!optionalFactions.isPresent()) {
+                        player.sendMessage(Messages.NOT_IN_A_FACTION.getMessage());
                         return;
                     }
 
-                    faction.getInvitedPlayers().add(factionsPlayer);
+                    final Faction faction = optionalFactions.get();
+                    Factions.getInstance().getDatabaseSaver().findFactionInvites(factionsPlayer, factionNames -> {
+                        if (factionNames.contains(faction.getName())) {
+                            player.sendMessage(Messages.FACTION_PLAYER_ALREADY_INVITED.getMessage());
+                            return;
+                        }
 
-                    final Player targetPlayer = Bukkit.getPlayer(factionsPlayer.getUuid());
-                    if (targetPlayer != null)
-                        targetPlayer.sendMessage(Messages.FACTION_PLAYER_INVITE_RECEIVED.getMessage(faction.getName(), faction.getTag()));
+                        faction.getInvitedPlayers().add(factionsPlayer);
 
-                    Factions.getInstance().getDatabaseSaver().saveFactionInvites(faction, () -> player.sendMessage(Messages.FACTION_PLAYER_INVITED.getMessage()));
+                        final Player targetPlayer = Bukkit.getPlayer(factionsPlayer.getUuid());
+                        if (targetPlayer != null)
+                            targetPlayer.sendMessage(Messages.FACTION_PLAYER_INVITE_RECEIVED.getMessage(faction.getName(), faction.getTag()));
+
+                        Factions.getInstance().getDatabaseSaver().saveFactionInvites(faction, () -> player.sendMessage(Messages.FACTION_PLAYER_INVITED.getMessage()));
+                    });
                 });
             });
         });
