@@ -53,6 +53,8 @@ public enum Messages {
     FACTION_STATS("Die Fraktion {0} hat {1} Kill{2} und {3} Tod{4}", true, true),
     FACTION_PLAYER_BASE_SET("Du hast Base umgesetzt", true, true),
     FACTION_CHUNK_INFO("Legende:\n§cRot%TXT%=Von andere Faction\n§aGrün%TXT%=Von deiner Faction\n§fWeiß%TXT%=Frei\n{0}#{1}#{2}#\n{3}#{4}#{5}#\n{6}#{7}#{8}#", false, true),
+    FACTION_CHUNK_ALREADY_CLAIMED("Schon für coolere Menschen", true, true),
+    FACTION_CHUNK_CLAIMED("Chunk geclaimt", true, true),
 
     EMPTY_MESSAGE("%TXT%Hello, I am Nico and I am %NUM%{0} %TXT%years old%PNC%.", false, true);
 

@@ -10,6 +10,7 @@ import org.bukkit.Bukkit;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * @author Nico_ND1
@@ -53,6 +54,14 @@ public class Faction {
         this.invitedPlayers = null;
         this.stats = null;
         this.chunks = null;
+    }
+
+    public Rank getRank(FactionsPlayer factionsPlayer) {
+        return this.members.entrySet().stream()
+            .filter(entry -> entry.getKey().getUuid().equals(factionsPlayer.getUuid()))
+            .findFirst()
+            .map(Entry::getValue)
+            .orElse(Rank.PLAYER);
     }
 
     public void incrementEloPoints(int increment) {
