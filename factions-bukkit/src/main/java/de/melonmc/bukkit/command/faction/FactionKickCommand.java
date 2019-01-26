@@ -51,7 +51,7 @@ public class FactionKickCommand implements ICommand<Player> {
             }
             final Rank rank = optionalEntry.get().getValue();
             if (rank == Rank.PLAYER) {
-                player.sendMessage(Messages.FACTION_KICK_NOT_ENOUGH_PERMISSIONS.getMessage());
+                player.sendMessage(Messages.FACTION_NOT_ENOUGH_PERMISSIONS.getMessage());
                 return;
             }
 
@@ -65,7 +65,7 @@ public class FactionKickCommand implements ICommand<Player> {
             final FactionsPlayer factionsPlayer = optionalFactionsPlayer.get();
             final Rank factionsPlayerRank = faction.getMembers().get(factionsPlayer);
             if (rank == Rank.MODERATOR && factionsPlayerRank != Rank.PLAYER) {
-                player.sendMessage(Messages.FACTION_KICK_NOT_ENOUGH_PERMISSIONS.getMessage());
+                player.sendMessage(Messages.FACTION_NOT_ENOUGH_PERMISSIONS.getMessage());
                 return;
             }
 

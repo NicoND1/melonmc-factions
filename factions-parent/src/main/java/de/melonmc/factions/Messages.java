@@ -44,13 +44,14 @@ public enum Messages {
     FACTION_LEAVE("Du hast verlassen", true, true),
     FACTION_LEAVE_REQUEST("Willst du wirklich leaven?", true, true),
     FACTION_LEAVE_REQUEST_REJECT("Ok, dann nicht", true, true),
-    FACTION_KICK_NOT_ENOUGH_PERMISSIONS("haha, du lappen (frau) hast zu wenig rechte", true, true),
+    FACTION_NOT_ENOUGH_PERMISSIONS("haha, du lappen (frau) hast zu wenig rechte", true, true),
     FACTION_TARGET_PLAYER_NOT_FOUND("{0} nicht in der Faction", true, true),
     FACTION_PLAYER_PROMOTE_SUCCESS("Du hast {0} zu {1} promoted", true, true),
     FACTION_PLAYER_PROMOTE("{0} ist nun {1}", true, true),
     FACTION_RANK_NOT_FOUND("Der Rang wurde nicht gefunden.", true, true),
     FACTION_PLAYER_RANK_NEEDS_CHANGE("Der Spieler hat doch eh schon den Rang", true, true),
     FACTION_STATS("Die Fraktion {0} hat {1} Kill{2} und {3} Tod{4}", true, true),
+    FACTION_PLAYER_BASE_SET("Du hast Base umgesetzt", true, true),
 
     EMPTY_MESSAGE("%TXT%Hello, I am Nico and I am %NUM%{0} %TXT%years old%PNC%.", false, true);
 

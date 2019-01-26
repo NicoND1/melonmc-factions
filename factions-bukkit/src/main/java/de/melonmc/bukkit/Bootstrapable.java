@@ -62,7 +62,9 @@ public class Bootstrapable implements IBootstrapable {
             new FactionKickCommand(),
             new FactionLeaveCommand(),
             new FactionPromoteCommand(),
-            new FactionStatsCommand()
+            new FactionStatsCommand(),
+            new FactionSetBaseCommand(),
+            new FactionBaseCommand()
         ));
 
         Factions.getInstance().getDatabaseSaver().loadDefaultConfigurations(defaultConfigurations -> {

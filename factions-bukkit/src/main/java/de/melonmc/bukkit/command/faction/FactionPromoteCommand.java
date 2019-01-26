@@ -52,7 +52,7 @@ public class FactionPromoteCommand implements ICommand<Player> {
                 .filter(entry -> entry.getKey().getUuid().equals(player.getUniqueId()))
                 .findAny().get();
             if (rank == Rank.ADMIN && ownEntry.getValue() != Rank.ADMIN || ownEntry.getValue() == Rank.PLAYER) {
-                player.sendMessage(Messages.FACTION_KICK_NOT_ENOUGH_PERMISSIONS.getMessage());
+                player.sendMessage(Messages.FACTION_NOT_ENOUGH_PERMISSIONS.getMessage());
                 return;
             }
 
@@ -72,7 +72,7 @@ public class FactionPromoteCommand implements ICommand<Player> {
                 }
                 final Entry<FactionsPlayer, Rank> entry = optionalEntry.get();
                 if (entry.getValue() == Rank.ADMIN || entry.getValue() == ownEntry.getValue()) {
-                    player.sendMessage(Messages.FACTION_KICK_NOT_ENOUGH_PERMISSIONS.getMessage());
+                    player.sendMessage(Messages.FACTION_NOT_ENOUGH_PERMISSIONS.getMessage());
                     return;
                 }
                 if (entry.getValue() == rank) {
