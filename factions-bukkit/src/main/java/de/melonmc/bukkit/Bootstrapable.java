@@ -61,7 +61,8 @@ public class Bootstrapable implements IBootstrapable {
             new FactionDenyCommand(),
             new FactionKickCommand(),
             new FactionLeaveCommand(),
-            new FactionPromoteCommand()
+            new FactionPromoteCommand(),
+            new FactionStatsCommand()
         ));
 
         Factions.getInstance().getDatabaseSaver().loadDefaultConfigurations(defaultConfigurations -> {

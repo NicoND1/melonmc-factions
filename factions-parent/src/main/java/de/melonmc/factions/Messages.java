@@ -20,6 +20,7 @@ public enum Messages {
     NOT_IN_A_FACTION("Du nicht in faction", true, true),
     FACTION_LIST_PREFIX("Folgende Spieler sind in der Fraktion ({0}):", true, true),
     ALREADY_IN_FACTION("Du schon in faction", true, true),
+    FACTION_NOT_FOUND("Faction nicht am existieren", true, true),
     FACTION_ALREADY_EXISTS("Faction existiert bereits du noob", true, true),
     FACTION_CREATED("Faction created! HGW DU NOOB {0} {1}", true, true),
     FACTION_DELETED("Faction gelöscht, lol", true, true),
@@ -49,6 +50,7 @@ public enum Messages {
     FACTION_PLAYER_PROMOTE("{0} ist nun {1}", true, true),
     FACTION_RANK_NOT_FOUND("Der Rang wurde nicht gefunden.", true, true),
     FACTION_PLAYER_RANK_NEEDS_CHANGE("Der Spieler hat doch eh schon den Rang", true, true),
+    FACTION_STATS("Die Fraktion {0} hat {1} Kill{2} und {3} Tod{4}", true, true),
 
     EMPTY_MESSAGE("%TXT%Hello, I am Nico and I am %NUM%{0} %TXT%years old%PNC%.", false, true);
 
