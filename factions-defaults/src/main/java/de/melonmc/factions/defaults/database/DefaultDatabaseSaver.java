@@ -463,28 +463,27 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
 
     @Override
     public void findFactionInvites(FactionsPlayer factionsPlayer, Consumer<List<String>> consumer) {
+        this.runAction(() -> consumer.accept(this.findFactionInvitesSync(factionsPlayer)));
+    }
+
+    @Override
+    public List<String> findFactionInvitesSync(FactionsPlayer factionsPlayer) {
         final List<String> invitedFactionNames = new ArrayList<>();
         this.factions.stream()
             .filter(faction -> faction.getInvitedPlayers().stream()
                 .anyMatch(factionsPlayer1 -> this.playerMatches(factionsPlayer, factionsPlayer1)))
             .forEach(faction -> invitedFactionNames.add(faction.getName()));
-        if (!invitedFactionNames.isEmpty()) {
-            consumer.accept(invitedFactionNames);
-            return;
-        }
+        if (!invitedFactionNames.isEmpty()) return invitedFactionNames;
 
-        this.runAction(() -> {
-            final MongoCollection<Document> collection = this.mongoDatabase.getCollection(FACTORY_COLLECTION);
-            final FindIterable<Document> findIterable = collection.find(Filters.or(
-                Filters.eq("invited-players.name", factionsPlayer.getName()),
-                Filters.eq("invited-players.uuid", factionsPlayer.getUuid())
-            )).projection(Projections.include("name"));
+        final MongoCollection<Document> collection = this.mongoDatabase.getCollection(FACTORY_COLLECTION);
+        final FindIterable<Document> findIterable = collection.find(Filters.or(
+            Filters.eq("invited-players.name", factionsPlayer.getName()),
+            Filters.eq("invited-players.uuid", factionsPlayer.getUuid())
+        )).projection(Projections.include("name"));
 
-            findIterable.forEach((Block<Document>) document -> invitedFactionNames.add(document.getString("name")));
-            consumer.accept(invitedFactionNames);
+        findIterable.forEach((Block<Document>) document -> invitedFactionNames.add(document.getString("name")));
 
-            // TODO: Add cache for invites
-        });
+        return invitedFactionNames;
     }
 
     @Override

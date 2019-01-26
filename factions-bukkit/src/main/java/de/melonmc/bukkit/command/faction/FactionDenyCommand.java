@@ -2,9 +2,13 @@ package de.melonmc.bukkit.command.faction;
 import de.melonmc.factions.Factions;
 import de.melonmc.factions.Messages;
 import de.melonmc.factions.command.ICommand;
+import de.melonmc.factions.command.Tab;
 import de.melonmc.factions.faction.Faction;
 import de.melonmc.factions.player.FactionsPlayer;
 import org.bukkit.entity.Player;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Nico_ND1
@@ -45,5 +49,13 @@ public class FactionDenyCommand implements ICommand<Player> {
         });
 
         return Result.SUCCESSFUL;
+    }
+
+    @Tab(0)
+    public List<String> onTab(Player player, String label, String[] args) {
+        final List<String> factionNames = Factions.getInstance().getDatabaseSaver().findFactionInvitesSync(new FactionsPlayer(player));
+        return factionNames.stream()
+            .filter(string -> string.startsWith(args[0]))
+            .map(String::toString).collect(Collectors.toList());
     }
 }

@@ -63,6 +63,8 @@ public interface DatabaseSaver {
      */
     void findFactionInvites(FactionsPlayer factionsPlayer, Consumer<List<String>> consumer);
 
+    List<String> findFactionInvitesSync(FactionsPlayer factionsPlayer);
+
     void findFactionByClaimableChunk(ClaimableChunk claimableChunk, Consumer<Optional<Faction>> consumer);
 
     void findFaction(FactionsPlayer factionsPlayer, Consumer<Optional<Faction>> consumer);
