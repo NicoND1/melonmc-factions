@@ -149,15 +149,7 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
 
     @Override
     public void notifyPlayerQuit(UUID uuid) {
-        final Optional<FactionsPlayer> optionalFactionsPlayer = this.factionsPlayers.stream()
-            .filter(factionsPlayer -> factionsPlayer.getUuid().equals(uuid))
-            .findAny();
-
-        optionalFactionsPlayer.ifPresent(factionsPlayer -> {
-            synchronized (this.factionsPlayers) {
-                this.factionsPlayers.remove(factionsPlayer);
-            }
-        });
+        this.factionsPlayers.removeIf(factionsPlayer -> factionsPlayer.getUuid().equals(uuid));
         this.nameCache.invalidate(uuid);
         this.homes.remove(uuid);
         this.chestshops.remove(uuid);

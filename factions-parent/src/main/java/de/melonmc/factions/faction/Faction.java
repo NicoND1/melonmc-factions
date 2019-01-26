@@ -6,6 +6,7 @@ import de.melonmc.factions.util.ConfigurableLocation;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
+import org.bukkit.Bukkit;
 
 import java.util.List;
 import java.util.Map;
@@ -72,6 +73,8 @@ public class Faction {
                 return ranks.length == 0;
             }).forEach(entry -> {
             final FactionsPlayer factionsPlayer = entry.getKey();
+            if (Bukkit.getPlayer(factionsPlayer.getUuid()) != null && factionsPlayer.getPlayer() == null)
+                factionsPlayer.setPlayer(Bukkit.getPlayer(factionsPlayer.getUuid()));
             if (factionsPlayer.getPlayer() == null || !factionsPlayer.getPlayer().isOnline()) return;
 
             factionsPlayer.getPlayer().sendMessage(message);

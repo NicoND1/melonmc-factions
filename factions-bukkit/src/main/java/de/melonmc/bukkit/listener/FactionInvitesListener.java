@@ -37,7 +37,8 @@ public class FactionInvitesListener implements Listener {
             }
 
             final FactionsPlayer factionsPlayer = optionalFactionsPlayer.get();
-            optionalFactionsPlayer.get().setName(player.getName());
+            factionsPlayer.setName(player.getName());
+            factionsPlayer.setPlayer(player);
 
             Factions.getInstance().getDatabaseSaver().savePlayer(factionsPlayer, () -> {
             });
