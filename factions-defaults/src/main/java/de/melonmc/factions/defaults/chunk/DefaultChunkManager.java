@@ -42,4 +42,10 @@ public class DefaultChunkManager implements ChunkManager {
         faction.getChunks().add(claimableChunk);
         Factions.getInstance().getDatabaseSaver().saveFaction(faction, runnable);
     }
+
+    @Override
+    public void unclaimChunk(Faction faction, ClaimableChunk claimableChunk, Runnable runnable) {
+        faction.getChunks().removeIf(claimableChunk1 -> claimableChunk.getChunk().equals(claimableChunk1.getChunk()));
+        Factions.getInstance().getDatabaseSaver().saveFaction(faction, runnable);
+    }
 }

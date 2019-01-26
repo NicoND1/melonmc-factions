@@ -16,4 +16,6 @@ public interface ChunkManager {
 
     void claimChunk(Faction faction, ClaimableChunk claimableChunk, Runnable runnable);
 
+    void unclaimChunk(Faction faction, ClaimableChunk claimableChunk, Runnable runnable);
+
 }
