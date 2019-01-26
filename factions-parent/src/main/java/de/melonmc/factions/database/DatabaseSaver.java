@@ -1,5 +1,6 @@
 package de.melonmc.factions.database;
 import de.melonmc.factions.chestshop.Chestshop;
+import de.melonmc.factions.chunk.ClaimableChunk;
 import de.melonmc.factions.faction.Faction;
 import de.melonmc.factions.home.Home;
 import de.melonmc.factions.player.FactionsPlayer;
@@ -61,6 +62,8 @@ public interface DatabaseSaver {
      * @param consumer
      */
     void findFactionInvites(FactionsPlayer factionsPlayer, Consumer<List<String>> consumer);
+
+    void findFactionByClaimableChunk(ClaimableChunk claimableChunk, Consumer<Optional<Faction>> consumer);
 
     void findFaction(FactionsPlayer factionsPlayer, Consumer<Optional<Faction>> consumer);
 

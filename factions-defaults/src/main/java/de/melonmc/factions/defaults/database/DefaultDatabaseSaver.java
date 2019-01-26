@@ -488,6 +488,34 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
     }
 
     @Override
+    public void findFactionByClaimableChunk(ClaimableChunk claimableChunk, Consumer<Optional<Faction>> consumer) {
+        final Optional<Faction> optionalFaction = this.factions.stream()
+            .filter(faction -> faction.getChunks().stream()
+                .anyMatch(claimableChunk1 -> claimableChunk1.getX() == claimableChunk.getX() && claimableChunk1.getZ() == claimableChunk.getZ() && claimableChunk1.getWorldName().equalsIgnoreCase(claimableChunk.getWorldName())))
+            .findFirst();
+        if (optionalFaction.isPresent()) {
+            consumer.accept(optionalFaction);
+            return;
+        }
+
+        this.runAction(() -> {
+            final MongoCollection<Document> collection = this.mongoDatabase.getCollection(FACTORY_COLLECTION);
+            final FindIterable<Document> findIterable = collection.find(Filters.and(
+                Filters.eq("chunks.x", claimableChunk.getX()),
+                Filters.eq("chunks.z", claimableChunk.getZ()),
+                Filters.eq("chunks.worldName", claimableChunk.getWorldName())
+            ));
+            final Document document = findIterable.first();
+            if (document == null) {
+                consumer.accept(Optional.empty());
+                return;
+            }
+
+            consumer.accept(Optional.of(this.fromFactionsDocument(document)));
+        });
+    }
+
+    @Override
     public void findFaction(FactionsPlayer factionsPlayer, Consumer<Optional<Faction>> consumer) {
         final Optional<Faction> optionalFaction = this.factions.stream()
             .filter(faction -> faction.getMembers().keySet().stream()

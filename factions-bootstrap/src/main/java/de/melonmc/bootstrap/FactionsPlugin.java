@@ -4,6 +4,7 @@ import de.melonmc.factions.FactionsInstanceHolder;
 import de.melonmc.factions.IBootstrapable;
 import de.melonmc.factions.database.DatabaseSaver;
 import de.melonmc.factions.defaults.DefaultFactions;
+import de.melonmc.factions.defaults.chunk.DefaultChunkManager;
 import de.melonmc.factions.defaults.database.DefaultDatabaseSaver;
 import de.melonmc.factions.defaults.database.MongoConfig;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -35,7 +36,7 @@ public class FactionsPlugin extends JavaPlugin {
 
         final DatabaseSaver databaseSaver = new DefaultDatabaseSaver(mongoConfig);
         FactionsInstanceHolder.setPlugin(this);
-        FactionsInstanceHolder.setFactions(new DefaultFactions(databaseSaver));
+        FactionsInstanceHolder.setFactions(new DefaultFactions(databaseSaver, new DefaultChunkManager()));
 
         this.iBootstrapable = new Bootstrapable();
         this.iBootstrapable.onStart();

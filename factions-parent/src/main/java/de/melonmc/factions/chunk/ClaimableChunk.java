@@ -5,6 +5,7 @@ import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -28,6 +29,14 @@ public class ClaimableChunk {
     private final String worldName;
     private final Map<Flag, Boolean> flags;
     private Chunk chunk;
+
+    public ClaimableChunk(Chunk chunk) {
+        this.x = chunk.getX();
+        this.z = chunk.getZ();
+        this.worldName = chunk.getWorld().getName();
+        this.flags = new HashMap<>();
+        this.chunk = chunk;
+    }
 
     public Chunk getChunk() {
         if (this.chunk != null) return this.chunk;
