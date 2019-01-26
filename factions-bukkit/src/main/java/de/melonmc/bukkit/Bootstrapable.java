@@ -69,7 +69,8 @@ public class Bootstrapable implements IBootstrapable {
             new FactionPromoteCommand(),
             new FactionStatsCommand(),
             new FactionSetBaseCommand(),
-            new FactionBaseCommand()
+            new FactionBaseCommand(),
+            new FactionTopListCommand()
         ));
 
         Factions.getInstance().createCommandExecutor("chunk", Arrays.asList(
