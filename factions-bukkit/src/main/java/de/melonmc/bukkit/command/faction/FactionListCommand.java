@@ -51,7 +51,7 @@ public class FactionListCommand implements ICommand<Player> {
                         continue;
                     }
 
-                    for (int i1 = 0; i < list.size(); i++) {
+                    for (int i1 = 0; i1 < list.size(); i1++) {
                         final FactionsPlayer factionsPlayer = list.get(i1);
                         String name = factionsPlayer.getName();
                         if (name == null) {

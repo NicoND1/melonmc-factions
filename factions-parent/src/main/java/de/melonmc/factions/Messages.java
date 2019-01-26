@@ -26,6 +26,12 @@ public enum Messages {
     FACTION_PLAYER_IN_FACTION("Er in Faction", true, true),
     FACTION_PLAYER_INVITE_RECEIVED("Du wurdest von der Faction {0} ({1}) eingeladen", true, true),
     FACTION_PLAYER_INVITES_NOTIFY("Du wurdest von {0} Faction{1} eingeladen.", true, true),
+    FACTION_NOT_INVITED("not invited", true, true),
+    FACTION_INVITED_FACTION_NOT_FOUND("not found", true, true),
+    FACTION_INVITE_ACCEPTED("du join faction {0}", true, true),
+    FACTION_INVITE_DECLINED("invite declined", true, true),
+    FACTION_PLAYER_JOIN("player {0} join", true, true),
+    FACTION_PLAYER_QUIT("player {0} quit", true, true),
     EMPTY_MESSAGE("%TXT%Hello, I am Nico and I am %NUM%{0} %TXT%years old%PNC%.", false, true);
 
     private final String message;

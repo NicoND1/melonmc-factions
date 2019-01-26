@@ -389,7 +389,7 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
     public void saveFactionInvites(Faction faction, Runnable runnable) {
         this.runAction(() -> {
             final MongoCollection<Document> collection = this.mongoDatabase.getCollection(FACTORY_COLLECTION);
-            collection.replaceOne(Filters.eq("name", faction.getName()), new Document("$set",
+            collection.updateOne(Filters.eq("name", faction.getName()), new Document("$set",
                 new Document("invited-players", faction.getInvitedPlayers().stream().map(factionsPlayer -> new Document("uuid", factionsPlayer.getUuid())
                     .append("name", factionsPlayer.getName()))
                     .collect(Collectors.toList()))));
