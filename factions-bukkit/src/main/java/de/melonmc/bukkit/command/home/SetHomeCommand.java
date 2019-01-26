@@ -29,13 +29,6 @@ public class SetHomeCommand implements ICommand<Player> {
         final String homeName = args[0];
 
         Factions.getInstance().getDatabaseSaver().findHomes(new FactionsPlayer(player), homes -> {
-            final int maxHomes = FactionsPlayer.HOMES_PER_PLAYER;
-
-            if (homes.size() >= maxHomes) {
-                player.sendMessage(Messages.TOO_MANY_HOMES.getMessage(FactionsPlayer.HOMES_PER_PLAYER));
-                return;
-            }
-
             final Optional<Home> optionalHome = homes.stream()
                 .filter(home -> home.getName().equalsIgnoreCase(homeName))
                 .findAny();
@@ -46,6 +39,11 @@ public class SetHomeCommand implements ICommand<Player> {
 
                 Factions.getInstance().getDatabaseSaver().saveHome(home, () -> player.sendMessage(Messages.HOME_UPDATED.getMessage(home.getName())));
             } else {
+                if (homes.size() >= FactionsPlayer.HOMES_PER_PLAYER) {
+                    player.sendMessage(Messages.TOO_MANY_HOMES.getMessage(FactionsPlayer.HOMES_PER_PLAYER));
+                    return;
+                }
+
                 final Home home = new Home(new FactionsPlayer(player), homeName, new ConfigurableLocation(player.getLocation()));
 
                 Factions.getInstance().getDatabaseSaver().saveHome(home, () -> player.sendMessage(Messages.HOME_SET.getMessage(home.getName())));
