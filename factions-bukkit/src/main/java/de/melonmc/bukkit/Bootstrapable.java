@@ -41,9 +41,7 @@ public class Bootstrapable implements IBootstrapable {
 
         Factions.getPlugin().getServer().getPluginCommand("spawn").setExecutor(new SpawnCommand());
 
-        Factions.getPlugin().getServer().getPluginCommand("npc").setExecutor(Factions.getInstance().createCommandExecutor(
-            Collections.singletonList(new NpcSetCommand())
-        ));
+        Factions.getInstance().createCommandExecutor("npc", Collections.singletonList(new NpcSetCommand()));
 
         final List<ICommand> homeCommands = Arrays.asList(
             new HomeListCommand(),
@@ -52,10 +50,10 @@ public class Bootstrapable implements IBootstrapable {
         );
         Factions.getPlugin().getServer().getPluginCommand("home").setExecutor(new HomeCommand(
             homeCommands,
-            Factions.getInstance().createCommandExecutor(homeCommands)
+            Factions.getInstance().createCommandExecutor("home", homeCommands)
         ));
 
-        Factions.getPlugin().getServer().getPluginCommand("faction").setExecutor(Factions.getInstance().createCommandExecutor(Arrays.asList(
+        Factions.getInstance().createCommandExecutor("faction", Arrays.asList(
             new FactionCreateCommand(),
             new FactionInviteCommand(),
             new FactionListCommand(),
@@ -64,7 +62,7 @@ public class Bootstrapable implements IBootstrapable {
             new FactionKickCommand(),
             new FactionLeaveCommand(),
             new FactionPromoteCommand()
-        )));
+        ));
 
         Factions.getInstance().getDatabaseSaver().loadDefaultConfigurations(defaultConfigurations -> {
             defaultConfigurations.getNpcInformations().forEach(npcInformation -> {

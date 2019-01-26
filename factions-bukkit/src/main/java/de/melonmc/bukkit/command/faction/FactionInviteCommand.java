@@ -2,10 +2,14 @@ package de.melonmc.bukkit.command.faction;
 import de.melonmc.factions.Factions;
 import de.melonmc.factions.Messages;
 import de.melonmc.factions.command.ICommand;
+import de.melonmc.factions.command.Tab;
 import de.melonmc.factions.faction.Faction;
 import de.melonmc.factions.player.FactionsPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Nico_ND1
@@ -73,5 +77,13 @@ public class FactionInviteCommand implements ICommand<Player> {
         });
 
         return Result.SUCCESSFUL;
+    }
+
+    @Tab(0)
+    public List<String> onTab(Player player, String label, String[] args) {
+        final List<String> list = new ArrayList<>();
+        list.add("Test");
+
+        return list;
     }
 }

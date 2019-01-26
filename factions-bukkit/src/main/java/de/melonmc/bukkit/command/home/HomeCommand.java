@@ -20,7 +20,7 @@ public class HomeCommand extends AbstractCommandExecutor {
     private final AbstractCommandExecutor parentCommandExecutor;
 
     public HomeCommand(List<ICommand> commands, AbstractCommandExecutor parentCommandExecutor) {
-        super(commands);
+        super("home", commands);
         this.parentCommandExecutor = parentCommandExecutor;
     }
 

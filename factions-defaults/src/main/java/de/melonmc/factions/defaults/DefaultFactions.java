@@ -19,7 +19,7 @@ public class DefaultFactions implements Factions {
     private final DatabaseSaver databaseSaver;
 
     @Override
-    public AbstractCommandExecutor createCommandExecutor(List<ICommand> commands) {
-        return new DefaultCommandExecutor(commands);
+    public AbstractCommandExecutor createCommandExecutor(String commandName, List<ICommand> commands) {
+        return new DefaultCommandExecutor(commandName, commands);
     }
 }

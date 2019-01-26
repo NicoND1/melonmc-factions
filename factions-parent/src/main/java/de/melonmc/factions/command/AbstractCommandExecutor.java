@@ -12,5 +12,6 @@ import java.util.List;
 @Data
 public abstract class AbstractCommandExecutor implements CommandExecutor {
 
+    protected final String commandName;
     protected final List<ICommand> commands;
 }

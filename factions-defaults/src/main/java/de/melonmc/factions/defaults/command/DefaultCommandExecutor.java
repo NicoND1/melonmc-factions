@@ -1,10 +1,17 @@
 package de.melonmc.factions.defaults.command;
+import de.melonmc.factions.Factions;
 import de.melonmc.factions.command.AbstractCommandExecutor;
 import de.melonmc.factions.command.ICommand;
+import de.melonmc.factions.command.Tab;
+import de.melonmc.factions.command.TabInfo;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,9 +19,22 @@ import java.util.Optional;
  * @author Nico_ND1
  */
 @SuppressWarnings("ALL")
-public class DefaultCommandExecutor extends AbstractCommandExecutor {
-    public DefaultCommandExecutor(List<ICommand> commands) {
-        super(commands);
+public class DefaultCommandExecutor extends AbstractCommandExecutor implements TabCompleter {
+
+    private final List<TabInfo> tabInfos = new ArrayList<>();
+
+    public DefaultCommandExecutor(String commandName, List<ICommand> commands) {
+        super(commandName, commands);
+
+        Factions.getPlugin().getServer().getPluginCommand(commandName).setExecutor(this);
+        Factions.getPlugin().getServer().getPluginCommand(commandName).setTabCompleter(this);
+
+        commands.forEach(command -> {
+            for (Method method : command.getClass().getDeclaredMethods()) {
+                if (method.isAnnotationPresent(Tab.class))
+                    this.tabInfos.add(new TabInfo(command, method.getAnnotation(Tab.class), method));
+            }
+        });
     }
 
     @Override
@@ -59,5 +79,35 @@ public class DefaultCommandExecutor extends AbstractCommandExecutor {
 
     private void sendHelpMessage(CommandSender commandSender, String label) {
         commandSender.sendMessage("send help message"); // TODO: Build help message
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
+        if (args.length == 0) return null;
+
+        final List<String> list = new ArrayList<>();
+        final Optional<TabInfo> optionalTabInfo = this.tabInfos.stream()
+            .filter(tabInfo -> {
+                for (String alias : tabInfo.getICommand().getAliases())
+                    if (alias.equalsIgnoreCase(args[0])) return true;
+                return tabInfo.getICommand().getName().equalsIgnoreCase(args[0]);
+            }).filter(tabInfo -> tabInfo.getTab().value() == args.length - 2)
+            .findFirst();
+        optionalTabInfo.ifPresent(tabInfo -> {
+            final Method method = tabInfo.getMethod();
+            final String newArgs[] = new String[args.length - 1];
+            System.arraycopy(args, 1, newArgs, 0, args.length - 1);
+
+            try {
+                final List<String> list1 = (List<String>) method.invoke(tabInfo.getICommand(), (Player) sender, label, newArgs);
+                list.addAll(list1);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            }
+        });
+
+        return list;
     }
 }

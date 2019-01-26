@@ -13,7 +13,7 @@ public interface Factions {
 
     DatabaseSaver getDatabaseSaver();
 
-    AbstractCommandExecutor createCommandExecutor(List<ICommand> commands);
+    AbstractCommandExecutor createCommandExecutor(String commandName, List<ICommand> commands);
 
     static Factions getInstance() {
         return FactionsInstanceHolder.getFactions();
