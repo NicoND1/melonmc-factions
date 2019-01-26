@@ -36,6 +36,11 @@ public class ChunkClaimCommand implements ICommand<Player> {
                 player.sendMessage(Messages.FACTION_NOT_ENOUGH_PERMISSIONS.getMessage());
                 return;
             }
+            final int maxChunks = faction.getMembers().size() * Faction.CHUNKS_PER_PLAYER;
+            if (faction.getChunks().size() >= maxChunks) {
+                player.sendMessage(Messages.FACTION_CHUNK_MAX.getMessage(maxChunks));
+                return;
+            }
 
             final ChunkManager chunkManager = Factions.getInstance().getChunkManager();
             final ClaimableChunk claimableChunk = chunkManager.getClaimableChunk(player.getLocation().getChunk());
