@@ -43,7 +43,10 @@ public enum Messages {
     FACTION_LEAVE_REQUEST("Willst du wirklich leaven?", true, true),
     FACTION_LEAVE_REQUEST_REJECT("Ok, dann nicht", true, true),
     FACTION_KICK_NOT_ENOUGH_PERMISSIONS("haha, du lappen (frau) hast zu wenig rechte", true, true),
+    FACTION_TARGET_PLAYER_NOT_FOUND("{0} nicht in der Faction", true, true),
+    FACTION_PLAYER_PROMOTE_SUCCESS("Du hast {0} zu {1} promoted", true, true),
     FACTION_PLAYER_PROMOTE("{0} ist nun {1}", true, true),
+    FACTION_RANK_NOT_FOUND("Der Rang wurde nicht gefunden.", true, true),
 
     EMPTY_MESSAGE("%TXT%Hello, I am Nico and I am %NUM%{0} %TXT%years old%PNC%.", false, true);
 
