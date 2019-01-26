@@ -37,6 +37,7 @@ public enum Messages {
     FACTION_PLAYER_JOIN("player {0} join", true, true),
     FACTION_PLAYER_QUIT("player {0} quit", true, true),
     FACTION_PLAYER_KICK_SUCCESSFUL("du hast {0} gekickt", true, true),
+    FACTION_PLAYER_KICK_SELF("Du kannst dich nicht selbst kicken", true, true),
     FACTION_PLAYER_KICK("player {0} kick from {1}", true, true),
     FACTION_PLAYER_KICKED("du wurdest gekickt", true, true),
     FACTION_LEAVE("Du hast verlassen", true, true),

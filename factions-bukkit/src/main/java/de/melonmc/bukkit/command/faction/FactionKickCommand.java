@@ -30,6 +30,11 @@ public class FactionKickCommand implements ICommand<Player> {
         if (args.length != 1) return Result.WRONG_ARGUMENTS;
 
         final String name = args[0];
+        if(name.equalsIgnoreCase(player.getName())) {
+            player.sendMessage(Messages.FACTION_PLAYER_KICK_SELF.getMessage());
+            return Result.OTHER;
+        }
+
         Factions.getInstance().getDatabaseSaver().findFaction(new FactionsPlayer(player), optionalFaction -> {
             if (!optionalFaction.isPresent()) {
                 player.sendMessage(Messages.NOT_IN_A_FACTION.getMessage());
