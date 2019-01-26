@@ -40,12 +40,12 @@ public class FactionListCommand implements ICommand<Player> {
                 map.put(rank, list);
             });
 
-            final StringBuilder stringBuilder = new StringBuilder(Messages.FACTION_LIST_PREFIX.getMessage());
+            final StringBuilder stringBuilder = new StringBuilder(Messages.FACTION_LIST_PREFIX.getMessage(faction.getMembers().size()));
             Factions.getInstance().getDatabaseSaver().runAction(() -> {
                 for (int i = 0; i < Rank.values().length; i++) {
                     final Rank rank = Rank.values()[i];
                     final List<FactionsPlayer> list = map.get(rank);
-                    stringBuilder.append(rank.buildPrefix()).append("§8: ").append(rank.getColorCode());
+                    stringBuilder.append("\n").append(rank.buildPrefix()).append("§8: ").append(rank.getColorCode());
                     if (list == null || list.isEmpty()) {
                         stringBuilder.append("§c/");
                         continue;

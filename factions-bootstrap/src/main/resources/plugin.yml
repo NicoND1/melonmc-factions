@@ -9,3 +9,4 @@ commands:
         permission: lol.much.permissions
         # TODO: Add permissions
     home:
+    faction:

@@ -1,5 +1,8 @@
 package de.melonmc.bukkit;
 import de.bergwerklabs.util.NPC;
+import de.melonmc.bukkit.command.faction.FactionCreateCommand;
+import de.melonmc.bukkit.command.faction.FactionInviteCommand;
+import de.melonmc.bukkit.command.faction.FactionListCommand;
 import de.melonmc.bukkit.command.home.HomeCommand;
 import de.melonmc.bukkit.command.home.HomeListCommand;
 import de.melonmc.bukkit.command.home.HomeRemoveCommand;
@@ -53,6 +56,12 @@ public class Bootstrapable implements IBootstrapable {
             homeCommands,
             Factions.getInstance().createCommandExecutor(homeCommands)
         ));
+
+        Factions.getPlugin().getServer().getPluginCommand("faction").setExecutor(Factions.getInstance().createCommandExecutor(Arrays.asList(
+            new FactionCreateCommand(),
+            new FactionInviteCommand(),
+            new FactionListCommand()
+        )));
 
         Factions.getInstance().getDatabaseSaver().loadDefaultConfigurations(defaultConfigurations -> {
             defaultConfigurations.getNpcInformations().forEach(npcInformation -> {
