@@ -22,6 +22,7 @@ public enum Messages {
     ALREADY_IN_FACTION("Du schon in faction", true, true),
     FACTION_NOT_FOUND("Faction nicht am existieren", true, true),
     FACTION_ALREADY_EXISTS("Faction existiert bereits du noob", true, true),
+    FACTION_INVALID_TAG("Der Tag muss mindestens {0} und höchstens {1} Zeichen lang sein.", true, true),
     FACTION_CREATED("Faction created! HGW DU NOOB {0} {1}", true, true),
     FACTION_DELETED("Faction gelöscht, lol", true, true),
     FACTION_PLAYER_ALREADY_INVITED("Der isch schon invited", true, true),

@@ -32,6 +32,10 @@ public class FactionCreateCommand implements ICommand<Player> {
 
         final String factionName = args[0];
         final String factionTag = args[1];
+        if (factionTag.length() < Faction.MIN_TAG_LENGTH || factionTag.length() > Faction.MAX_TAG_LENGTH) {
+            player.sendMessage(Messages.FACTION_INVALID_TAG.getMessage());
+            return Result.OTHER;
+        }
 
         Factions.getInstance().getDatabaseSaver().findFaction(new FactionsPlayer(player), optionalFaction -> {
             if (optionalFaction.isPresent()) {
