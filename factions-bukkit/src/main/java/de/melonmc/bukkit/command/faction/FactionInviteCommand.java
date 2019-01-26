@@ -55,22 +55,24 @@ public class FactionInviteCommand implements ICommand<Player> {
                     }
 
                     final Faction faction = optionalFactions.get();
-                    Factions.getInstance().getDatabaseSaver().findFactionInvites(factionsPlayer, factionNames -> {
-                        if (factionNames.contains(faction.getName())) {
-                            player.sendMessage(Messages.FACTION_PLAYER_ALREADY_INVITED.getMessage());
-                            return;
-                        }
+                    if (faction.getInvitedPlayers().stream().anyMatch(factionsPlayer1 -> factionsPlayer1.getUuid().equals(factionsPlayer.getUuid()))) {
+                        player.sendMessage(Messages.FACTION_PLAYER_ALREADY_INVITED.getMessage());
+                        return;
+                    }
+                    if (faction.getInvitedPlayers().size() >= Faction.MAX_INVITES) {
+                        player.sendMessage(Messages.FACTION_PLAYER_INVITE_MAX.getMessage(Faction.MAX_INVITES));
+                        return;
+                    }
 
-                        faction.getInvitedPlayers().add(factionsPlayer);
+                    faction.getInvitedPlayers().add(factionsPlayer);
 
-                        final Player targetPlayer = Bukkit.getPlayer(factionsPlayer.getUuid());
-                        if (targetPlayer != null)
-                            targetPlayer.sendMessage(Messages.FACTION_PLAYER_INVITE_RECEIVED.getMessage(faction.getName(), faction.getTag()));
+                    final Player targetPlayer = Bukkit.getPlayer(factionsPlayer.getUuid());
+                    if (targetPlayer != null)
+                        targetPlayer.sendMessage(Messages.FACTION_PLAYER_INVITE_RECEIVED.getMessage(faction.getName(), faction.getTag()));
 
-                        Factions.getInstance().getDatabaseSaver().saveFactionInvites(faction, () -> {
-                            player.sendMessage(Messages.FACTION_PLAYER_INVITED.getMessage());
-                            faction.broadcast(Messages.FACTION_PLAYER_INVITED_BROADCAST.getMessage(factionsPlayer.getName()));
-                        });
+                    Factions.getInstance().getDatabaseSaver().saveFactionInvites(faction, () -> {
+                        player.sendMessage(Messages.FACTION_PLAYER_INVITED.getMessage());
+                        faction.broadcast(Messages.FACTION_PLAYER_INVITED_BROADCAST.getMessage(factionsPlayer.getName()));
                     });
                 });
             });

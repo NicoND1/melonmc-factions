@@ -35,6 +35,7 @@ public enum Messages {
     FACTION_INVITED_FACTION_NOT_FOUND("not found", true, true),
     FACTION_INVITE_ACCEPTED("du join faction {0}", true, true),
     FACTION_INVITE_DECLINED("invite declined", true, true),
+    FACTION_PLAYER_INVITE_MAX("Deine Fraktion kann nur {0} Leute einladen", true, true),
     FACTION_PLAYER_JOIN("player {0} join", true, true),
     FACTION_PLAYER_QUIT("player {0} quit", true, true),
     FACTION_PLAYER_KICK_SUCCESSFUL("du hast {0} gekickt", true, true),
