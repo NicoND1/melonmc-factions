@@ -11,3 +11,5 @@ commands:
     home:
     faction:
         aliases: [factions, f, fraktion, fraktionen]
+    chunk:
+        aliases: [land]

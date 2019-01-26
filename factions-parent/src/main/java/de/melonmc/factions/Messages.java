@@ -52,6 +52,7 @@ public enum Messages {
     FACTION_PLAYER_RANK_NEEDS_CHANGE("Der Spieler hat doch eh schon den Rang", true, true),
     FACTION_STATS("Die Fraktion {0} hat {1} Kill{2} und {3} Tod{4}", true, true),
     FACTION_PLAYER_BASE_SET("Du hast Base umgesetzt", true, true),
+    FACTION_CHUNK_INFO("Legende:\n§cRot%TXT%=Von andere Faction\n§aGrün%TXT%=Von deiner Faction\n§fWeiß%TXT%=Frei\n{0}#{1}#{2}#\n{3}#{4}#{5}#\n{6}#{7}#{8}#", false, true),
 
     EMPTY_MESSAGE("%TXT%Hello, I am Nico and I am %NUM%{0} %TXT%years old%PNC%.", false, true);
 
