@@ -39,7 +39,7 @@ public class FactionLeaveCommand implements ICommand<Player> {
 
     @Override
     public Result onExecute(Player player, String label, String[] args) {
-        if(args.length == 1 && args[0].equalsIgnoreCase("not") && this.timeout.getIfPresent(player.getUniqueId()) != null) {
+        if (args.length == 1 && args[0].equalsIgnoreCase("not") && this.timeout.getIfPresent(player.getUniqueId()) != null) {
             this.timeout.invalidate(player.getUniqueId());
             player.sendMessage(Messages.FACTION_LEAVE_REQUEST_REJECT.getMessage());
             return Result.SUCCESSFUL;
@@ -54,7 +54,10 @@ public class FactionLeaveCommand implements ICommand<Player> {
             final Faction faction = optionalFaction.get();
             if (this.timeout.getIfPresent(player.getUniqueId()) != null) {
                 this.timeout.invalidate(player.getUniqueId());
-                faction.getMembers().remove(new FactionsPlayer(player));
+                faction.getMembers().keySet().stream()
+                    .filter(factionsPlayer -> factionsPlayer.getUuid().equals(player.getUniqueId()))
+                    .findFirst()
+                    .ifPresent(factionsPlayer -> faction.getMembers().remove(factionsPlayer));
                 if (faction.getMembers().values().stream().noneMatch(rank -> rank == Rank.ADMIN)) {
                     final Optional<Entry<FactionsPlayer, Rank>> optionalMod = faction.getMembers().entrySet().stream()
                         .filter(entry -> entry.getValue() == Rank.MODERATOR)
@@ -83,7 +86,7 @@ public class FactionLeaveCommand implements ICommand<Player> {
                                 this.searchNameAndBroadcastUpdate(faction, factionsPlayer);
                             } else {
                                 faction.broadcast(Messages.FACTION_PLAYER_PROMOTE.getMessage(
-                                    faction.getName(),
+                                    factionsPlayer.getName(),
                                     Rank.ADMIN.buildPrefix()
                                 ));
                             }
