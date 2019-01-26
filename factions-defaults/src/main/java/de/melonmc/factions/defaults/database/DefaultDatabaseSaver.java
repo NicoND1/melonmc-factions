@@ -54,7 +54,7 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
     private static final String CHESTSHOP_COLLECTION = "factory_chestshop";
 
     private final MongoDatabase mongoDatabase;
-    private final ExecutorService executorService = Executors.newFixedThreadPool(3, new ThreadFactory() {
+    private final ExecutorService executorService = Executors.newFixedThreadPool(5, new ThreadFactory() {
         final AtomicLong atomicLong = new AtomicLong();
 
         @Override
@@ -116,12 +116,8 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
 
     @Override
     public void runAction(Runnable runnable) {
-        if (Thread.currentThread().getName().startsWith("Database Thread #") || true) // TODO: Remove || true
-            try {
-                runnable.run();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        if (Thread.currentThread().getName().startsWith("Database Thread #"))
+            runnable.run();
         else
             this.executorService.submit(runnable);
     }
