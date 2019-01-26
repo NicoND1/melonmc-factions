@@ -411,6 +411,14 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
     }
 
     @Override
+    public void loadAllFactions() {
+        final MongoCollection<Document> collection = this.mongoDatabase.getCollection(FACTORY_COLLECTION);
+        final FindIterable<Document> findIterable = collection.find();
+
+        findIterable.forEach((Block<Document>) document -> this.factions.add(this.fromFactionsDocument(document)));
+    }
+
+    @Override
     public void loadFaction(Faction originFaction, Consumer<Optional<Faction>> consumer) {
         final Optional<Faction> optionalFaction = this.factions.stream()
             .filter(faction -> faction.getName().equalsIgnoreCase(originFaction.getName()))

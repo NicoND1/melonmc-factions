@@ -50,6 +50,8 @@ public interface DatabaseSaver {
 
     void deleteFaction(Faction faction, Runnable runnable);
 
+    void loadAllFactions();
+
     void loadFaction(Faction faction, Consumer<Optional<Faction>> consumer);
 
     void loadTopTenFactions(Consumer<List<Faction>> consumer);

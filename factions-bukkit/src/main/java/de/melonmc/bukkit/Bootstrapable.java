@@ -39,6 +39,8 @@ public class Bootstrapable implements IBootstrapable {
     public void onStart() {
         instance = this;
 
+        Factions.getInstance().getDatabaseSaver().loadAllFactions();
+
         Bukkit.getPluginManager().registerEvents(new FactionInvitesListener(), Factions.getPlugin());
         Bukkit.getPluginManager().registerEvents(new NpcInteractListener(), Factions.getPlugin());
 
