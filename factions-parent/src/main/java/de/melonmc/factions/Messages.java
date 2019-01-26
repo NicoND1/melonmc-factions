@@ -32,6 +32,10 @@ public enum Messages {
     FACTION_INVITE_DECLINED("invite declined", true, true),
     FACTION_PLAYER_JOIN("player {0} join", true, true),
     FACTION_PLAYER_QUIT("player {0} quit", true, true),
+    FACTION_PLAYER_KICK_SUCCESSFUL("du hast {0} gekickt", true, true),
+    FACTION_PLAYER_KICK("player {0} kick from {1}", true, true),
+    FACTION_PLAYER_KICKED("du wurdest gekickt", true, true),
+    FACTION_KICK_NOT_ENOUGH_PERMISSIONS("haha, du lappen (frau) hast zu wenig rechte", true, true),
     EMPTY_MESSAGE("%TXT%Hello, I am Nico and I am %NUM%{0} %TXT%years old%PNC%.", false, true);
 
     private final String message;
