@@ -51,6 +51,8 @@ public interface DatabaseSaver {
 
     void loadFaction(Faction faction, Consumer<Optional<Faction>> consumer);
 
+    void loadTopTenFactions(Consumer<List<Faction>> consumer);
+
     /**
      * Searches for all invites from {@code factionsPlayer} and gives back a list of names from
      * {@link Faction factions} that invited him.

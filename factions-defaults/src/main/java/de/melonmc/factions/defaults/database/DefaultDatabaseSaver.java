@@ -7,6 +7,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Projections;
+import com.mongodb.client.model.Sorts;
 import com.mongodb.client.model.UpdateOptions;
 import de.melonmc.factions.chestshop.Chestshop;
 import de.melonmc.factions.chunk.ClaimableChunk;
@@ -32,6 +33,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
+import java.util.Map.Entry;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
@@ -67,6 +69,9 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
     });
     private final Cache<UUID, String> nameCache = CacheBuilder.newBuilder()
         .expireAfterWrite(5, TimeUnit.HOURS)
+        .build();
+    private final Cache<Integer, Faction> topTenFactions = CacheBuilder.newBuilder()
+        .expireAfterWrite(60, TimeUnit.MINUTES)
         .build();
     private final Map<UUID, List<Home>> homes = new HashMap<>();
     private final Map<UUID, List<Chestshop>> chestshops = new HashMap<>();
@@ -438,6 +443,29 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
             final Faction faction = this.fromFactionsDocument(document);
             this.factions.add(faction);
             consumer.accept(Optional.of(faction));
+        });
+    }
+
+    @Override
+    public void loadTopTenFactions(Consumer<List<Faction>> consumer) {
+        final List<Faction> list = new ArrayList<>(10);
+        if (this.topTenFactions.size() > 0) {
+            consumer.accept(this.topTenFactions.asMap().entrySet().stream()
+                .map(Entry::getValue)
+                .collect(Collectors.toList()));
+            return;
+        }
+
+        this.runAction(() -> {
+            final MongoCollection<Document> collection = this.mongoDatabase.getCollection(FACTORY_COLLECTION);
+            final FindIterable<Document> findIterable = collection.find()
+                .sort(Sorts.ascending("elo-points"))
+                .limit(10);
+
+            findIterable.forEach((Block<Document>) document -> list.add(this.fromFactionsDocument(document)));
+            list.forEach(faction -> this.topTenFactions.put(list.indexOf(faction), faction));
+
+            consumer.accept(list);
         });
     }
 
