@@ -18,7 +18,7 @@ public class WoodcutterJobListener extends JobListener {
     @EventHandler(ignoreCancelled = true)
     public void onBlockBreak(BlockBreakEvent event) {
         final Player player = event.getPlayer();
-        if (event.getBlock().getType() != Material.WOOD) return;
+        if (event.getBlock().getType() != Material.LOG && event.getBlock().getType() != Material.LOG_2) return;
 
         this.achieveAction(player);
     }

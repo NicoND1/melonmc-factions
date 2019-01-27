@@ -10,7 +10,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>factions-bukkit</artifactId>
-  <version>0.0.62</version>
+  <version>0.0.63</version>
 
   <dependencies>
     <dependency>
