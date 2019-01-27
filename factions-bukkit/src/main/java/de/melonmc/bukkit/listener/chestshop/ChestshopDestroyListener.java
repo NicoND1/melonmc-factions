@@ -24,8 +24,6 @@ public class ChestshopDestroyListener implements Listener {
             return;
 
         Factions.getInstance().getDatabaseSaver().loadChestshops(new FactionsPlayer(player), chestshops -> {
-            chestshops.forEach(chestshop -> System.out.println(chestshop.getChestLocation().toLocation().getBlock().equals(event.getBlock())
-                || chestshop.getSignLocation().toLocation().getBlock().equals(event.getBlock())));
             final Optional<Chestshop> optionalChestshop = chestshops.stream()
                 .filter(chestshop -> chestshop.getChestLocation().toLocation().getBlock().equals(event.getBlock())
                     || chestshop.getSignLocation().toLocation().getBlock().equals(event.getBlock()))
