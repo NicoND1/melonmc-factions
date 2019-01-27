@@ -43,6 +43,8 @@ public class FactionInvitesListener implements Listener {
             Factions.getInstance().getDatabaseSaver().savePlayer(factionsPlayer, () -> {
             });
         });
+        Factions.getInstance().getDatabaseSaver().loadChestshops(new FactionsPlayer(player), chestshops -> {
+        });
 
         Factions.getInstance().getDatabaseSaver().findFactionInvites(new FactionsPlayer(player), factionNames -> {
             if (factionNames.isEmpty()) return;
