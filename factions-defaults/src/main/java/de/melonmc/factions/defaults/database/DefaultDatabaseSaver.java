@@ -653,9 +653,7 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
                 .append("displayname", chestshop.getDisplayName())
                 .append("chest-location", chestshop.getChestLocation().createDocument())
                 .append("sign-location", chestshop.getSignLocation().createDocument())
-                .append("itemstack", new Document("type", chestshop.getItemStack().getType().name())
-                    .append("data", chestshop.getItemStack().getData().getData())
-                ), new UpdateOptions().upsert(true));
+                .append("itemstack", new Document("type", chestshop.getItemStack().getType().name())), new UpdateOptions().upsert(true));
 
             if (this.factionsPlayers.stream().anyMatch(factionsPlayer -> this.playerMatches(factionsPlayer, chestshop.getOwner()))) {
                 final List<Chestshop> chestshops = this.chestshops.getOrDefault(chestshop.getOwner().getUuid(), new ArrayList<>());
@@ -696,21 +694,19 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
             final FindIterable<Document> findIterable = collection.find(this.createPlayerFilter("owner.name", "owner.uuid", factionsPlayer));
             final List<Chestshop> chestshops = new ArrayList<>();
 
-            findIterable.forEach((Block<Document>) document -> {
-                chestshops.add(new Chestshop(
-                    document.getString("id"),
-                    factionsPlayer,
-                    new ItemStack(
-                        Material.valueOf(document.get("itemstack", Document.class).getString("type")),
-                        1,
-                        Short.valueOf(document.get("itemstack", Document.class).getInteger("data").toString())
-                    ), document.getString("displayname"),
-                    document.getInteger("amount"),
-                    document.getInteger("costs"),
-                    new ConfigurableLocation(document.get("sign-location", Document.class)),
-                    new ConfigurableLocation(document.get("chest-location", Document.class))
-                ));
-            });
+            findIterable.forEach((Block<Document>) document -> chestshops.add(new Chestshop(
+                document.getString("id"),
+                factionsPlayer,
+                new ItemStack(
+                    Material.valueOf(document.get("itemstack", Document.class).getString("type")),
+                    1,
+                    Short.valueOf(document.get("itemstack", Document.class).getInteger("data").toString())
+                ), document.getString("displayname"),
+                document.getInteger("amount"),
+                document.getInteger("costs"),
+                new ConfigurableLocation(document.get("sign-location", Document.class)),
+                new ConfigurableLocation(document.get("chest-location", Document.class))
+            )));
 
             this.chestshops.put(factionsPlayer.getUuid(), chestshops);
             consumer.accept(chestshops);

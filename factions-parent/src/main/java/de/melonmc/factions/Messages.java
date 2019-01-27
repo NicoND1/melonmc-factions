@@ -60,6 +60,13 @@ public enum Messages {
     FACTION_CHUNK_NOT_OWN("Nicht deins", true, true),
     FACTION_CHUNK_MAX("Deine Fraktion kann nur {0} Chunks haben", true, true),
 
+    CHESTSHOP_UNKNOWN_MATERIAL("Gebe ein gültiges Material an", true, true),
+    CHESTSHOP_UNKNOWN_INTEGER("Gebe eine gültige Zahl an (ohne Komma, ...)", true, true),
+    CHESTSHOP_AMOUNT_TOO_HIGH("Amount darf nicht höher als 64 sein", true, true),
+    CHESTSHOP_AMOUNT_TOO_LITTLE("Amount muss eins oder mehr sein", true, true),
+    CHESTSHOP_CREATED("Chestshop erstellt", true, true),
+    CHESTSHOP_DELETED("Chestshop gelöscht", true, true),
+
     EMPTY_MESSAGE("%TXT%Hello, I am Nico and I am %NUM%{0} %TXT%years old%PNC%.", false, true);
 
     private final String message;

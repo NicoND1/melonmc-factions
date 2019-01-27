@@ -13,6 +13,8 @@ import de.melonmc.bukkit.command.spawn.SpawnCommand;
 import de.melonmc.bukkit.listener.FactionInvitesListener;
 import de.melonmc.bukkit.listener.NpcInteractListener;
 import de.melonmc.bukkit.listener.SpawnWorldListener;
+import de.melonmc.bukkit.listener.chestshop.ChestshopCreateListener;
+import de.melonmc.bukkit.listener.chestshop.ChestshopDestroyListener;
 import de.melonmc.factions.Factions;
 import de.melonmc.factions.IBootstrapable;
 import de.melonmc.factions.command.ICommand;
@@ -78,6 +80,9 @@ public class Bootstrapable implements IBootstrapable {
             new ChunkUnclaimCommand(),
             new ChunkSettingsCommand()
         ));
+
+        Bukkit.getPluginManager().registerEvents(new ChestshopCreateListener(), Factions.getPlugin());
+        Bukkit.getPluginManager().registerEvents(new ChestshopDestroyListener(), Factions.getPlugin());
 
         Factions.getInstance().getDatabaseSaver().loadDefaultConfigurations(defaultConfigurations -> {
             defaultConfigurations.getNpcInformations().forEach(npcInformation -> {
