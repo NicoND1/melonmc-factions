@@ -73,14 +73,26 @@ public class MoneyPayCommand implements ICommand<Player> {
                 }
 
                 final FactionsPlayer targetFactionsPlayer = optionalFactionsPlayer1.get();
-                targetFactionsPlayer.setCoins(targetFactionsPlayer.getCoins() + amount);
+                targetFactionsPlayer.setCoins(factionsPlayer.getCoins() + amount);
                 factionsPlayer.setCoins(factionsPlayer.getCoins() - amount);
 
-                Factions.getInstance().getDatabaseSaver().incrementPlayerCoins(targetFactionsPlayer, () -> {
+                Factions.getInstance().getDatabaseSaver().incrementPlayerCoins(new FactionsPlayer(
+                    targetFactionsPlayer.getUuid(),
+                    targetFactionsPlayer.getName(),
+                    null,
+                    null,
+                    amount
+                ), () -> {
                     if (targetFactionsPlayer.getPlayer() != null && targetFactionsPlayer.getPlayer().isOnline())
                         targetFactionsPlayer.getPlayer().sendMessage(Messages.MONEY_PAY_RECEIVED.getMessage(player.getName(), amount));
                 });
-                Factions.getInstance().getDatabaseSaver().incrementPlayerCoins(factionsPlayer, () -> player.sendMessage(Messages.MONEY_PAY_SUCCESS.getMessage(targetFactionsPlayer.getName(), amount)));
+                Factions.getInstance().getDatabaseSaver().incrementPlayerCoins(new FactionsPlayer(
+                    factionsPlayer.getUuid(),
+                    factionsPlayer.getName(),
+                    null,
+                    null,
+                    -amount
+                ), () -> player.sendMessage(Messages.MONEY_PAY_SUCCESS.getMessage(targetFactionsPlayer.getName(), amount)));
             });
         });
 
