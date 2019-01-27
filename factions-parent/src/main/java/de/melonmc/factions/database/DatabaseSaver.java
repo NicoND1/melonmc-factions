@@ -81,4 +81,6 @@ public interface DatabaseSaver {
 
     void loadChestshops(FactionsPlayer factionsPlayer, Consumer<List<Chestshop>> consumer);
 
+    List<Chestshop> loadChestshopsSync(FactionsPlayer factionsPlayer);
+
 }

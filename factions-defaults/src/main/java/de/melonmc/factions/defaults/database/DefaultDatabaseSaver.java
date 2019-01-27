@@ -684,32 +684,32 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
 
     @Override
     public void loadChestshops(FactionsPlayer factionsPlayer, Consumer<List<Chestshop>> consumer) {
-        if (this.chestshops.containsKey(factionsPlayer.getUuid())) {
-            consumer.accept(this.chestshops.get(factionsPlayer.getUuid()));
-            return;
-        }
+        this.runAction(() -> consumer.accept(this.loadChestshopsSync(factionsPlayer)));
+    }
 
-        this.runAction(() -> {
-            final MongoCollection<Document> collection = this.mongoDatabase.getCollection(CHESTSHOP_COLLECTION);
-            final FindIterable<Document> findIterable = collection.find(this.createPlayerFilter("owner.name", "owner.uuid", factionsPlayer));
-            final List<Chestshop> chestshops = new ArrayList<>();
+    @Override
+    public List<Chestshop> loadChestshopsSync(FactionsPlayer factionsPlayer) {
+        if (this.chestshops.containsKey(factionsPlayer.getUuid())) return this.chestshops.get(factionsPlayer.getUuid());
 
-            findIterable.forEach((Block<Document>) document -> chestshops.add(new Chestshop(
-                document.getString("id"),
-                factionsPlayer,
-                new ItemStack(
-                    Material.valueOf(document.get("itemstack", Document.class).getString("type")),
-                    1,
-                    Short.valueOf(document.get("itemstack", Document.class).getInteger("data").toString())
-                ), document.getString("displayname"),
-                document.getInteger("amount"),
-                document.getInteger("costs"),
-                new ConfigurableLocation(document.get("sign-location", Document.class)),
-                new ConfigurableLocation(document.get("chest-location", Document.class))
-            )));
+        final MongoCollection<Document> collection = this.mongoDatabase.getCollection(CHESTSHOP_COLLECTION);
+        final FindIterable<Document> findIterable = collection.find(this.createPlayerFilter("owner.name", "owner.uuid", factionsPlayer));
+        final List<Chestshop> chestshops = new ArrayList<>();
 
-            this.chestshops.put(factionsPlayer.getUuid(), chestshops);
-            consumer.accept(chestshops);
-        });
+        findIterable.forEach((Block<Document>) document -> chestshops.add(new Chestshop(
+            document.getString("id"),
+            factionsPlayer,
+            new ItemStack(
+                Material.valueOf(document.get("itemstack", Document.class).getString("type")),
+                1,
+                Short.valueOf(document.get("itemstack", Document.class).getInteger("data").toString())
+            ), document.getString("displayname"),
+            document.getInteger("amount"),
+            document.getInteger("costs"),
+            new ConfigurableLocation(document.get("sign-location", Document.class)),
+            new ConfigurableLocation(document.get("chest-location", Document.class))
+        )));
+
+        this.chestshops.put(factionsPlayer.getUuid(), chestshops);
+        return chestshops;
     }
 }
