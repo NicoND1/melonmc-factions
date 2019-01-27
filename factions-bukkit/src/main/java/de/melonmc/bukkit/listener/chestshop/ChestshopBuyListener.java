@@ -121,10 +121,10 @@ public class ChestshopBuyListener implements Listener {
                     }
 
                     final FactionsPlayer owner = optionalFactionsPlayer1.get();
-                    owner.setCoins(owner.getCoins() + chestshop.getCosts());
-                    factionsPlayer.setCoins(factionsPlayer.getCoins() - chestshop.getCosts());
+                    owner.setCoins(chestshop.getCosts());
+                    factionsPlayer.setCoins(-chestshop.getCosts());
 
-                    Factions.getInstance().getDatabaseSaver().savePlayer(owner, () -> {
+                    Factions.getInstance().getDatabaseSaver().incrementPlayerCoins(owner, () -> {
                         if (owner.getPlayer() != null && owner.getPlayer().isOnline())
                             owner.getPlayer().sendMessage(Messages.CHESTSHOP_PLAYER_BOUGHT.getMessage(
                                 player.getName(),
@@ -132,7 +132,7 @@ public class ChestshopBuyListener implements Listener {
                                 chestshop.getCosts()
                             ));
                     });
-                    Factions.getInstance().getDatabaseSaver().savePlayer(factionsPlayer, () -> player.sendMessage(Messages.CHESTSHOP_PLAYER_BOUGHT_SUCCESS.getMessage(
+                    Factions.getInstance().getDatabaseSaver().incrementPlayerCoins(factionsPlayer, () -> player.sendMessage(Messages.CHESTSHOP_PLAYER_BOUGHT_SUCCESS.getMessage(
                         chestshop.getAmount() + " " + chestshop.getDisplayName(),
                         chestshop.getCosts(),
                         owner.getName()
