@@ -13,3 +13,5 @@ commands:
         aliases: [factions, f, fraktion, fraktionen]
     chunk:
         aliases: [land]
+    money:
+        aliases: [muenzen]

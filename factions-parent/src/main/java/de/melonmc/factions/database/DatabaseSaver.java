@@ -30,6 +30,8 @@ public interface DatabaseSaver {
 
     void savePlayer(FactionsPlayer factionsPlayer, Runnable runnable);
 
+    void incrementPlayerCoins(FactionsPlayer factionsPlayer, Runnable runnable);
+
     void deletePlayer(FactionsPlayer factionsPlayer, Runnable runnable);
 
     /**

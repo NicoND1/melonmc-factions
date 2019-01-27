@@ -278,6 +278,16 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
     }
 
     @Override
+    public void incrementPlayerCoins(FactionsPlayer factionsPlayer, Runnable runnable) {
+        this.runAction(() -> {
+            final MongoCollection<Document> collection = this.mongoDatabase.getCollection(PLAYERS_COLLECTION);
+            collection.updateOne(this.createPlayerFilter("name", "uuid", factionsPlayer), new Document("$inc", new Document("coins", factionsPlayer.getCoins())));
+
+            runnable.run();
+        });
+    }
+
+    @Override
     public void deletePlayer(FactionsPlayer factionsPlayer, Runnable runnable) {
         this.runAction(() -> {
             final MongoCollection<Document> collection = this.mongoDatabase.getCollection(PLAYERS_COLLECTION);

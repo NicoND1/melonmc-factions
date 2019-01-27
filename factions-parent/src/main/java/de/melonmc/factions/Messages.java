@@ -73,6 +73,14 @@ public enum Messages {
     CHESTSHOP_PLAYER_BOUGHT("{0} hat {1} in einem deiner Shops für {2} Coins gekauft.", true, true),
     CHESTSHOP_PLAYER_BOUGHT_SUCCESS("Du hast {0} für {1} Coins aus dem Shop von {2}", true, true),
 
+    MONEY_UNKNOWN_INTEGER("Gebe eine gültige Zahl an", true, true),
+    MONEY_PAY_OWN_TOO_LITTLE("Du hast dafür zu wenig Geld", true, true),
+    MONEY_PAY_TOO_LITTLE("Du musst mindestens 1 Coin angeben", true, true),
+    MONEY_PAY_SELF("Du willst dir selbst Geld schenken? Okay...", true, true),
+    MONEY_PAY_TIMEOUT("Warte noch kurz", true, true),
+    MONEY_PAY_SUCCESS("Du hast {0} {1} Coins geschenkt", true, true),
+    MONEY_PAY_RECEIVED("{0} hat dir {1} Coins geschenkt", true, true),
+
     EMPTY_MESSAGE("%TXT%Hello, I am Nico and I am %NUM%{0} %TXT%years old%PNC%.", false, true);
 
     private final String message;

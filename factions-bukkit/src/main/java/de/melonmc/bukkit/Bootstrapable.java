@@ -8,6 +8,7 @@ import de.melonmc.bukkit.command.home.HomeCommand;
 import de.melonmc.bukkit.command.home.HomeListCommand;
 import de.melonmc.bukkit.command.home.HomeRemoveCommand;
 import de.melonmc.bukkit.command.home.SetHomeCommand;
+import de.melonmc.bukkit.command.money.MoneyPayCommand;
 import de.melonmc.bukkit.command.npc.NpcSetCommand;
 import de.melonmc.bukkit.command.spawn.SpawnCommand;
 import de.melonmc.bukkit.listener.FactionInvitesListener;
@@ -81,6 +82,10 @@ public class Bootstrapable implements IBootstrapable {
             new ChunkClaimCommand(),
             new ChunkUnclaimCommand(),
             new ChunkSettingsCommand()
+        ));
+
+        Factions.getInstance().createCommandExecutor("money", Arrays.asList(
+            new MoneyPayCommand()
         ));
 
         Bukkit.getPluginManager().registerEvents(new ChestshopCreateListener(), Factions.getPlugin());
