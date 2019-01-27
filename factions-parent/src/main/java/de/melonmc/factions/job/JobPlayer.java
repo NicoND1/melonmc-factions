@@ -2,6 +2,7 @@ package de.melonmc.factions.job;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -16,14 +17,11 @@ public class JobPlayer {
     public static final int NEEDED_ACTION_FOR_LEVEL = 50;
 
     private final UUID uuid;
-    private int actions;
-    private long totalActions;
-    private long level;
+    private final List<Job> jobs;
 
-    public int incrementActions() {
-        this.actions++;
-        this.totalActions++;
-        return this.actions;
+    public JobPlayer(UUID uuid) {
+        this.uuid = uuid;
+        this.jobs = null;
     }
 
 }

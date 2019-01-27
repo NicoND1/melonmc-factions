@@ -3,6 +3,7 @@ import de.melonmc.factions.chestshop.Chestshop;
 import de.melonmc.factions.chunk.ClaimableChunk;
 import de.melonmc.factions.faction.Faction;
 import de.melonmc.factions.home.Home;
+import de.melonmc.factions.job.JobPlayer;
 import de.melonmc.factions.player.FactionsPlayer;
 import de.melonmc.factions.util.ConfigurableLocation;
 
@@ -87,5 +88,11 @@ public interface DatabaseSaver {
     void loadChestshops(FactionsPlayer factionsPlayer, Consumer<List<Chestshop>> consumer);
 
     List<Chestshop> loadChestshopsSync(FactionsPlayer factionsPlayer);
+
+    void saveJobPlayer(JobPlayer jobPlayer, Runnable runnable);
+
+    void deleteJobPlayer(JobPlayer jobPlayer, Runnable runnable);
+
+    void loadJobPlayer(FactionsPlayer factionsPlayer, Consumer<Optional<JobPlayer>> consumer);
 
 }
