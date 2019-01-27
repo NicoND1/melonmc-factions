@@ -648,7 +648,7 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
             final MongoCollection<Document> collection = this.mongoDatabase.getCollection(CHESTSHOP_COLLECTION);
             collection.replaceOne(Filters.eq("id", chestshop.getId()), new Document("id", chestshop.getId())
                 .append("owner", new Document("uuid", chestshop.getOwner().getUuid()).append("name", chestshop.getOwner().getName()))
-                .append("amont", chestshop.getAmount())
+                .append("amount", chestshop.getAmount())
                 .append("costs", chestshop.getCosts())
                 .append("displayname", chestshop.getDisplayName())
                 .append("chest-location", chestshop.getChestLocation().createDocument())
@@ -698,11 +698,7 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
         findIterable.forEach((Block<Document>) document -> chestshops.add(new Chestshop(
             document.getString("id"),
             factionsPlayer,
-            new ItemStack(
-                Material.valueOf(document.get("itemstack", Document.class).getString("type")),
-                1,
-                Short.valueOf(document.get("itemstack", Document.class).getInteger("data").toString())
-            ), document.getString("displayname"),
+            new ItemStack(Material.valueOf(document.get("itemstack", Document.class).getString("type"))), document.getString("displayname"),
             document.getInteger("amount"),
             document.getInteger("costs"),
             new ConfigurableLocation(document.get("sign-location", Document.class)),
