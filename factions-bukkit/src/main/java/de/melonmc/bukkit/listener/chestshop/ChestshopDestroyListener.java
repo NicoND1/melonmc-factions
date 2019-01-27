@@ -9,6 +9,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -23,16 +24,18 @@ public class ChestshopDestroyListener implements Listener {
             (event.getBlock().getType() != Material.SIGN && event.getBlock().getType() != Material.SIGN_POST && event.getBlock().getType() != Material.WALL_SIGN))
             return;
 
-        Factions.getInstance().getDatabaseSaver().loadChestshops(new FactionsPlayer(player), chestshops -> {
-            final Optional<Chestshop> optionalChestshop = chestshops.stream()
-                .filter(chestshop -> chestshop.getChestLocation().toLocation().getBlock().equals(event.getBlock())
-                    || chestshop.getSignLocation().toLocation().getBlock().equals(event.getBlock()))
-                .findFirst();
-            if (!optionalChestshop.isPresent()) return;
+        final List<Chestshop> chestshops = Factions.getInstance().getDatabaseSaver().loadChestshopsSync(new FactionsPlayer(player));
+        final Optional<Chestshop> optionalChestshop = chestshops.stream()
+            .filter(chestshop -> chestshop.getChestLocation().toLocation().getBlock().equals(event.getBlock())
+                || chestshop.getSignLocation().toLocation().getBlock().equals(event.getBlock()))
+            .findFirst();
+        if (!optionalChestshop.isPresent()) {
+            event.setCancelled(true);
+            return;
+        }
 
-            final Chestshop chestshop = optionalChestshop.get();
-            Factions.getInstance().getDatabaseSaver().deleteChestshop(new FactionsPlayer(player), chestshop.getId(), () -> player.sendMessage(Messages.CHESTSHOP_DELETED.getMessage()));
-        });
+        final Chestshop chestshop = optionalChestshop.get();
+        Factions.getInstance().getDatabaseSaver().deleteChestshop(new FactionsPlayer(player), chestshop.getId(), () -> player.sendMessage(Messages.CHESTSHOP_DELETED.getMessage()));
     }
 
 }
