@@ -19,6 +19,7 @@ public class ChunkSettingsListener implements Listener {
     @EventHandler
     public void onInvClick(InventoryClickEvent event) {
         final Player player = (Player) event.getWhoClicked();
+        if (event.getClickedInventory() == null) return;
         if (!event.getClickedInventory().getName().startsWith("Chunk Settings"))
             return;
         if (event.getCurrentItem() == null || !event.getCurrentItem().hasItemMeta() || !event.getCurrentItem().getItemMeta().hasDisplayName())
