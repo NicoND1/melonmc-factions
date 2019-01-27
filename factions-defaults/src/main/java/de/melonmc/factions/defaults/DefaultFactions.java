@@ -5,6 +5,7 @@ import de.melonmc.factions.command.AbstractCommandExecutor;
 import de.melonmc.factions.command.ICommand;
 import de.melonmc.factions.database.DatabaseSaver;
 import de.melonmc.factions.defaults.command.DefaultCommandExecutor;
+import de.melonmc.factions.job.JobManager;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -19,6 +20,7 @@ public class DefaultFactions implements Factions {
 
     private final DatabaseSaver databaseSaver;
     private final ChunkManager chunkManager;
+    private final JobManager jobManager;
 
     @Override
     public AbstractCommandExecutor createCommandExecutor(String commandName, List<ICommand> commands) {
