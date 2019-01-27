@@ -16,6 +16,7 @@ import java.util.UUID;
 public class FactionsPlayer {
 
     public static final int HOMES_PER_PLAYER = 3;
+    public static final int JOBS_PER_PLAYER = 2;
 
     private final UUID uuid;
     private String name;
