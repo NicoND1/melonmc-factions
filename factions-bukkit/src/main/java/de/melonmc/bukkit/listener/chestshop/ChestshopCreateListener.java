@@ -63,7 +63,7 @@ public class ChestshopCreateListener implements Listener {
             new ConfigurableLocation(chestBlock.getLocation())
         );
 
-        event.setLine(0, player.getName());
+        event.setLine(0, "§7- §8" + player.getName() + " §7-");
         event.setLine(1, chestshop.getDisplayName());
         event.setLine(2, "§cAnzahl§7: §8" + amount);
         event.setLine(3, "§cKosten§7: §8" + costs);
