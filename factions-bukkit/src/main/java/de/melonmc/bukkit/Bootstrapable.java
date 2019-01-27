@@ -8,6 +8,7 @@ import de.melonmc.bukkit.command.home.HomeCommand;
 import de.melonmc.bukkit.command.home.HomeListCommand;
 import de.melonmc.bukkit.command.home.HomeRemoveCommand;
 import de.melonmc.bukkit.command.home.SetHomeCommand;
+import de.melonmc.bukkit.command.job.JobsCommand;
 import de.melonmc.bukkit.command.money.MoneyAddCommand;
 import de.melonmc.bukkit.command.money.MoneyPayCommand;
 import de.melonmc.bukkit.command.money.MoneyRemoveCommand;
@@ -20,6 +21,8 @@ import de.melonmc.bukkit.listener.chestshop.ChestshopBuyListener;
 import de.melonmc.bukkit.listener.chestshop.ChestshopCreateListener;
 import de.melonmc.bukkit.listener.chestshop.ChestshopDestroyListener;
 import de.melonmc.bukkit.listener.chestshop.ChestshopInteractListener;
+import de.melonmc.bukkit.listener.job.JobSettingsListener;
+import de.melonmc.bukkit.listener.job.MinerJobListener;
 import de.melonmc.factions.Factions;
 import de.melonmc.factions.IBootstrapable;
 import de.melonmc.factions.command.ICommand;
@@ -96,6 +99,12 @@ public class Bootstrapable implements IBootstrapable {
         Bukkit.getPluginManager().registerEvents(new ChestshopDestroyListener(), Factions.getPlugin());
         Bukkit.getPluginManager().registerEvents(new ChestshopInteractListener(), Factions.getPlugin());
         Bukkit.getPluginManager().registerEvents(new ChestshopBuyListener(), Factions.getPlugin());
+
+        Factions.getInstance().createCommandExecutor("jobs", Collections.singletonList(
+            new JobsCommand()
+        ));
+        Factions.getInstance().getJobManager().registerJobListener(new MinerJobListener());
+        Bukkit.getPluginManager().registerEvents(new JobSettingsListener(), Factions.getPlugin());
 
         Factions.getInstance().getDatabaseSaver().loadDefaultConfigurations(defaultConfigurations -> {
             defaultConfigurations.getNpcInformations().forEach(npcInformation -> {

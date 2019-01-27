@@ -161,7 +161,7 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
         this.chestshopCache.invalidate(uuid);
         this.jobPlayers.removeIf(jobPlayer -> {
             if (jobPlayer.getUuid().equals(uuid)) {
-                this.saveJobPlayer(jobPlayer, () -> {
+                this.saveJobPlayer(jobPlayer, false, () -> {
                 });
                 return true;
             }
@@ -783,6 +783,10 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
 
     @Override
     public void saveJobPlayer(JobPlayer jobPlayer, Runnable runnable) {
+        this.saveJobPlayer(jobPlayer, true, runnable);
+    }
+
+    private void saveJobPlayer(JobPlayer jobPlayer, boolean cache, Runnable runnable) {
         this.runAction(() -> {
             final MongoCollection<Document> collection = this.mongoDatabase.getCollection(JOB_COLLECTION);
             collection.replaceOne(Filters.eq("uuid", jobPlayer.getUuid()), new Document("uuid", jobPlayer.getUuid())
@@ -790,8 +794,18 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
                         .map(job -> new Document("type", job.getType().ordinal())
                             .append("actions", job.getActions())
                             .append("totalactions", job.getTotalActions())
-                            .append("level", job.getLevel()))),
+                            .append("level", job.getLevel()))
+                        .collect(Collectors.toList())),
                 new UpdateOptions().upsert(true));
+
+            jobPlayer.getJobs().forEach(job -> {
+                if (job.getCoinDiff() > 0)
+                    this.incrementPlayerCoins(new FactionsPlayer(jobPlayer.getUuid(), null, null, null, job.getCoinDiff()), () -> {
+                    });
+            });
+
+            if (cache && this.jobPlayers.stream().noneMatch(jobPlayer1 -> jobPlayer.getUuid().equals(jobPlayer1.getUuid())))
+                this.jobPlayers.add(jobPlayer);
 
             runnable.run();
         });
@@ -834,8 +848,9 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
                     document.get("jobs", List.class).forEach((Consumer<Document>) doc -> this.add(new Job(
                         Type.values()[Math.min(doc.getInteger("type"), Type.values().length - 1)],
                         doc.getInteger("actions"),
-                        doc.getInteger("totalactions"),
-                        doc.getLong("level")
+                        doc.getLong("totalactions"),
+                        doc.getLong("level"),
+                        0
                     )));
                 }});
 

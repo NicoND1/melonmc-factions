@@ -21,18 +21,6 @@ public abstract class JobListener implements Listener {
 
     protected final Type type;
 
-    public void isPlayerValid(Player player, Consumer<Boolean> consumer) {
-        Factions.getInstance().getDatabaseSaver().loadJobPlayer(new FactionsPlayer(player), optionalJobPlayer -> {
-            if (!optionalJobPlayer.isPresent()) {
-                consumer.accept(false);
-                return;
-            }
-
-            consumer.accept(optionalJobPlayer.get().getJobs().stream()
-                .anyMatch(job -> job.getType() == this.type));
-        });
-    }
-
     public void getJobs(Player player, Consumer<List<Job>> consumer) {
         Factions.getInstance().getDatabaseSaver().loadJobPlayer(new FactionsPlayer(player), optionalJobPlayer -> {
             if (optionalJobPlayer.isPresent())

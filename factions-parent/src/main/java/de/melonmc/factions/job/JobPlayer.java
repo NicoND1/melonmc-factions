@@ -12,7 +12,7 @@ import java.util.UUID;
 @Data
 public class JobPlayer {
 
-    public static final double MONEY_MULTIPLIER = 1.1; // +10%
+    public static final double MONEY_MULTIPLIER = .1;
     public static final int MONEY_PER_ACTION = 10;
     public static final int NEEDED_ACTION_FOR_LEVEL = 50;
 

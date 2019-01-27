@@ -83,6 +83,8 @@ public enum Messages {
     MONEY_ADD_SUCCESS("Du hast {0} {1} Coins hinzugefügt", true, true),
     MONEY_REMOVE_SUCCESS("Du hast {0} {1} Coins genommen", true, true),
 
+    JOB_LEVEL_ACHIEVED("Du bist in deinem Job {0} nun Level {1}", true, true),
+
     EMPTY_MESSAGE("%TXT%Hello, I am Nico and I am %NUM%{0} %TXT%years old%PNC%.", false, true);
 
     private final String message;

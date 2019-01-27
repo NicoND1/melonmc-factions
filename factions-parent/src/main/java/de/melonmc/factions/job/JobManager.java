@@ -10,4 +10,6 @@ public interface JobManager {
 
     Type[] getTypes();
 
+    void achieveAction(JobPlayer jobPlayer, Job job);
+
 }

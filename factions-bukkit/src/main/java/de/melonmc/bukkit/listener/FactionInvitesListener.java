@@ -1,6 +1,7 @@
 package de.melonmc.bukkit.listener;
 import de.melonmc.factions.Factions;
 import de.melonmc.factions.Messages;
+import de.melonmc.factions.job.JobPlayer;
 import de.melonmc.factions.player.FactionsPlayer;
 import de.melonmc.factions.stats.Stats;
 import net.md_5.bungee.api.chat.BaseComponent;
@@ -13,6 +14,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+
+import java.util.ArrayList;
 
 /**
  * @author Nico_ND1
@@ -44,6 +47,11 @@ public class FactionInvitesListener implements Listener {
             });
         });
         Factions.getInstance().getDatabaseSaver().loadChestshops(new FactionsPlayer(player), chestshops -> {
+        });
+        Factions.getInstance().getDatabaseSaver().loadJobPlayer(new FactionsPlayer(player), optionalJobPlayer -> {
+            if (!optionalJobPlayer.isPresent())
+                Factions.getInstance().getDatabaseSaver().saveJobPlayer(new JobPlayer(player.getUniqueId(), new ArrayList<>()), () -> {
+                });
         });
 
         Factions.getInstance().getDatabaseSaver().findFactionInvites(new FactionsPlayer(player), factionNames -> {
