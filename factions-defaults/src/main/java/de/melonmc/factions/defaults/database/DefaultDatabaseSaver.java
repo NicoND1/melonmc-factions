@@ -73,6 +73,9 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
     private final Cache<Integer, Faction> topTenFactions = CacheBuilder.newBuilder()
         .expireAfterWrite(60, TimeUnit.MINUTES)
         .build();
+    private final Cache<UUID, List<Chestshop>> chestshopCache = CacheBuilder.newBuilder()
+        .expireAfterWrite(5, TimeUnit.MINUTES)
+        .build();
     private final Map<UUID, List<Home>> homes = new HashMap<>();
     private final Map<UUID, List<Chestshop>> chestshops = new HashMap<>();
     private final List<FactionsPlayer> factionsPlayers = new ArrayList<>();
@@ -149,6 +152,7 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
         this.nameCache.invalidate(uuid);
         this.homes.remove(uuid);
         this.chestshops.remove(uuid);
+        this.chestshopCache.invalidate(uuid);
     }
 
     @Override
@@ -683,6 +687,40 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
     }
 
     @Override
+    public void findChestshop(ConfigurableLocation anyLocation, Consumer<Optional<Chestshop>> consumer) {
+        final List<Chestshop> list = new ArrayList<Chestshop>() {{
+            DefaultDatabaseSaver.this.chestshops.values().forEach(this::addAll);
+            DefaultDatabaseSaver.this.chestshopCache.asMap().values().forEach(this::addAll);
+        }};
+        final Optional<Chestshop> optionalChestshop = list.stream()
+            .filter(chestshop -> chestshop.getChestLocation().toLocation().getBlock().equals(anyLocation.toLocation().getBlock())
+                || chestshop.getSignLocation().toLocation().getBlock().equals(anyLocation.toLocation().getBlock()))
+            .findFirst();
+        if (optionalChestshop.isPresent()) {
+            consumer.accept(optionalChestshop);
+            return;
+        }
+
+        this.runAction(() -> {
+            final MongoCollection<Document> collection = this.mongoDatabase.getCollection(CHESTSHOP_COLLECTION);
+            final FindIterable<Document> findIterable = collection.find(Filters.or(
+                Filters.eq("chest-location", anyLocation.createDocument()),
+                Filters.eq("sign-location", anyLocation.createDocument())
+            ));
+            final Document document = findIterable.first();
+            if (document == null) {
+                consumer.accept(Optional.empty());
+                return;
+            }
+
+            consumer.accept(Optional.of(this.fromChestshopDocument(new FactionsPlayer(
+                document.get("owner.uuid", UUID.class),
+                document.getString("owner.name")
+            ), document)));
+        });
+    }
+
+    @Override
     public void loadChestshops(FactionsPlayer factionsPlayer, Consumer<List<Chestshop>> consumer) {
         this.runAction(() -> consumer.accept(this.loadChestshopsSync(factionsPlayer)));
     }
@@ -695,7 +733,14 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
         final FindIterable<Document> findIterable = collection.find(this.createPlayerFilter("owner.name", "owner.uuid", factionsPlayer));
         final List<Chestshop> chestshops = new ArrayList<>();
 
-        findIterable.forEach((Block<Document>) document -> chestshops.add(new Chestshop(
+        findIterable.forEach((Block<Document>) document -> chestshops.add(this.fromChestshopDocument(factionsPlayer, document)));
+
+        this.chestshops.put(factionsPlayer.getUuid(), chestshops);
+        return chestshops;
+    }
+
+    private Chestshop fromChestshopDocument(FactionsPlayer factionsPlayer, Document document) {
+        return new Chestshop(
             document.getString("id"),
             factionsPlayer,
             new ItemStack(Material.valueOf(document.get("itemstack", Document.class).getString("type"))), document.getString("displayname"),
@@ -703,9 +748,6 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
             document.getInteger("costs"),
             new ConfigurableLocation(document.get("sign-location", Document.class)),
             new ConfigurableLocation(document.get("chest-location", Document.class))
-        )));
-
-        this.chestshops.put(factionsPlayer.getUuid(), chestshops);
-        return chestshops;
+        );
     }
 }

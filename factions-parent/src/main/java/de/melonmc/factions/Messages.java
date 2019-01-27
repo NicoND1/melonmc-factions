@@ -66,6 +66,12 @@ public enum Messages {
     CHESTSHOP_AMOUNT_TOO_LITTLE("Amount muss eins oder mehr sein", true, true),
     CHESTSHOP_CREATED("Chestshop erstellt", true, true),
     CHESTSHOP_DELETED("Chestshop gelöscht", true, true),
+    CHESTSHOP_BUY_OWN("%ERR%Du kannst nicht in deinem eigenen Shop einkaufen", true, true),
+    CHESTSHOP_EMPTY("Der Shop ist zu leer", true, true),
+    CHESTSHOP_INVENTORY_FULL("Dein Inventar ist zu voll", true, true),
+    CHESTSHOP_TOO_LITTLE_MONEY("Du hast zu wenig Coins", true, true),
+    CHESTSHOP_PLAYER_BOUGHT("{0} hat {1} in einem deiner Shops für {2} Coins gekauft.", true, true),
+    CHESTSHOP_PLAYER_BOUGHT_SUCCESS("Du hast {0} für {1} Coins aus dem Shop von {2}", true, true),
 
     EMPTY_MESSAGE("%TXT%Hello, I am Nico and I am %NUM%{0} %TXT%years old%PNC%.", false, true);
 

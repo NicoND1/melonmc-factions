@@ -4,6 +4,7 @@ import de.melonmc.factions.chunk.ClaimableChunk;
 import de.melonmc.factions.faction.Faction;
 import de.melonmc.factions.home.Home;
 import de.melonmc.factions.player.FactionsPlayer;
+import de.melonmc.factions.util.ConfigurableLocation;
 
 import java.util.List;
 import java.util.Optional;
@@ -78,6 +79,8 @@ public interface DatabaseSaver {
     void saveChestshop(Chestshop chestshop, Runnable runnable);
 
     void deleteChestshop(FactionsPlayer factionsPlayer, String id, Runnable runnable);
+
+    void findChestshop(ConfigurableLocation anyLocation, Consumer<Optional<Chestshop>> consumer);
 
     void loadChestshops(FactionsPlayer factionsPlayer, Consumer<List<Chestshop>> consumer);
 
