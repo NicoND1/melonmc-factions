@@ -47,6 +47,8 @@ public class DefaultCommandExecutor extends AbstractCommandExecutor implements T
         final String subCommandName = args[0];
         final Optional<ICommand> optionalICommand = this.commands.stream()
             .filter(subCommand -> {
+                if (subCommand.getPermission() != null && !commandSender.hasPermission(subCommand.getPermission()))
+                    return false;
                 for (String alias : subCommand.getAliases())
                     if (alias.equalsIgnoreCase(subCommandName)) return true;
                 return subCommand.getName().equalsIgnoreCase(subCommandName);
@@ -88,6 +90,8 @@ public class DefaultCommandExecutor extends AbstractCommandExecutor implements T
         final List<String> list = new ArrayList<>();
         final Optional<TabInfo> optionalTabInfo = this.tabInfos.stream()
             .filter(tabInfo -> {
+                if (tabInfo.getICommand().getPermission() != null && !sender.hasPermission(tabInfo.getICommand().getPermission()))
+                    return false;
                 for (String alias : tabInfo.getICommand().getAliases())
                     if (alias.equalsIgnoreCase(args[0])) return true;
                 return tabInfo.getICommand().getName().equalsIgnoreCase(args[0]);

@@ -10,6 +10,10 @@ public interface ICommand<T extends CommandSender> {
 
     String[] getAliases();
 
+    default String getPermission() {
+        return null;
+    }
+
     Result onExecute(T sender, String label, String[] args);
 
     public enum Result {
