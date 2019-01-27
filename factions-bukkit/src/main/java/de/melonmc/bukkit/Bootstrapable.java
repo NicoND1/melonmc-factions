@@ -21,8 +21,7 @@ import de.melonmc.bukkit.listener.chestshop.ChestshopBuyListener;
 import de.melonmc.bukkit.listener.chestshop.ChestshopCreateListener;
 import de.melonmc.bukkit.listener.chestshop.ChestshopDestroyListener;
 import de.melonmc.bukkit.listener.chestshop.ChestshopInteractListener;
-import de.melonmc.bukkit.listener.job.JobSettingsListener;
-import de.melonmc.bukkit.listener.job.MinerJobListener;
+import de.melonmc.bukkit.listener.job.*;
 import de.melonmc.factions.Factions;
 import de.melonmc.factions.IBootstrapable;
 import de.melonmc.factions.command.ICommand;
@@ -104,6 +103,12 @@ public class Bootstrapable implements IBootstrapable {
             new JobsCommand()
         ));
         Factions.getInstance().getJobManager().registerJobListener(new MinerJobListener());
+        Factions.getInstance().getJobManager().registerJobListener(new FarmerJobListener());
+        Factions.getInstance().getJobManager().registerJobListener(new FishermanJobListener());
+        Factions.getInstance().getJobManager().registerJobListener(new HunterJobListener());
+        Factions.getInstance().getJobManager().registerJobListener(new SmithJobListener());
+        Factions.getInstance().getJobManager().registerJobListener(new WizardJobListener());
+        Factions.getInstance().getJobManager().registerJobListener(new WoodcutterJobListener());
         Bukkit.getPluginManager().registerEvents(new JobSettingsListener(), Factions.getPlugin());
 
         Factions.getInstance().getDatabaseSaver().loadDefaultConfigurations(defaultConfigurations -> {

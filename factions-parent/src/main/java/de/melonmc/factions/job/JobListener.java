@@ -43,4 +43,19 @@ public abstract class JobListener implements Listener {
         });
     }
 
+    public void achieveAction(Player player) {
+        this.getJob(player, optionalJob -> {
+            if (!optionalJob.isPresent()) return;
+
+            final Job job = optionalJob.get();
+            Factions.getInstance().getDatabaseSaver().loadJobPlayer(new FactionsPlayer(player), optionalJobPlayer -> {
+                if (!optionalJobPlayer.isPresent()) {
+                    player.sendMessage("§cEs kam ein Fehler auf.");
+                    return;
+                }
+                Factions.getInstance().getJobManager().achieveAction(optionalJobPlayer.get(), job);
+            });
+        });
+    }
+
 }

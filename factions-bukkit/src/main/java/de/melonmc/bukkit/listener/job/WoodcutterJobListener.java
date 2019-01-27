@@ -9,15 +9,16 @@ import org.bukkit.event.block.BlockBreakEvent;
 /**
  * @author Nico_ND1
  */
-public class MinerJobListener extends JobListener {
-    public MinerJobListener() {
-        super(Type.MINER);
+public class WoodcutterJobListener extends JobListener {
+
+    public WoodcutterJobListener() {
+        super(Type.WOODCUTTER);
     }
 
     @EventHandler(ignoreCancelled = true)
     public void onBlockBreak(BlockBreakEvent event) {
         final Player player = event.getPlayer();
-        if (event.getBlock().getType() != Material.STONE) return;
+        if (event.getBlock().getType() != Material.WOOD) return;
 
         this.achieveAction(player);
     }
