@@ -5,6 +5,7 @@ import de.melonmc.factions.player.FactionsPlayer;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Listener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +17,7 @@ import java.util.function.Consumer;
  */
 @AllArgsConstructor
 @Data
-public abstract class JobListener {
+public abstract class JobListener implements Listener {
 
     protected final Type type;
 

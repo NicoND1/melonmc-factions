@@ -19,6 +19,9 @@ import de.melonmc.factions.database.NpcInformation;
 import de.melonmc.factions.faction.Faction;
 import de.melonmc.factions.faction.Faction.Rank;
 import de.melonmc.factions.home.Home;
+import de.melonmc.factions.job.Job;
+import de.melonmc.factions.job.Job.Type;
+import de.melonmc.factions.job.JobPlayer;
 import de.melonmc.factions.player.FactionsPlayer;
 import de.melonmc.factions.stats.Stats;
 import de.melonmc.factions.util.ConfigurableLocation;
@@ -53,6 +56,7 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
     private static final String FACTORY_COLLECTION = "factory_factories";
     private static final String DEFAULT_CONFIGURATION_COLLECTION = "factory_configuration";
     private static final String CHESTSHOP_COLLECTION = "factory_chestshop";
+    private static final String JOB_COLLECTION = "factory_job";
 
     private final MongoDatabase mongoDatabase;
     private final ExecutorService executorService = Executors.newFixedThreadPool(5, new ThreadFactory() {
@@ -81,6 +85,7 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
     private final Map<UUID, List<Chestshop>> chestshops = new HashMap<>();
     private final List<FactionsPlayer> factionsPlayers = new ArrayList<>();
     private final List<Faction> factions = new ArrayList<>();
+    private final List<JobPlayer> jobPlayers = new ArrayList<>();
     private DefaultConfigurations defaultConfigurations;
 
     public DefaultDatabaseSaver(MongoConfig mongoConfig) {
@@ -154,6 +159,14 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
         this.homes.remove(uuid);
         this.chestshops.remove(uuid);
         this.chestshopCache.invalidate(uuid);
+        this.jobPlayers.removeIf(jobPlayer -> {
+            if (jobPlayer.getUuid().equals(uuid)) {
+                this.saveJobPlayer(jobPlayer, () -> {
+                });
+                return true;
+            }
+            return false;
+        });
     }
 
     @Override
@@ -766,5 +779,70 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
             new ConfigurableLocation(document.get("sign-location", Document.class)),
             new ConfigurableLocation(document.get("chest-location", Document.class))
         );
+    }
+
+    @Override
+    public void saveJobPlayer(JobPlayer jobPlayer, Runnable runnable) {
+        this.runAction(() -> {
+            final MongoCollection<Document> collection = this.mongoDatabase.getCollection(JOB_COLLECTION);
+            collection.replaceOne(Filters.eq("uuid", jobPlayer.getUuid()), new Document("uuid", jobPlayer.getUuid())
+                    .append("jobs", jobPlayer.getJobs().stream()
+                        .map(job -> new Document("type", job.getType().ordinal())
+                            .append("actions", job.getActions())
+                            .append("totalactions", job.getTotalActions())
+                            .append("level", job.getLevel()))),
+                new UpdateOptions().upsert(true));
+
+            runnable.run();
+        });
+    }
+
+    @Override
+    public void deleteJobPlayer(JobPlayer jobPlayer, Runnable runnable) {
+        this.runAction(() -> {
+            final MongoCollection<Document> collection = this.mongoDatabase.getCollection(JOB_COLLECTION);
+            collection.deleteOne(Filters.eq("uuid", jobPlayer.getUuid()));
+
+            this.jobPlayers.removeIf(jobPlayer1 -> jobPlayer.getUuid().equals(jobPlayer1.getUuid()));
+
+            runnable.run();
+        });
+    }
+
+    @Override
+    public void loadJobPlayer(FactionsPlayer factionsPlayer, Consumer<Optional<JobPlayer>> consumer) {
+        final Optional<JobPlayer> optionalJobPlayer = this.jobPlayers.stream()
+            .filter(jobPlayer1 -> factionsPlayer.getUuid().equals(jobPlayer1.getUuid()))
+            .findFirst();
+        if (optionalJobPlayer.isPresent()) {
+            consumer.accept(optionalJobPlayer);
+            return;
+        }
+
+        this.runAction(() -> {
+            final MongoCollection<Document> collection = this.mongoDatabase.getCollection(JOB_COLLECTION);
+            final FindIterable<Document> findIterable = collection.find(Filters.eq("uuid", factionsPlayer.getUuid()));
+            final Document document = findIterable.first();
+            if (document == null) {
+                consumer.accept(Optional.empty());
+                return;
+            }
+
+            final JobPlayer jobPlayer = new JobPlayer(
+                document.get("uuid", UUID.class),
+                new ArrayList<Job>() {{
+                    document.get("jobs", List.class).forEach((Consumer<Document>) doc -> this.add(new Job(
+                        Type.values()[Math.min(doc.getInteger("type"), Type.values().length - 1)],
+                        doc.getInteger("actions"),
+                        doc.getInteger("totalactions"),
+                        doc.getLong("level")
+                    )));
+                }});
+
+            if (this.jobPlayers.stream().noneMatch(jobPlayer1 -> jobPlayer.getUuid().equals(jobPlayer1.getUuid())))
+                this.jobPlayers.add(jobPlayer);
+
+            consumer.accept(Optional.of(jobPlayer));
+        });
     }
 }

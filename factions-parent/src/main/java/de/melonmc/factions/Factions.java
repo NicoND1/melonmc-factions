@@ -3,6 +3,7 @@ import de.melonmc.factions.chunk.ChunkManager;
 import de.melonmc.factions.command.AbstractCommandExecutor;
 import de.melonmc.factions.command.ICommand;
 import de.melonmc.factions.database.DatabaseSaver;
+import de.melonmc.factions.job.JobManager;
 import org.bukkit.plugin.Plugin;
 
 import java.util.List;
@@ -17,6 +18,8 @@ public interface Factions {
     AbstractCommandExecutor createCommandExecutor(String commandName, List<ICommand> commands);
 
     ChunkManager getChunkManager();
+
+    JobManager getJobManager();
 
     static Factions getInstance() {
         return FactionsInstanceHolder.getFactions();

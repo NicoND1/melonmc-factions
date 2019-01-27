@@ -1,6 +1,7 @@
 package de.melonmc.factions.job;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -11,7 +12,13 @@ import lombok.RequiredArgsConstructor;
 @Data
 public class Job {
 
+    @AllArgsConstructor
     public enum Type {
+
+        MINER("Bergbauer", "Bau Stein ab");
+
+        @Getter private final String name;
+        @Getter private final String description;
 
     }
 
