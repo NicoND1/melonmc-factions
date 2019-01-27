@@ -9,6 +9,7 @@ import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Projections;
 import com.mongodb.client.model.Sorts;
 import com.mongodb.client.model.UpdateOptions;
+import de.melonmc.factions.Factions;
 import de.melonmc.factions.chestshop.Chestshop;
 import de.melonmc.factions.chunk.ClaimableChunk;
 import de.melonmc.factions.chunk.ClaimableChunk.Flag;
@@ -283,7 +284,13 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
             final MongoCollection<Document> collection = this.mongoDatabase.getCollection(PLAYERS_COLLECTION);
             collection.updateOne(this.createPlayerFilter("name", "uuid", factionsPlayer), new Document("$inc", new Document("coins", factionsPlayer.getCoins())));
 
-            runnable.run();
+            if (Bukkit.getPlayer(factionsPlayer.getUuid()) != null || Bukkit.getPlayer(factionsPlayer.getName()) != null)
+                Factions.getInstance().getDatabaseSaver().findPlayer(factionsPlayer, optionalFactionsPlayer -> {
+                    optionalFactionsPlayer.ifPresent(factionsPlayer1 -> factionsPlayer1.setCoins(factionsPlayer1.getCoins() + factionsPlayer.getCoins()));
+                    runnable.run();
+                });
+            else
+                runnable.run();
         });
     }
 

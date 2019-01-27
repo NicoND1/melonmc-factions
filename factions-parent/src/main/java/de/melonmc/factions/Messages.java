@@ -80,6 +80,8 @@ public enum Messages {
     MONEY_PAY_TIMEOUT("Warte noch kurz", true, true),
     MONEY_PAY_SUCCESS("Du hast {0} {1} Coins geschenkt", true, true),
     MONEY_PAY_RECEIVED("{0} hat dir {1} Coins geschenkt", true, true),
+    MONEY_ADD_SUCCESS("Du hast {0} {1} Coins hinzugefügt", true, true),
+    MONEY_REMOVE_SUCCESS("Du hast {0} {1} Coins genommen", true, true),
 
     EMPTY_MESSAGE("%TXT%Hello, I am Nico and I am %NUM%{0} %TXT%years old%PNC%.", false, true);
 

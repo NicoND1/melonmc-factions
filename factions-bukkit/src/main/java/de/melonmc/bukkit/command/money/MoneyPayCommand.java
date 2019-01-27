@@ -73,9 +73,6 @@ public class MoneyPayCommand implements ICommand<Player> {
                 }
 
                 final FactionsPlayer targetFactionsPlayer = optionalFactionsPlayer1.get();
-                targetFactionsPlayer.setCoins(factionsPlayer.getCoins() + amount);
-                factionsPlayer.setCoins(factionsPlayer.getCoins() - amount);
-
                 Factions.getInstance().getDatabaseSaver().incrementPlayerCoins(new FactionsPlayer(
                     targetFactionsPlayer.getUuid(),
                     targetFactionsPlayer.getName(),
