@@ -22,7 +22,7 @@ public class Job {
         HUNTER("Jäger", "Töte Mobs", Material.BOW),
         WIZARD("Zauberer", "Braue Tränke", Material.POTION),
         FISHERMAN("Fischer", "Angel", Material.FISHING_ROD),
-        SMITH("Schmied", "Schmiede Items", Material.WOOD);
+        SMITH("Schmied", "Schmiede Items", Material.ANVIL);
 
         @Getter private final String name;
         @Getter private final String description;
