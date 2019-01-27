@@ -65,6 +65,7 @@ public class MoneyPayCommand implements ICommand<Player> {
                 player.sendMessage(Messages.MONEY_PAY_OWN_TOO_LITTLE.getMessage());
                 return;
             }
+            this.timeout.put(player.getUniqueId(), System.currentTimeMillis());
 
             Factions.getInstance().getDatabaseSaver().findPlayer(new FactionsPlayer(null, playerName), optionalFactionsPlayer1 -> {
                 if (!optionalFactionsPlayer1.isPresent()) {
