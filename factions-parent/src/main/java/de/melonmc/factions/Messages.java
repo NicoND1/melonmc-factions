@@ -86,8 +86,9 @@ public enum Messages {
     JOB_LEVEL_ACHIEVED("Du bist in deinem Job {0} nun Level {1}", true, true),
 
     TPA_TIMEOUT("Warte noch", true, true),
-    TPA_NO_REQUESTS("Niemand will zu dir", true, true),
+    TPA_REQUEST("{0} will zu dir", true, true),
     TPA_REQUEST_SENT("Du willst zu {0}", true, true),
+    TPA_REQUEST_ALREADY_SENT("Du willst bereits dahin", true, true),
     TPA_REQUEST_ACCEPT("Du hast die Anfrage von {0} akzeptiert", true, true),
     TPA_REQUEST_ACCEPTED("{0} hat deine Anfrage akzeptiert", true, true),
     TPA_REQUEST_PLAYER_OFFLINE("Der Spieler ist nicht mehr online", true, true),

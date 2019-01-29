@@ -16,3 +16,4 @@ commands:
     money:
         aliases: [muenzen]
     jobs:
+    tpa:

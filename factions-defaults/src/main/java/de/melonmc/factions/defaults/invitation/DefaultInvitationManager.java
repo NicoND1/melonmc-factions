@@ -2,9 +2,10 @@ package de.melonmc.factions.defaults.invitation;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import de.melonmc.factions.invitation.InvitationManager;
+import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang.ObjectUtils.Null;
 
 import java.util.*;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -12,76 +13,55 @@ import java.util.concurrent.TimeUnit;
  */
 public class DefaultInvitationManager implements InvitationManager {
 
-    private static final Cache<Key, List<UUID>> EMPTY_CACHE = CacheBuilder.newBuilder().build();
-    private final Map<UUID, Cache<Key, List<UUID>>> keys = Collections.synchronizedMap(new HashMap<>());
+    private static final Cache<UUID, Null> EMPTY_CACHE = CacheBuilder.newBuilder().build();
+    private final Map<UUID, Cache<Key, List<UUID>>> keys2 = Collections.synchronizedMap(new HashMap<>());
+    private final Map<Key, Map<UUID, Cache<UUID, Null>>> keys = Collections.synchronizedMap(new HashMap<>());
 
     @Override
     public boolean cache(Key key, UUID uuid, UUID secondaryUuid) {
         if (this.isCached(key, uuid, secondaryUuid)) return false;
 
-        final Cache<Key, List<UUID>> cache = this.keys.getOrDefault(uuid, CacheBuilder.newBuilder()
+        final Map<UUID, Cache<UUID, Null>> map = this.keys.getOrDefault(key, new HashMap<>());
+        final Cache<UUID, Null> cache = map.getOrDefault(uuid, CacheBuilder.newBuilder()
             .expireAfterWrite(key.getTimeout(), TimeUnit.SECONDS)
             .build());
-        try {
-            final List<UUID> uuids = cache.get(key, ArrayList::new);
-            uuids.add(secondaryUuid);
+        cache.put(secondaryUuid, ObjectUtils.NULL);
+        map.put(uuid, cache);
+        this.keys.put(key, map);
 
-            cache.put(key, uuids);
-            this.keys.put(uuid, cache);
-            return true;
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-
-        return false;
+        return true;
     }
 
     @Override
     public boolean isCached(Key key, UUID uuid, UUID secondaryUuid) {
-        final Cache<Key, List<UUID>> cache = this.keys.getOrDefault(uuid, EMPTY_CACHE);
+        final Map<UUID, Cache<UUID, Null>> map = this.keys.getOrDefault(key, Collections.emptyMap());
+        final Cache<UUID, Null> cache = map.getOrDefault(uuid, EMPTY_CACHE);
 
-        try {
-            final List<UUID> uuids = cache.get(key, Collections::emptyList);
-
-            return uuids.contains(secondaryUuid);
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-
-        return false;
+        return cache.asMap().containsKey(secondaryUuid);
     }
 
     @Override
     public int getCacheSize(Key key, UUID uuid) {
-        final Cache<Key, List<UUID>> cache = this.keys.getOrDefault(uuid, EMPTY_CACHE);
-        try {
-            final List<UUID> uuids = cache.get(key, Collections::emptyList);
+        final Map<UUID, Cache<UUID, Null>> map = this.keys.getOrDefault(key, Collections.emptyMap());
+        final Cache<UUID, Null> cache = map.getOrDefault(uuid, EMPTY_CACHE);
 
-            return uuids.size();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-
-        return 0;
+        return (int) cache.size();
     }
 
     @Override
     public void invalidate(Key key, UUID uuid) {
-        if (!this.keys.containsKey(uuid)) return;
+        final Map<UUID, Cache<UUID, Null>> map = this.keys.getOrDefault(key, Collections.emptyMap());
+        if (!map.containsKey(uuid)) return;
 
-        final Cache<Key, List<UUID>> cache = this.keys.get(uuid);
-        cache.invalidate(key);
+        map.remove(uuid);
     }
 
     @Override
     public void invalidate(Key key, UUID uuid, UUID secondaryUuid) {
         if (!this.isCached(key, uuid, secondaryUuid)) return;
 
-        final Cache<Key, List<UUID>> cache = this.keys.get(uuid);
-        final List<UUID> uuids = cache.getIfPresent(key);
-        uuids.remove(secondaryUuid);
-
-        cache.put(key, uuids);
-        this.keys.put(uuid, cache);
+        final Map<UUID, Cache<UUID, Null>> map = this.keys.getOrDefault(key, Collections.emptyMap());
+        final Cache<UUID, Null> cache = map.getOrDefault(uuid, EMPTY_CACHE);
+        cache.invalidate(uuid);
     }
 }

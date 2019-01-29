@@ -5,11 +5,11 @@ import de.melonmc.factions.Factions;
 import de.melonmc.factions.Messages;
 import de.melonmc.factions.command.AbstractCommandExecutor;
 import de.melonmc.factions.command.ICommand;
+import de.melonmc.factions.invitation.InvitationManager.Key;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.metadata.FixedMetadataValue;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,7 +23,7 @@ public class TpaCommand extends AbstractCommandExecutor {
 
     private final AbstractCommandExecutor parentCommandExecutor;
     private final Cache<UUID, Long> timeout = CacheBuilder.newBuilder()
-        .expireAfterWrite(10, TimeUnit.SECONDS)
+        .expireAfterWrite(5, TimeUnit.SECONDS)
         .build();
 
     public TpaCommand(List<ICommand> commands, AbstractCommandExecutor parentCommandExecutor) {
@@ -59,7 +59,12 @@ public class TpaCommand extends AbstractCommandExecutor {
                     return false;
                 }
 
-                target.setMetadata("tpa", new FixedMetadataValue(Factions.getPlugin(), sender.getName()));
+                if (Factions.getInstance().getInvitationManager().cache(Key.TPA, target.getUniqueId(), ((Player) sender).getUniqueId())) {
+                    sender.sendMessage(Messages.TPA_REQUEST_SENT.getMessage(target.getName()));
+                    target.sendMessage(Messages.TPA_REQUEST.getMessage(sender.getName()));
+                } else {
+                    sender.sendMessage(Messages.TPA_REQUEST_ALREADY_SENT.getMessage());
+                }
                 return true;
             }
         }

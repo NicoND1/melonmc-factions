@@ -14,6 +14,8 @@ import de.melonmc.bukkit.command.money.MoneyPayCommand;
 import de.melonmc.bukkit.command.money.MoneyRemoveCommand;
 import de.melonmc.bukkit.command.npc.NpcSetCommand;
 import de.melonmc.bukkit.command.spawn.SpawnCommand;
+import de.melonmc.bukkit.command.tpa.TpaAcceptCommand;
+import de.melonmc.bukkit.command.tpa.TpaCommand;
 import de.melonmc.bukkit.listener.FactionInvitesListener;
 import de.melonmc.bukkit.listener.NpcInteractListener;
 import de.melonmc.bukkit.listener.SpawnWorldListener;
@@ -110,6 +112,9 @@ public class Bootstrapable implements IBootstrapable {
         Factions.getInstance().getJobManager().registerJobListener(new WizardJobListener());
         Factions.getInstance().getJobManager().registerJobListener(new WoodcutterJobListener());
         Bukkit.getPluginManager().registerEvents(new JobSettingsListener(), Factions.getPlugin());
+
+        Bukkit.getServer().getPluginCommand("tpa").setExecutor(new TpaCommand(Collections.singletonList(new TpaAcceptCommand()),
+            Factions.getInstance().createCommandExecutor("tpa", Collections.singletonList(new TpaAcceptCommand()))));
 
         Factions.getInstance().getDatabaseSaver().loadDefaultConfigurations(defaultConfigurations -> {
             defaultConfigurations.getNpcInformations().forEach(npcInformation -> {
