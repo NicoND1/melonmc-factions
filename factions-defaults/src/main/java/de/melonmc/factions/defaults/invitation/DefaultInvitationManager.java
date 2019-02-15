@@ -62,6 +62,6 @@ public class DefaultInvitationManager implements InvitationManager {
 
         final Map<UUID, Cache<UUID, Null>> map = this.keys.getOrDefault(key, Collections.emptyMap());
         final Cache<UUID, Null> cache = map.getOrDefault(uuid, EMPTY_CACHE);
-        cache.invalidate(uuid);
+        cache.invalidate(secondaryUuid);
     }
 }

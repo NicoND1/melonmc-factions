@@ -5,6 +5,7 @@ import de.melonmc.factions.command.ICommand;
 import de.melonmc.factions.database.DatabaseSaver;
 import de.melonmc.factions.invitation.InvitationManager;
 import de.melonmc.factions.job.JobManager;
+import de.melonmc.factions.trade.TradeManager;
 import org.bukkit.plugin.Plugin;
 
 import java.util.List;
@@ -23,6 +24,8 @@ public interface Factions {
     JobManager getJobManager();
 
     InvitationManager getInvitationManager();
+
+    TradeManager getTradeManager();
 
     static Factions getInstance() {
         return FactionsInstanceHolder.getFactions();

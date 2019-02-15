@@ -94,6 +94,15 @@ public enum Messages {
     TPA_REQUEST_PLAYER_OFFLINE("Der Spieler ist nicht mehr online", true, true),
     TPA_NO_REQUESTS_FROM("Der will nicht zu dir", true, true),
 
+    TRADE_TIMEOUT("Warte noch", true, true),
+    TRADE_REQUEST("{0} will handeln", true, true),
+    TRADE_REQUEST_SENT("Du willst mit {0} handeln", true, true),
+    TRADE_REQUEST_ALREADY_SENT("Du willst bereits mit ihm handeln", true, true),
+    TRADE_REQUEST_ACCEPT("Du hast die Handels-Anfrage von {0} akzeptiert", true, true),
+    TRADE_REQUEST_ACCEPTED("{0} hat deine Handels-Anfrage akzeptiert", true, true),
+    TRADE_REQUEST_PLAYER_OFFLINE("Der Spieler ist nicht mehr online", true, true),
+    TRADE_NO_REQUESTS_FROM("Der will nicht mit dir handeln", true, true),
+
     EMPTY_MESSAGE("%TXT%Hello, I am Nico and I am %NUM%{0} %TXT%years old%PNC%.", false, true);
 
     private final String message;

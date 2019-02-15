@@ -16,6 +16,8 @@ import de.melonmc.bukkit.command.npc.NpcSetCommand;
 import de.melonmc.bukkit.command.spawn.SpawnCommand;
 import de.melonmc.bukkit.command.tpa.TpaAcceptCommand;
 import de.melonmc.bukkit.command.tpa.TpaCommand;
+import de.melonmc.bukkit.command.trade.TradeAcceptCommand;
+import de.melonmc.bukkit.command.trade.TradeCommand;
 import de.melonmc.bukkit.listener.FactionInvitesListener;
 import de.melonmc.bukkit.listener.NpcInteractListener;
 import de.melonmc.bukkit.listener.SpawnWorldListener;
@@ -94,6 +96,14 @@ public class Bootstrapable implements IBootstrapable {
             new MoneyPayCommand(),
             new MoneyAddCommand(),
             new MoneyRemoveCommand()
+        ));
+
+        final List<ICommand> tradeCommands = Arrays.asList(
+            new TradeAcceptCommand()
+        );
+        Factions.getPlugin().getServer().getPluginCommand("trade").setExecutor(new TradeCommand(
+            tradeCommands,
+            Factions.getInstance().createCommandExecutor("trade", tradeCommands)
         ));
 
         Bukkit.getPluginManager().registerEvents(new ChestshopCreateListener(), Factions.getPlugin());
