@@ -60,7 +60,7 @@ public class ChunkSettingsListener implements Listener {
                 final Faction faction = optionalFaction.get();
                 if (faction.getRank(new FactionsPlayer(player)) == Rank.UNKNOWN) {
                     event.setCancelled(true);
-                    player.sendMessage(Messages.CHUNK_SETTINGS_BUILD_DENY.getMessage());
+                    player.sendMessage(Messages.CHUNK_SETTINGS_BUILD_CANCEL.getMessage());
                 }
             }
         });
@@ -75,7 +75,7 @@ public class ChunkSettingsListener implements Listener {
                 final Faction faction = optionalFaction.get();
                 if (faction.getRank(new FactionsPlayer(player)) == Rank.UNKNOWN) {
                     event.setCancelled(true);
-                    player.sendMessage(Messages.CHUNK_SETTINGS_BUILD_DENY.getMessage());
+                    player.sendMessage(Messages.CHUNK_SETTINGS_BUILD_CANCEL.getMessage());
                 }
             }
         });

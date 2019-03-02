@@ -51,5 +51,4 @@ public class ClaimableChunk {
     public boolean isFlagSet(Flag flag) {
         return this.flags.getOrDefault(flag, flag.defaultValue);
     }
-
 }
