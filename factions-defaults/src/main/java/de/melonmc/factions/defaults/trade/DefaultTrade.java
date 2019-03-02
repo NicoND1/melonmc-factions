@@ -1,9 +1,11 @@
 package de.melonmc.factions.defaults.trade;
 import de.melonmc.factions.trade.Trade;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 /**
  * @author Nico_ND1
@@ -12,10 +14,22 @@ public class DefaultTrade extends Trade {
 
     private final Inventory inventory;
 
-    public DefaultTrade(Player leftPlayer, Player rightPlayer) {
+    DefaultTrade(Player leftPlayer, Player rightPlayer) {
         super(leftPlayer, rightPlayer);
 
         this.inventory = Bukkit.createInventory(null, 4 * 9, "Trade: " + leftPlayer.getName() + " | " + rightPlayer.getName());
+        this.inventory.setItem(4, this.createItemStack(Material.EMERALD_BLOCK, "Annehmen"));
+        this.inventory.setItem(13, this.createItemStack(Material.IRON_BARDING, "<- " + this.leftPlayer.getName()));
+        this.inventory.setItem(22, this.createItemStack(Material.IRON_BARDING, this.rightPlayer.getName() + " ->"));
+        this.inventory.setItem(31, this.createItemStack(Material.REDSTONE_BLOCK, "Ablehnen"));
+    }
+
+    private ItemStack createItemStack(Material material, String name) {
+        final ItemStack itemStack = new ItemStack(material);
+        final ItemMeta itemMeta = itemStack.getItemMeta();
+        itemMeta.setDisplayName(name);
+        itemStack.setItemMeta(itemMeta);
+        return itemStack;
     }
 
     @Override
@@ -65,7 +79,9 @@ public class DefaultTrade extends Trade {
     @Override
     public void cancel() {
         this.leftPlayer.sendMessage("Cancel");
+        this.leftPlayer.closeInventory();
         this.rightPlayer.sendMessage("Cancel");
+        this.rightPlayer.closeInventory();
     }
 
     private ItemStack[] getItems(Player player) {

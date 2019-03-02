@@ -29,6 +29,8 @@ public class DefaultTradeManager implements TradeManager {
 
     @Override
     public Trade createTrade(Player leftPlayer, Player rightPlayer) {
-        return new DefaultTrade(leftPlayer, rightPlayer);
+        final Trade trade = new DefaultTrade(leftPlayer, rightPlayer);
+        this.trades.add(trade);
+        return trade;
     }
 }

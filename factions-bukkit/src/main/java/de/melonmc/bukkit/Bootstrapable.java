@@ -26,6 +26,7 @@ import de.melonmc.bukkit.listener.chestshop.ChestshopCreateListener;
 import de.melonmc.bukkit.listener.chestshop.ChestshopDestroyListener;
 import de.melonmc.bukkit.listener.chestshop.ChestshopInteractListener;
 import de.melonmc.bukkit.listener.job.*;
+import de.melonmc.bukkit.listener.trade.TradeListener;
 import de.melonmc.factions.Factions;
 import de.melonmc.factions.IBootstrapable;
 import de.melonmc.factions.command.ICommand;
@@ -105,6 +106,7 @@ public class Bootstrapable implements IBootstrapable {
             tradeCommands,
             Factions.getInstance().createCommandExecutor("trade", tradeCommands)
         ));
+        Bukkit.getPluginManager().registerEvents(new TradeListener(), Factions.getPlugin());
 
         Bukkit.getPluginManager().registerEvents(new ChestshopCreateListener(), Factions.getPlugin());
         Bukkit.getPluginManager().registerEvents(new ChestshopDestroyListener(), Factions.getPlugin());

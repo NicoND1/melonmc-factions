@@ -12,8 +12,8 @@ import org.bukkit.inventory.ItemStack;
 @Data
 public abstract class Trade {
 
-    protected static final int[] LEFT_ITEMS = {1};
-    protected static final int[] RIGHT_ITEMS = {1};
+    protected static final int[] LEFT_ITEMS = {0, 1, 2, 3};
+    protected static final int[] RIGHT_ITEMS = {5, 6, 7, 8};
     protected final ItemStack[] leftItems = new ItemStack[LEFT_ITEMS.length];
     protected final ItemStack[] rightItems = new ItemStack[RIGHT_ITEMS.length];
     protected final Player leftPlayer;
