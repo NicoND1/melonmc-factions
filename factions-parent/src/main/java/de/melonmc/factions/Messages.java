@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public enum Messages {
 
+    CHUNK_SETTINGS_BUILD_DENY("Hier kannst du §cnicht §7bauen§8, §7da dieser Chunk einer anderen Fraktion gehört§8!", true, true),
+
     TOO_MANY_HOMES("%ERR%Du hast bereits %NUM%{0} %ERR%Homes.", true, true),
     HOME_UPDATED("%TXT%Du hast den Homepunkt (%NUM%{0}%TXT%) aktualisiert.", true, true),
     HOME_SET("%TXT%Du hast einen neuen Homepunkt gesetzt (%NUM%{0}%TXT%)", true, true),

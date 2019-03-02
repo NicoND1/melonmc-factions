@@ -8,7 +8,10 @@ import de.melonmc.factions.faction.Faction.Rank;
 import de.melonmc.factions.player.FactionsPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
 /**
@@ -48,4 +51,33 @@ public class ChunkSettingsListener implements Listener {
         });
     }
 
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onBlockPlace(BlockPlaceEvent event) {
+        Player player = event.getPlayer();
+
+        Factions.getInstance().getChunkManager().getFaction(new ClaimableChunk(player.getLocation().getChunk()), optionalFaction -> {
+            if (optionalFaction.isPresent()) {
+                final Faction faction = optionalFaction.get();
+                if (faction.getRank(new FactionsPlayer(player)) == Rank.UNKNOWN) {
+                    event.setCancelled(true);
+                    player.sendMessage(Messages.CHUNK_SETTINGS_BUILD_DENY.getMessage());
+                }
+            }
+        });
+    }
+
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onBlockBreak(BlockBreakEvent event) {
+        Player player = event.getPlayer();
+
+        Factions.getInstance().getChunkManager().getFaction(new ClaimableChunk(player.getLocation().getChunk()), optionalFaction -> {
+            if (optionalFaction.isPresent()) {
+                final Faction faction = optionalFaction.get();
+                if (faction.getRank(new FactionsPlayer(player)) == Rank.UNKNOWN) {
+                    event.setCancelled(true);
+                    player.sendMessage(Messages.CHUNK_SETTINGS_BUILD_DENY.getMessage());
+                }
+            }
+        });
+    }
 }
