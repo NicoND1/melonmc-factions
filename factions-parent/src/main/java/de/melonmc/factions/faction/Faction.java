@@ -27,7 +27,7 @@ public class Faction {
     @AllArgsConstructor
     public enum Rank {
 
-        ADMIN("§c", "Admin"), MODERATOR("§a", "Mod"), PLAYER("§7", "Spieler");
+        ADMIN("§c", "Admin"), MODERATOR("§a", "Mod"), PLAYER("§7", "Spieler"), UNKNOWN("", "Unknown");
 
         @Getter private final String colorCode;
         @Getter private final String prefix;
@@ -61,7 +61,7 @@ public class Faction {
             .filter(entry -> entry.getKey().getUuid().equals(factionsPlayer.getUuid()))
             .findFirst()
             .map(Entry::getValue)
-            .orElse(Rank.PLAYER);
+            .orElse(Rank.UNKNOWN);
     }
 
     public void incrementEloPoints(int increment) {
