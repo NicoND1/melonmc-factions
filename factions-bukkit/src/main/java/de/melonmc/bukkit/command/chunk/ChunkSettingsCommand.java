@@ -1,4 +1,5 @@
 package de.melonmc.bukkit.command.chunk;
+import de.MelonMC.RufixHD.SystemAPI.APIs.InventarAPI;
 import de.melonmc.bukkit.listener.chunk.settings.ChunkSettingsListener;
 import de.melonmc.factions.Factions;
 import de.melonmc.factions.Messages;
@@ -55,15 +56,14 @@ public class ChunkSettingsCommand implements ICommand<Player> {
                     return;
                 }
 
-                final Inventory inventory = Bukkit.createInventory(null, 36, "Chunk Settings");
+                InventarAPI.createAnimatedInv(54, "§8» §aChunksettings", player);
+
                 for (int i = 0; i < Flag.values().length; i++) {
                     final Flag flag = Flag.values()[i];
 
-                    inventory.setItem(i, this.createItem(flag.getMaterial(), flag.name(), (short) 0));
-                    inventory.setItem(i + 9, this.createItem(Material.INK_SACK, "An / Aus", (short) (claimableChunk.isFlagSet(flag) ? 10 : 1)));
+                    InventarAPI.setItemDelayed(player, 4, i + 20, this.createItem(flag.getMaterial(), flag.name(), (short) 0));
+                    InventarAPI.setItemDelayed(player, 4,i + 9 + 20, this.createItem(Material.INK_SACK, "§aAn §8/ §cAus", (short) (claimableChunk.isFlagSet(flag) ? 10 : 1)));
                 }
-
-                player.openInventory(inventory);
             });
         });
 

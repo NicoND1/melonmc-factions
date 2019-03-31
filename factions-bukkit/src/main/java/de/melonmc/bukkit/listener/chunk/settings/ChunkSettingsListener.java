@@ -6,6 +6,8 @@ import de.melonmc.factions.chunk.ClaimableChunk.Flag;
 import de.melonmc.factions.faction.Faction;
 import de.melonmc.factions.faction.Faction.Rank;
 import de.melonmc.factions.player.FactionsPlayer;
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -22,16 +24,16 @@ public class ChunkSettingsListener implements Listener {
     @EventHandler
     public void onInvClick(InventoryClickEvent event) {
         final Player player = (Player) event.getWhoClicked();
+
         if (event.getClickedInventory() == null) return;
-        if (!event.getClickedInventory().getName().startsWith("Chunk Settings"))
+        if (!event.getClickedInventory().getName().equals("§8» §aChunksettings"))
             return;
-        if (event.getCurrentItem() == null || !event.getCurrentItem().hasItemMeta() || !event.getCurrentItem().getItemMeta().hasDisplayName())
-            return;
+        if (event.getCurrentItem() == null) return;
 
         event.setCancelled(true);
 
         final int index = event.getSlot() > 8 ? event.getSlot() - 9 : event.getSlot();
-        final Flag flag = Flag.values()[index];
+        final Flag flag = Flag.values()[index- 20];
         Factions.getInstance().getChunkManager().getFaction(new ClaimableChunk(player.getLocation().getChunk()), optionalFaction -> {
             if (!optionalFaction.isPresent()) { // TODO: Maybe send info message
                 player.closeInventory();
@@ -47,7 +49,14 @@ public class ChunkSettingsListener implements Listener {
             final ClaimableChunk claimableChunk = Factions.getInstance().getChunkManager().getClaimableChunk(player.getLocation().getChunk());
             claimableChunk.getFlags().put(flag, !claimableChunk.isFlagSet(flag));
 
-            Factions.getInstance().getDatabaseSaver().saveFaction(faction, () -> player.performCommand("chunk settings"));
+            player.closeInventory();
+
+            Bukkit.getScheduler().runTaskLater(Factions.getPlugin(), new Runnable() {
+                @Override
+                public void run() {
+                    Factions.getInstance().getDatabaseSaver().saveFaction(faction, () -> player.performCommand("chunk settings"));
+                }
+            },1);
         });
     }
 
