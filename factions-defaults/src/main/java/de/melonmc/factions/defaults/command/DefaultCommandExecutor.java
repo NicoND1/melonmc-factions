@@ -80,7 +80,20 @@ public class DefaultCommandExecutor extends AbstractCommandExecutor implements T
     }
 
     private void sendHelpMessage(CommandSender commandSender, String label) {
-        commandSender.sendMessage("send help message"); // TODO: Build help message
+        // TODO: Build help message
+
+        if (label.equals("home")) {
+            commandSender.sendMessage("§8§m--------------§8[ §a§lHomeSystem §8]§8§m--------------");
+            commandSender.sendMessage("");
+            commandSender.sendMessage("§a/home set NAME §8● §7Homepunkt setzen");
+            commandSender.sendMessage("§a/home NAME §8● §7Zu einem Homepunkt teleportieren");
+            commandSender.sendMessage("§a/home list §8● §7homepunkte anzeigen");
+            commandSender.sendMessage("");
+            commandSender.sendMessage("§8§m----------------------------------------");
+            return;
+        }
+
+        commandSender.sendMessage("Hilfenachricht wurde noch nicht erstellt!");
     }
 
     @Override
