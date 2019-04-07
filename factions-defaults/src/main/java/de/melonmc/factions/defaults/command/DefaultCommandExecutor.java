@@ -85,9 +85,21 @@ public class DefaultCommandExecutor extends AbstractCommandExecutor implements T
         if (label.equals("home")) {
             commandSender.sendMessage("§8§m--------------§8[ §a§lHomeSystem §8]§8§m--------------");
             commandSender.sendMessage("");
-            commandSender.sendMessage("§a/home set NAME §8● §7Homepunkt setzen");
-            commandSender.sendMessage("§a/home NAME §8● §7Zu einem Homepunkt teleportieren");
-            commandSender.sendMessage("§a/home list §8● §7homepunkte anzeigen");
+            commandSender.sendMessage(" §a/home set NAME §8● §7Homepunkt setzen");
+            commandSender.sendMessage(" §a/home NAME §8● §7Zu einem Homepunkt teleportieren");
+            commandSender.sendMessage(" §a/home list §8● §7Homepunkte anzeigen");
+            commandSender.sendMessage("");
+            commandSender.sendMessage("§8§m----------------------------------------");
+            return;
+        }
+
+        if (label.equals("chunk")) {
+            commandSender.sendMessage("§8§m--------------§8[ §a§lChunkSystem §8]§8§m--------------");
+            commandSender.sendMessage("");
+            commandSender.sendMessage(" §a/chunk claim §8● §7Chunk für deine fraktion sichern");
+            commandSender.sendMessage(" §a/chunk unclaim §8● §7Chunk für deine fraktion entsichern");
+            commandSender.sendMessage(" §a/chunk settings §8● §7Chunkeinstellungen ändern");
+            commandSender.sendMessage(" §a/chunk list §8● §7gesicherte Chunks anzeigen");
             commandSender.sendMessage("");
             commandSender.sendMessage("§8§m----------------------------------------");
             return;
