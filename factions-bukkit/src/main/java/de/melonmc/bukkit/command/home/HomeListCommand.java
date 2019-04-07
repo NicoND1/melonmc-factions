@@ -2,6 +2,7 @@ package de.melonmc.bukkit.command.home;
 import de.melonmc.factions.Factions;
 import de.melonmc.factions.Messages;
 import de.melonmc.factions.command.ICommand;
+import de.melonmc.factions.faction.Faction;
 import de.melonmc.factions.home.Home;
 import de.melonmc.factions.player.FactionsPlayer;
 import org.bukkit.entity.Player;
@@ -60,6 +61,13 @@ public class HomeListCommand implements ICommand<Player> {
     }
 
     private void listHomes(Player player, List<Home> list) {
-        // TODO: List homes
+        String Homes = null;
+        for (int i = 0; i < list.size(); i++) {
+            Homes = Homes + list.get(i).getName() + "§8, §e";
+        }
+        Homes = Homes.replace("null", "");
+        Homes = Homes.substring(0, Homes.length() - 6);
+
+        player.sendMessage(Messages.HOMES_LIST.getMessage(Homes));
     }
 }

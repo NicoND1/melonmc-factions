@@ -7,12 +7,13 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public enum Messages {
     TOO_MANY_HOMES("Du hast bereits %NUM%{0} %TXT%Homes§8.", true, true),
-    HOME_UPDATED("%TXT%Du hast den Homepunkt §8(§e%NUM%{0}%TXT%§8) §7aktualisiert§8.", true, true),
+    HOME_UPDATED("%TXT%Du hast den Homepunkt §e%NUM%{0} §7aktualisiert§8.", true, true),
     HOME_SET("%TXT%Du hast einen neuen Homepunkt gesetzt §8(§e%NUM%{0}%TXT%§8)", true, true),
     HOME_NOT_FOUND("Dieser Homepunkt wurde §cnicht §7gefunden§8.", true, true),
     HOME_DELETED("Der Homepunkt wurde §cgelöscht§8.", true, true),
     HOMES_EMPTY("Du hast noch §ckeine §7Homepunkte gesetzt§8!", true, true),
     HOMES_EMPTY_OTHER("Der Spieler hat noch §ckeine %TXT%Homepunkte§8.", true, true),
+    HOMES_LIST("Deine Homepunkte§8: §e{0}§8.", true, true),
 
     PLAYER_NOT_FOUND("Dieser Spieler wurde §cnicht gefunden§8!", true, true),
 

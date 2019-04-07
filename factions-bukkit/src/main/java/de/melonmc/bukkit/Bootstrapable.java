@@ -36,7 +36,9 @@ import de.melonmc.factions.database.NpcInformation;
 import lombok.Data;
 import lombok.Getter;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.inventory.ItemStack;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
@@ -144,6 +146,12 @@ public class Bootstrapable implements IBootstrapable {
                             npcInformation.getLocation().toLocation()
                         );
                         npc.spawn();
+
+                        npc.setHeadSlot(new ItemStack(Material.DIAMOND_HELMET));
+                        npc.setChestSlot(new ItemStack(Material.DIAMOND_CHESTPLATE));
+                        npc.setLegSlot(new ItemStack(Material.DIAMOND_LEGGINGS));
+                        npc.setShoeSlot(new ItemStack(Material.DIAMOND_BOOTS));
+                        npc.setHandSlot(new ItemStack(Material.IRON_SWORD));
 
                         this.ncps.put(npcInformation, npc);
                     } catch (IllegalAccessException | NoSuchMethodException | InstantiationException | InvocationTargetException e) {
