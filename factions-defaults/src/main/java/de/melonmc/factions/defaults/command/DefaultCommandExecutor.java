@@ -105,6 +105,47 @@ public class DefaultCommandExecutor extends AbstractCommandExecutor implements T
             return;
         }
 
+        if (label.equals("trade")) {
+            commandSender.sendMessage("§8§m--------------§8[ §a§lTradeSystem §8]§8§m--------------");
+            commandSender.sendMessage("");
+            commandSender.sendMessage(" §a/trade NAME §8● §7Handelseinladung senden");
+            commandSender.sendMessage(" §a/trade accept NAME §8● §7Handelseinladung annehmen");
+            commandSender.sendMessage(" §a/trade deny NAME §8● §7Handelsanfrage ablehnen");
+            commandSender.sendMessage("");
+            commandSender.sendMessage("§8§m----------------------------------------");
+            return;
+        }
+
+        if (label.equals("tpa")) {
+            commandSender.sendMessage("§8§m--------------§8[ §a§lTeleportSystem §8]§8§m--------------");
+            commandSender.sendMessage("");
+            commandSender.sendMessage(" §a/tpa NAME §8● §7Teleportanfrage senden");
+            commandSender.sendMessage(" §a/tpa accept NAME §8● §7Teleportanfrage annehmen");
+            commandSender.sendMessage(" §a/tpa deny NAME §8● §7Teleportanfrage ablehnen");
+            commandSender.sendMessage("");
+            commandSender.sendMessage("§8§m----------------------------------------");
+            return;
+        }
+
+        if (label.equals("jobs")) {
+            commandSender.sendMessage("§8§m--------------§8[ §a§lJobSystem §8]§8§m--------------");
+            commandSender.sendMessage("");
+            commandSender.sendMessage(" §a/jobs list §8● §7Alle Jobs ansehen");
+            commandSender.sendMessage("");
+            commandSender.sendMessage("§8§m----------------------------------------");
+            return;
+        }
+
+        if (label.equals("money")) {
+            commandSender.sendMessage("§8§m--------------§8[ §a§lCoinSystem §8]§8§m--------------");
+            commandSender.sendMessage("");
+            commandSender.sendMessage(" §a/money info §8● §7Kontostand anzeigen");
+            commandSender.sendMessage(" §a/money pay NAME §8● §7Geld vergeben");
+            commandSender.sendMessage("");
+            commandSender.sendMessage("§8§m----------------------------------------");
+            return;
+        }
+
         commandSender.sendMessage("Hilfenachricht wurde noch nicht erstellt!");
     }
 
