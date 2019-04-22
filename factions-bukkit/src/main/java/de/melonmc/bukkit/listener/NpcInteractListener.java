@@ -22,5 +22,4 @@ public class NpcInteractListener implements Listener {
             }
         });
     }
-
 }

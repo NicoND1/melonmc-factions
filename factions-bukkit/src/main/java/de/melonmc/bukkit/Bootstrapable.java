@@ -38,6 +38,7 @@ import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.WorldCreator;
 import org.bukkit.inventory.ItemStack;
 
 import java.lang.reflect.InvocationTargetException;
@@ -168,6 +169,12 @@ public class Bootstrapable implements IBootstrapable {
 
             Bukkit.getPluginManager().registerEvents(new SpawnWorldListener(world), Factions.getPlugin());
         });
+
+        //Load Worlds
+        Bukkit.createWorld(new WorldCreator("Bauwelt-Normal").generateStructures(false));
+        Bukkit.getWorlds().add(Bukkit.getWorld("Bauwelt-Normal"));
+        Bukkit.createWorld(new WorldCreator("Bauwelt-Episch").generateStructures(false));
+        Bukkit.getWorlds().add(Bukkit.getWorld("Bauwelt-Episch"));
     }
 
     @Override

@@ -24,30 +24,48 @@ public class NpcSetCommand implements ICommand<Player> {
     @Override
     public Result onExecute(Player sender, String label, String[] args) {
         if (args.length == 2) {
-            final String nameHeader = args[0];
-            final String nameFooter = args[1];
+            final String nameHeader = args[0].replace("&", "§");
+            final String nameFooter = args[1].replace("&", "§");
+
             Factions.getInstance().getDatabaseSaver().loadDefaultConfigurations(defaultConfigurations -> {
-                final Optional<NpcInformation> optionalNpcInformation = defaultConfigurations.getNpcInformations().stream()
-                    .filter(npcInformation -> npcInformation.getNameHeader().equals(nameHeader))
-                    .findAny();
 
-                if (optionalNpcInformation.isPresent()) {
-                    optionalNpcInformation.ifPresent(npcInformation -> {
-                        npcInformation.setLocation(new ConfigurableLocation(sender.getLocation()));
-                        sender.sendMessage("Die Location wurde geupdatet.");
-                    });
+                sender.sendMessage(nameHeader);
+                sender.sendMessage(nameFooter);
+
+                if(nameHeader.equals("teleport")){
+                    final Optional<NpcInformation> optionalNpcInformation = defaultConfigurations.getNpcInformations().stream()
+                        .filter(npcInformation -> npcInformation.getNameFooter().equals(nameFooter))
+                        .findAny();
+
+                    if (optionalNpcInformation.isPresent()) {
+                        optionalNpcInformation.ifPresent(npcInformation -> {
+                            npcInformation.setTeleportLocation(new ConfigurableLocation(sender.getLocation()));
+                            Factions.getInstance().getDatabaseSaver().saveDefaultConfigurations(defaultConfigurations, () -> sender.sendMessage("Die teleport Location wurde geupdatet."));
+                        });
+                    } else {
+                        Factions.getInstance().getDatabaseSaver().saveDefaultConfigurations(defaultConfigurations, () -> sender.sendMessage("Setze zuerst den NPC spawn."));
+                    }
                 } else {
-                    defaultConfigurations.getNpcInformations().add(new NpcInformation(
-                        nameHeader,
-                        nameFooter,
-                        new ConfigurableLocation(sender.getLocation()),
-                        new ConfigurableLocation("world", 0, 0, 0, 0, 0)
-                    ));
+                    final Optional<NpcInformation> optionalNpcInformation = defaultConfigurations.getNpcInformations().stream()
+                        .filter(npcInformation -> npcInformation.getNameHeader().equals(nameHeader))
+                        .findAny();
 
-                    Factions.getInstance().getDatabaseSaver().saveDefaultConfigurations(defaultConfigurations, () -> sender.sendMessage("Hinzugefügt."));
+                    if (optionalNpcInformation.isPresent()) {
+                        optionalNpcInformation.ifPresent(npcInformation -> {
+                            npcInformation.setLocation(new ConfigurableLocation(sender.getLocation()));
+                            Factions.getInstance().getDatabaseSaver().saveDefaultConfigurations(defaultConfigurations, () -> sender.sendMessage("Die NPC spawn Location wurde geupdatet."));
+                        });
+                    } else {
+                        defaultConfigurations.getNpcInformations().add(new NpcInformation(
+                            nameHeader,
+                            nameFooter,
+                            new ConfigurableLocation(sender.getLocation()),
+                            new ConfigurableLocation("world", 0, 0, 0, 0, 0)
+                        ));
+                        Factions.getInstance().getDatabaseSaver().saveDefaultConfigurations(defaultConfigurations, () -> sender.sendMessage("NPC Hinzugefügt."));
+                    }
                 }
             });
-
             return Result.SUCCESSFUL;
         }
 
