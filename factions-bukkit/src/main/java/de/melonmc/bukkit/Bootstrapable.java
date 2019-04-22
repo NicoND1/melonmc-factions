@@ -10,6 +10,7 @@ import de.melonmc.bukkit.command.home.HomeRemoveCommand;
 import de.melonmc.bukkit.command.home.SetHomeCommand;
 import de.melonmc.bukkit.command.job.JobsCommand;
 import de.melonmc.bukkit.command.money.MoneyAddCommand;
+import de.melonmc.bukkit.command.money.MoneyInfoCommand;
 import de.melonmc.bukkit.command.money.MoneyPayCommand;
 import de.melonmc.bukkit.command.money.MoneyRemoveCommand;
 import de.melonmc.bukkit.command.npc.NpcSetCommand;
@@ -103,7 +104,8 @@ public class Bootstrapable implements IBootstrapable {
         Factions.getInstance().createCommandExecutor("money", Arrays.asList(
             new MoneyPayCommand(),
             new MoneyAddCommand(),
-            new MoneyRemoveCommand()
+            new MoneyRemoveCommand(),
+            new MoneyInfoCommand()
         ));
 
         final List<ICommand> tradeCommands = Arrays.asList(

@@ -10,7 +10,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>factions-bukkit</artifactId>
-  <version>0.0.78</version>
+  <version>0.0.88</version>
 
   <dependencies>
     <dependency>
@@ -23,6 +23,12 @@
       <groupId>de.melonmc</groupId>
       <artifactId>factions-parent</artifactId>
       <version>0.20.3</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>de.melonmc</groupId>
+      <artifactId>factions-parent</artifactId>
+      <version>0.20.41</version>
       <scope>compile</scope>
     </dependency>
   </dependencies>

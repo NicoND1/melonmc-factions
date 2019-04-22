@@ -82,6 +82,7 @@ public enum Messages {
     MONEY_PAY_RECEIVED("§3{0} §7hat dir §e{1} §7Münzen geschenkt§8.", true, true),
     MONEY_ADD_SUCCESS("Du hast §3{0} §e{1} §7Münzen hinzugefügt§8!", true, true),
     MONEY_REMOVE_SUCCESS("Du hast §3{0} §e{1} §7Münzen genommen§8!", true, true),
+    MONEY_INFO("Du hast §e{0} §7Münzen§8!", true, true),
 
     JOB_LEVEL_ACHIEVED("§7Du bist in deinem Job §e{0} §7nun Level §3{1}§8!", true, true),
 
