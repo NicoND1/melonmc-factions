@@ -1,4 +1,5 @@
 package de.melonmc.bukkit.command.job;
+import de.MelonMC.RufixHD.SystemAPI.APIs.InventarAPI;
 import de.melonmc.factions.Factions;
 import de.melonmc.factions.command.ICommand;
 import de.melonmc.factions.job.Job;
@@ -39,15 +40,21 @@ public class JobsCommand implements ICommand<Player> {
             }
 
             final JobPlayer jobPlayer = optionalJobPlayer.get();
-            final int invSize = Type.values().length % 9 == 0 ?
-                (Type.values().length / 9) * 9 :
-                (Type.values().length / 9) * 9 + 9;
-            final Inventory inventory = Bukkit.createInventory(null, invSize, "Jobs");
+
+            InventarAPI.createAnimatedInv(45, "§8» §aJobs", player);
+            InventarAPI.setItem(player, 19, null);
+            InventarAPI.setItem(player, 20, null);
+            InventarAPI.setItem(player, 21, null);
+            InventarAPI.setItem(player, 22, null);
+            InventarAPI.setItem(player, 23, null);
+            InventarAPI.setItem(player, 24, null);
+            InventarAPI.setItem(player, 25, null);
+
             for (Type type : Type.values()) {
                 final boolean hasJob = jobPlayer.getJobs().stream().anyMatch(job -> job.getType() == type);
                 final ItemStack itemStack = new ItemStack(type.getMaterial());
                 final ItemMeta itemMeta = itemStack.getItemMeta();
-                itemMeta.setDisplayName((hasJob ? "§a" : "§c") + type.getName());
+                itemMeta.setDisplayName((hasJob ? "§8» §a" : "§8» §c") + type.getName());
 
                 final List<String> lore = new ArrayList<>();
                 if (hasJob) {
@@ -60,10 +67,8 @@ public class JobsCommand implements ICommand<Player> {
                 itemMeta.setLore(lore);
                 itemStack.setItemMeta(itemMeta);
 
-                inventory.addItem(itemStack);
+                player.getOpenInventory().getTopInventory().addItem(itemStack);
             }
-
-            player.openInventory(inventory);
         });
 
         return Result.SUCCESSFUL;

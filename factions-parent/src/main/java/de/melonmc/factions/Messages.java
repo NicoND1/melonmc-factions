@@ -85,6 +85,7 @@ public enum Messages {
     MONEY_INFO("Du hast §e{0} §7Münzen§8!", true, true),
 
     JOB_LEVEL_ACHIEVED("§7Du bist in deinem Job §e{0} §7nun Level §3{1}§8!", true, true),
+    JOB_MAX("§7Du hast schon §e3 §7Jobs bitte kündige erst einen Job§8, §7damit du einen neuen antreten kannst§8.", true, true),
 
     TPA_TIMEOUT("Warte noch§8!", true, true),
     TPA_REQUEST("§3{0} will zu dir§8! §7Nehme die Anfrage mit §a/tpa accept {0} §7an oder lehne sie mit §c/tpa deny {0} §7ab§8!", true, true),
