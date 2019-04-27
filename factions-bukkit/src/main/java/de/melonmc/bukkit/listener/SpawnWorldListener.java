@@ -22,15 +22,16 @@ public class SpawnWorldListener implements Listener {
     }
 
     @EventHandler
-    public void onBlockPlace(BlockPlaceEvent event) { // TODO: Uncomment
-        //if (event.getPlayer().getWorld().equals(this.world))
-        //    event.setCancelled(true);
+    public void onBlockPlace(BlockPlaceEvent event) {
+        if (event.getBlockPlaced().getLocation().getWorld().equals(this.world)) {
+            //event.setCancelled(true);
+        }
     }
 
     @EventHandler
-    public void onBlockBreak(BlockBreakEvent event) { // TODO: Uncomment
-        //if (event.getPlayer().getWorld().equals(this.world))
-        //    event.setCancelled(true);
+    public void onBlockBreak(BlockBreakEvent event) {
+        if (event.getBlock().getLocation().getWorld().equals(this.world)) {
+            //event.setCancelled(true);
+        }
     }
-
 }

@@ -1,7 +1,6 @@
 package de.melonmc.bukkit.listener;
 
-import de.MelonMC.RufixHD.SystemAPI.APIs.NickAPI;
-import de.MelonMC.RufixHD.SystemAPI.APIs.PlayerStateAPI;
+import de.melonmc.bukkit.manager.scoreboard.ScorebaordManager;
 import de.melonmc.factions.Factions;
 import de.melonmc.factions.Messages;
 import org.bukkit.Bukkit;
@@ -24,15 +23,11 @@ public class PlayerJoinListener implements Listener{
 
         event.setJoinMessage(null);
 
-        if (NickAPI.getMySQL(player.getUniqueId().toString()) == 1) {
-            NickAPI.randomNick(player);
-            PlayerStateAPI.setNicked(player);
-        }
-
         Bukkit.getScheduler().runTaskLater(Factions.getPlugin(), new Runnable() {
             @Override
             public void run() {
                 Bukkit.broadcastMessage(Messages.PLAYER_JOIN.getMessage(player.getDisplayName()));
+                ScorebaordManager.setBoard(player);
             }
         }, 20);
     }

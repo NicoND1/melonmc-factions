@@ -19,10 +19,7 @@ import de.melonmc.bukkit.command.tpa.TpaAcceptCommand;
 import de.melonmc.bukkit.command.tpa.TpaCommand;
 import de.melonmc.bukkit.command.trade.TradeAcceptCommand;
 import de.melonmc.bukkit.command.trade.TradeCommand;
-import de.melonmc.bukkit.listener.FactionInvitesListener;
-import de.melonmc.bukkit.listener.NpcInteractListener;
-import de.melonmc.bukkit.listener.PlayerJoinListener;
-import de.melonmc.bukkit.listener.SpawnWorldListener;
+import de.melonmc.bukkit.listener.*;
 import de.melonmc.bukkit.listener.chestshop.ChestshopBuyListener;
 import de.melonmc.bukkit.listener.chestshop.ChestshopCreateListener;
 import de.melonmc.bukkit.listener.chestshop.ChestshopDestroyListener;
@@ -30,6 +27,7 @@ import de.melonmc.bukkit.listener.chestshop.ChestshopInteractListener;
 import de.melonmc.bukkit.listener.job.*;
 import de.melonmc.bukkit.listener.trade.PlayerQuitListener;
 import de.melonmc.bukkit.listener.trade.TradeListener;
+import de.melonmc.bukkit.manager.scoreboard.ScorebaordManager;
 import de.melonmc.factions.Factions;
 import de.melonmc.factions.IBootstrapable;
 import de.melonmc.factions.command.ICommand;
@@ -59,12 +57,15 @@ public class Bootstrapable implements IBootstrapable {
     public void onStart() {
         instance = this;
 
+        ScorebaordManager.updateBoard();
+
         Factions.getInstance().getDatabaseSaver().loadAllFactions();
 
         Bukkit.getPluginManager().registerEvents(new FactionInvitesListener(), Factions.getPlugin());
         Bukkit.getPluginManager().registerEvents(new NpcInteractListener(), Factions.getPlugin());
         Bukkit.getPluginManager().registerEvents(new PlayerJoinListener(), Factions.getPlugin());
         Bukkit.getPluginManager().registerEvents(new PlayerQuitListener(), Factions.getPlugin());
+        Bukkit.getPluginManager().registerEvents(new PlayerChatListener(), Factions.getPlugin());
 
         Factions.getPlugin().getServer().getPluginCommand("spawn").setExecutor(new SpawnCommand());
 

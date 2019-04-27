@@ -1,4 +1,4 @@
-package de.melonmc.factions.scoreboard;
+package de.melonmc.bukkit.manager.scoreboard;
 
 import de.MelonMC.RufixHD.SystemAPI.APIs.ScoreboardAPI;
 import de.melonmc.factions.Factions;
@@ -59,7 +59,7 @@ public class ScorebaordManager {
                         final FactionsPlayer factionsPlayer = optionalFactionsPlayer.get();
                         Factions.getInstance().getDatabaseSaver().findFaction(factionsPlayer, optionalFaction -> {
 
-                            all.setPlayerListName("§8[§a" + optionalFaction.get().getTag() + "§8]" + all.getDisplayName());
+                            all.setPlayerListName(all.getDisplayName() + " §8[§a" + optionalFaction.get().getTag() + "§8]");
 
                             if (optionalFaction.isPresent()) {
                                 ScoreboardAPI.updateBoard(5, " §8➥ §a" + optionalFaction.get().getName(), all.getScoreboard());
