@@ -110,8 +110,6 @@ public enum Messages {
     PLAYER_JOIN("§3{0} §7hat Factions §abetreten§8!", true, true),
     PLAYER_QUIT("§3{0} §7hat Factions §cverlassen§8!", true, true),
 
-    NICK_CANCEL_ACTION("§7Du kannst dich als Spectator §cnicht §7nicken§8!", true, true),
-
     EMPTY_MESSAGE("%TXT%Hello, I am Nico and I am %NUM%{0} %TXT%years old%PNC%.", false, true);
 
     private final String message;

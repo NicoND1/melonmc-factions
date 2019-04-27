@@ -26,9 +26,14 @@ public class PlayerJoinListener implements Listener{
         Bukkit.getScheduler().runTaskLater(Factions.getPlugin(), new Runnable() {
             @Override
             public void run() {
-                Bukkit.broadcastMessage(Messages.PLAYER_JOIN.getMessage(player.getDisplayName()));
                 ScorebaordManager.setBoard(player);
+                Bukkit.getScheduler().runTaskLater(Factions.getPlugin(), new Runnable() {
+                    @Override
+                    public void run() {
+                        Bukkit.broadcastMessage(Messages.PLAYER_JOIN.getMessage(player.getDisplayName()));
+                    }
+                }, 10);
             }
-        }, 20);
+        }, 10);
     }
 }

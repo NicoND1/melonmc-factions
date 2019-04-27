@@ -59,13 +59,14 @@ public class ScorebaordManager {
                         final FactionsPlayer factionsPlayer = optionalFactionsPlayer.get();
                         Factions.getInstance().getDatabaseSaver().findFaction(factionsPlayer, optionalFaction -> {
 
-                            all.setPlayerListName(all.getDisplayName() + " §8[§a" + optionalFaction.get().getTag() + "§8]");
-
                             if (optionalFaction.isPresent()) {
+                                all.setPlayerListName(all.getDisplayName() + " §8[§a" + optionalFaction.get().getTag() + "§8]");
                                 ScoreboardAPI.updateBoard(5, " §8➥ §a" + optionalFaction.get().getName(), all.getScoreboard());
                             } else {
+                                all.setPlayerListName(all.getDisplayName());
                                 ScoreboardAPI.updateBoard(5, " §8➥ §aKeine", all.getScoreboard());
                             }
+
                             if (optionalFactionsPlayer.isPresent()) {
                                 ScoreboardAPI.updateBoard(2, " §8➥ §a" +  optionalFactionsPlayer.get().getCoins(), all.getScoreboard());
                             } else {
