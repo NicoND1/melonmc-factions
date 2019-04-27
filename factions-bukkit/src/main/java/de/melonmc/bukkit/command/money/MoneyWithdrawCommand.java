@@ -53,6 +53,12 @@ public class MoneyWithdrawCommand implements ICommand<Player> {
                 player.sendMessage("§cEs kam ein Fehler auf");
                 return;
             }
+
+            if (optionalFactionsPlayer.get().getCoins() < amount) {
+                player.sendMessage(Messages.MONEY_PAY_OWN_TOO_LITTLE.getMessage());
+                return;
+            }
+
             Factions.getInstance().getDatabaseSaver().incrementPlayerCoins(new FactionsPlayer(
                 null,
                 player.getName(),
