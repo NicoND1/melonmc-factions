@@ -9,10 +9,7 @@ import de.melonmc.bukkit.command.home.HomeListCommand;
 import de.melonmc.bukkit.command.home.HomeRemoveCommand;
 import de.melonmc.bukkit.command.home.SetHomeCommand;
 import de.melonmc.bukkit.command.job.JobsCommand;
-import de.melonmc.bukkit.command.money.MoneyAddCommand;
-import de.melonmc.bukkit.command.money.MoneyInfoCommand;
-import de.melonmc.bukkit.command.money.MoneyPayCommand;
-import de.melonmc.bukkit.command.money.MoneyRemoveCommand;
+import de.melonmc.bukkit.command.money.*;
 import de.melonmc.bukkit.command.npc.NpcSetCommand;
 import de.melonmc.bukkit.command.spawn.SpawnCommand;
 import de.melonmc.bukkit.command.tpa.TpaAcceptCommand;
@@ -25,6 +22,7 @@ import de.melonmc.bukkit.listener.chestshop.ChestshopCreateListener;
 import de.melonmc.bukkit.listener.chestshop.ChestshopDestroyListener;
 import de.melonmc.bukkit.listener.chestshop.ChestshopInteractListener;
 import de.melonmc.bukkit.listener.job.*;
+import de.melonmc.bukkit.listener.money.DepositMoneyListener;
 import de.melonmc.bukkit.listener.trade.PlayerQuitListener;
 import de.melonmc.bukkit.listener.trade.TradeListener;
 import de.melonmc.bukkit.manager.scoreboard.ScorebaordManager;
@@ -66,6 +64,7 @@ public class Bootstrapable implements IBootstrapable {
         Bukkit.getPluginManager().registerEvents(new PlayerJoinListener(), Factions.getPlugin());
         Bukkit.getPluginManager().registerEvents(new PlayerQuitListener(), Factions.getPlugin());
         Bukkit.getPluginManager().registerEvents(new PlayerChatListener(), Factions.getPlugin());
+        Bukkit.getPluginManager().registerEvents(new DepositMoneyListener(), Factions.getPlugin());
 
         Factions.getPlugin().getServer().getPluginCommand("spawn").setExecutor(new SpawnCommand());
 
@@ -106,9 +105,10 @@ public class Bootstrapable implements IBootstrapable {
             new MoneyPayCommand(),
             new MoneyAddCommand(),
             new MoneyRemoveCommand(),
+            new MoneyWithdrawCommand(),
             new MoneyInfoCommand()
         ));
-
+        /*
         final List<ICommand> tradeCommands = Arrays.asList(
             new TradeAcceptCommand()
         );
@@ -116,6 +116,7 @@ public class Bootstrapable implements IBootstrapable {
             tradeCommands,
             Factions.getInstance().createCommandExecutor("trade", tradeCommands)
         ));
+        */
         Bukkit.getPluginManager().registerEvents(new TradeListener(), Factions.getPlugin());
 
         Bukkit.getPluginManager().registerEvents(new ChestshopCreateListener(), Factions.getPlugin());

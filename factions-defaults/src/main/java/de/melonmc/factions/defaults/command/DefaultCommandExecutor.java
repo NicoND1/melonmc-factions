@@ -141,6 +141,17 @@ public class DefaultCommandExecutor extends AbstractCommandExecutor implements T
             commandSender.sendMessage("");
             commandSender.sendMessage(" §a/money info §8● §7Kontostand anzeigen");
             commandSender.sendMessage(" §a/money pay NAME §8● §7Geld vergeben");
+            commandSender.sendMessage(" §a/money withdraw ZAHL §8● §7Scheck ausstellen");
+            commandSender.sendMessage("");
+            commandSender.sendMessage("§8§m----------------------------------------");
+            return;
+        }
+
+        if (label.equals("npc")) {
+            commandSender.sendMessage("§8§m--------------§8[ §a§lNPCSystem §8]§8§m--------------");
+            commandSender.sendMessage("");
+            commandSender.sendMessage(" §a/npc set NAME NAME §8● §7NPC setzen");
+            commandSender.sendMessage(" §a/npc teleport set NAME §8● §7Teleportpunkt setzen");
             commandSender.sendMessage("");
             commandSender.sendMessage("§8§m----------------------------------------");
             return;

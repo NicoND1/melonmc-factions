@@ -58,7 +58,7 @@ public enum Messages {
     FACTION_CHUNK_CLAIMED("Der Chunk wurde §agesichert§8!", true, true),
     FACTION_CHUNK_NOT_CLAIMED("Der Chunk wurde §cnicht §7gesichert§8!", true, true),
     FACTION_CHUNK_NOT_OWN("Das ist §cnicht §7dein Chunk§8!", true, true),
-    FACTION_CHUNK_MAX("Deine Fraktion kann nur §e{0} §7Chunks haben§8.", true, true),
+    FACTION_CHUNK_MAX("Deine Fraktion kann nur §e{0} §7Chunks haben§8. Deine Fraktion benötigt mehr Mitglieder um mehr Chunks zu sichern§8.", true, true),
 
     CHESTSHOP_UNKNOWN_MATERIAL("Gebe ein gültiges Material an§8.", true, true),
     CHESTSHOP_UNKNOWN_INTEGER("Gebe eine gültige Zahl an §8(§7ohne Komma§8, §7...§8)", true, true),
@@ -82,6 +82,8 @@ public enum Messages {
     MONEY_PAY_RECEIVED("§3{0} §7hat dir §e{1} §7Münzen geschenkt§8.", true, true),
     MONEY_ADD_SUCCESS("Du hast §3{0} §e{1} §7Münzen hinzugefügt§8!", true, true),
     MONEY_REMOVE_SUCCESS("Du hast §3{0} §e{1} §7Münzen genommen§8!", true, true),
+    MONEY_WHITDRAW_SUCCESS("Du hast einen Scheck von §e{0} §7Münzen ausgestellt§8.", true, true),
+    MONEY_DEPOSIT_SUCCESS("Du hast einen Scheck von §e{0} §7Münzen eingelöst§8.", true, true),
     MONEY_INFO("Du hast §e{0} §7Münzen§8!", true, true),
 
     JOB_LEVEL_ACHIEVED("§7Du bist in deinem Job §e{0} §7nun Level §3{1}§8!", true, true),
