@@ -157,7 +157,7 @@ public class DefaultCommandExecutor extends AbstractCommandExecutor implements T
             return;
         }
 
-        if (label.equals("npc")) {
+        if (label.equals("fraktion") || label.equals("f")) {
             commandSender.sendMessage("§8§m--------------§8[ §a§lFraktionSystem §8]§8§m--------------");
             commandSender.sendMessage("");
             commandSender.sendMessage(" §a/Fraktion list §8● §7Mitglieder deiner Fraktion anzeigen");
