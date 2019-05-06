@@ -157,6 +157,27 @@ public class DefaultCommandExecutor extends AbstractCommandExecutor implements T
             return;
         }
 
+        if (label.equals("npc")) {
+            commandSender.sendMessage("§8§m--------------§8[ §a§lFraktionSystem §8]§8§m--------------");
+            commandSender.sendMessage("");
+            commandSender.sendMessage(" §a/Fraktion list §8● §7Mitglieder deiner Fraktion anzeigen");
+            commandSender.sendMessage(" §a/Fraktion create NAME TAG §8● §7Fraktion erstellen");
+            commandSender.sendMessage(" §a/Fraktion invite NAME §8● §7Spieler in eine fraktion einladen");
+            commandSender.sendMessage(" §a/Fraktion accept NAME §8● §7Fraktionseinladung annehmen");
+            commandSender.sendMessage(" §a/Fraktion deny NAME §8● §7Fraktionseinladung ablehnen");
+            commandSender.sendMessage(" §a/Fraktion kick NAME §8● §7Spieler aus der Fraktion kicken");
+            commandSender.sendMessage(" §a/Fraktion leave §8● §7Fraktion verlassen");
+            commandSender.sendMessage(" §a/Fraktion promote NAME RANG §8(§7Spieler§8, §7Moderator§8, §7Leitung§8) §8● §7Rang vergeben");
+            commandSender.sendMessage(" §a/Fraktion stats §8● §7Fraktionsstats anzeigen");
+            commandSender.sendMessage(" §a/Fraktion stats NAME §8● §7Fraktionsstats einer andren Fraktion anzeigen");
+            commandSender.sendMessage(" §a/Fraktion setbase §8● §7Fraktionsbase setzen");
+            commandSender.sendMessage(" §a/Fraktion base §8● §7Zur Fraktionsbase teleportieren");
+            commandSender.sendMessage(" §a/Fraktion toplist §8● §7Zeigt die 10 bessten Fraktionen an");
+            commandSender.sendMessage("");
+            commandSender.sendMessage("§8§m----------------------------------------");
+            return;
+        }
+
         commandSender.sendMessage("Hilfenachricht wurde noch nicht erstellt!");
     }
 

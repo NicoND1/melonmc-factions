@@ -15,7 +15,24 @@ import org.bukkit.entity.Player;
 public class ScorebaordManager {
     public static void setBoard(Player player) {
         String uuid = player.getUniqueId().toString();
-        ScoreboardAPI.animationTitle = new String[]{"§8» §2F§ar§2aktionen","§8» §2Fr§aa§2ktionen"};
+        ScoreboardAPI.animationTitle = new String[]{
+            "§8» §2F§araktionen",
+            "§8» §aF§2r§aaktionen",
+            "§8» §aFr§2a§aktionen",
+            "§8» §aFra§2k§ationen",
+            "§8» §aFrak§2t§aionen",
+            "§8» §aFrakt§2i§aonen",
+            "§8» §aFrakti§2o§anen",
+            "§8» §aFraktio§2n§aen",
+            "§8» §aFraktion§2e§an",
+            "§8» §aFraktio§2n§aen",
+            "§8» §aFrakti§2o§anen",
+            "§8» §aFrakt§2i§aonen",
+            "§8» §aFrak§2t§aionen",
+            "§8» §aFra§2k§ationen",
+            "§8» §aFr§2a§aktionen",
+            "§8» §aF§2r§aaktionen",
+            "§8» §2F§araktionen"};
         ScoreboardAPI.createBoard(player);
         ScoreboardAPI.setLineStetic(7, " ", player);
         ScoreboardAPI.setLineStetic(6, "× §7Fraktion", player);
@@ -60,7 +77,7 @@ public class ScorebaordManager {
                         Factions.getInstance().getDatabaseSaver().findFaction(factionsPlayer, optionalFaction -> {
 
                             if (optionalFaction.isPresent()) {
-                                all.setPlayerListName(all.getDisplayName() + " §8[§a" + optionalFaction.get().getTag() + "§8]");
+                                all.setPlayerListName(all.getDisplayName() + " §8» §a§o" + optionalFaction.get().getTag());
                                 ScoreboardAPI.updateBoard(5, " §8➥ §a" + optionalFaction.get().getName(), all.getScoreboard());
                             } else {
                                 all.setPlayerListName(all.getDisplayName());

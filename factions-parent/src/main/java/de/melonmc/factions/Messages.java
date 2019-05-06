@@ -109,8 +109,8 @@ public enum Messages {
 
     CHUNK_SETTINGS_BUILD_CANCEL("Hier kannst du §cnicht §7bauen§8, §7da dieser Chunk einer anderen Fraktion gehört§8!", true, true),
 
-    PLAYER_JOIN("§3{0} §7hat Factions §abetreten§8!", true, true),
-    PLAYER_QUIT("§3{0} §7hat Factions §cverlassen§8!", true, true),
+    PLAYER_JOIN("§3{0} §7hat Fraktionen §abetreten§8!", true, true),
+    PLAYER_QUIT("§3{0} §7hat Fraktionen §cverlassen§8!", true, true),
 
     EMPTY_MESSAGE("%TXT%Hello, I am Nico and I am %NUM%{0} %TXT%years old%PNC%.", false, true);
 
@@ -136,7 +136,7 @@ public enum Messages {
 
     private class Statics {
 
-        static final String PREFIX = "§8» §a§lFactions§8 ● §7";
+        static final String PREFIX = "§8» §a§lFraktionen§8 ● §7";
         static final String NUMBERS = "§e";
         static final String DEFAULT_TEXT = "§7";
         static final String PUNCTUATION_MARK = "§8";

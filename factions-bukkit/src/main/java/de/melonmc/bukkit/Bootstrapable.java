@@ -152,11 +152,11 @@ public class Bootstrapable implements IBootstrapable {
                         );
                         npc.spawn();
 
-                        npc.setHeadSlot(new ItemStack(Material.DIAMOND_HELMET));
-                        npc.setChestSlot(new ItemStack(Material.DIAMOND_CHESTPLATE));
-                        npc.setLegSlot(new ItemStack(Material.DIAMOND_LEGGINGS));
-                        npc.setShoeSlot(new ItemStack(Material.DIAMOND_BOOTS));
-                        npc.setHandSlot(new ItemStack(Material.IRON_SWORD));
+                        if(npcInformation.getNameHeader().equals("§8» §aBauwelt§8-§aNormal"))
+                        npc.updateSkin("eyJ0aW1lc3RhbXAiOjE1NTcwMDQ4ODg0ODIsInByb2ZpbGVJZCI6ImI4ZjYyYTMyMTE4ZDQ3MDZiYzExZTRmMzI3N2FkOTllIiwicHJvZmlsZU5hbWUiOiJGYXJtZXIiLCJzaWduYXR1cmVSZXF1aXJlZCI6dHJ1ZSwidGV4dHVyZXMiOnsiU0tJTiI6eyJ1cmwiOiJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlLzY5NDI3MmNjZjZkYzljODA4MjFkZGFkMzI2MWE5MzAyNjYwMTU3OGUwMDRmNTM5YTRiODA3ZDk5MWJjNzdlMWYifX19", "uZt19CfmngQcjt2KhP+2mAKIyACl56SxB2luAOd6fqvmR9HskLyUGzdNYS3YIdFlcgKpRck39yM3gY/NQ1Qlx5XcOum7VJUEaHr3rBpOVrns/uvRSTz9wZhkUgcnVe8IAu4nho9hMOalM2loh10wLd6R5YEJCp7oWnFHLJ/8yMrmEiULLWsF39Hq5bKt53UgH+cIP77S6WK749AG1VwwGJepsCHXspJyOtLuti70p2VOWEgmAnU0B2RAZoprSMbnWJmAT8RLl3JUGaG1UNcZllJIGNL/Hs08wtjsYZ0DdNwd3x4c+TbRUqUoK5B2b+5VeXmBd9j1GVkf9vYeiL0vCJujdOuo4Y0iVgEOyRAf82dKZ1KAsYp7y3J0mx2acTaKTw0tlA2lepnHiPipNrLubur8m98suux2d6rpzm89ZeUM+HllOe/tDJUbFluixt0Vbw/pHDIGUSzjTNro9b+eOx4rpIrb0xFC7S4Qqx0xd/iLwnOmF1tG3teeJNqzq1KJCB3dhQRdzFeumkmgDWuSdK/YPQtC/dA/AScjujGRQvqiKRpUDzU4GcaEslP9TAw1Kd8VlDeSKs8iv2snL9kIKyMuUt5jJcvKr92VCQJCCL2cY52F501Cm8t/w9CK9pscQ263lNjpTFywKBhcQEzRpX8nNeJJpD4K8MbAc/mxnlk=");
+
+                        if(npcInformation.getNameHeader().equals("§8» §aBauwelt§8-§aEpisch"))
+                        npc.updateSkin("eyJ0aW1lc3RhbXAiOjE1NTcwMDU4NjkwMDEsInByb2ZpbGVJZCI6IjE1YTcwZGM4MDM4OTQ2MDRhY2E3NjQyZGQwOTdjN2E3IiwicHJvZmlsZU5hbWUiOiJkaXJ0Iiwic2lnbmF0dXJlUmVxdWlyZWQiOnRydWUsInRleHR1cmVzIjp7IlNLSU4iOnsidXJsIjoiaHR0cDovL3RleHR1cmVzLm1pbmVjcmFmdC5uZXQvdGV4dHVyZS81ZjRiNjUxY2NkYzcwODk5YmE2Y2IwMmFhMWE0ZmE5MjNlMWU2MDBjZTU5ZTUyODkwNDk1OWUwNDE1NmY0OGFhIn19fQ==", "elP3i/v6XfYoznEjrpaQjM9HIx1NsLWZi3iefm85m37SGFPpBj9GUBba2JJAR3wRZDZZhKXyBiLTlpNV5GQH34J7y12oqaGIkC26SQqm4QMdj55jYkZ+bo0RtID0nfjgUeO+YkIaYicOAsph6r+ZOLj6uJg+lQ6AfyhoRGorTtxCocTqGu89BqR/NTiaazKPTPfHNzhwZ8kDUsKDkQPyHASopxeBf1FhqW7fW3/4TXwfrAPJ7IYcfsA1Vqgsix+0bvT6BvPNfL5hUGwbLUTqABD8WHRngvZ/BQDDcNrEu8V8UUmA5fvFjSdq0BvdZydTEtHHrGCCEchUNDTAZZmmpt8OPO7+ilvzpomw1DNAVxgdScEElFfaJNh/voVrEr1CKv0KfGi1sW6epfgyB+pDit7ML7GxNxc6WyE9IpP3rMYWvWmWsteAm1bHIg7D0sOTI+Lw6XW7Nrvi/iuXU/84FIPIH6Ah2st9z3hK66CXAmxQPSm0RENPcaDje/iTvAi4cdGce9p+gWaYEI56ANExjG3Uc8f4dVGeFe5gYm8CUV5lrthWa86kKC3jBp3Y89Am1zHq0LR3bWK92rElbd7hzRL2amzGyiFkNHykjnKQFjfjy/yXSE/n1Fp9Qlg3PMNyNQdnGopq67mTL9ygMJjlwkphT6/K/wQWspK28NrHoNs=");
 
                         this.ncps.put(npcInformation, npc);
                     } catch (IllegalAccessException | NoSuchMethodException | InstantiationException | InvocationTargetException e) {

@@ -24,14 +24,14 @@ public class SpawnWorldListener implements Listener {
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event) {
         if (event.getBlockPlaced().getLocation().getWorld().equals(this.world)) {
-            //event.setCancelled(true);
+            event.setCancelled(true);
         }
     }
 
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
         if (event.getBlock().getLocation().getWorld().equals(this.world)) {
-            //event.setCancelled(true);
+            event.setCancelled(true);
         }
     }
 }

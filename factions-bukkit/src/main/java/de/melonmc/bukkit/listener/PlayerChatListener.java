@@ -21,7 +21,11 @@ public class PlayerChatListener implements Listener {
         Factions.getInstance().getDatabaseSaver().findPlayer(new FactionsPlayer(null, player.getName(), null), optionalFactionsPlayer -> {
             final FactionsPlayer factionsPlayer = optionalFactionsPlayer.get();
             Factions.getInstance().getDatabaseSaver().findFaction(factionsPlayer, optionalFaction -> {
-                event.setFormat("§a" + optionalFaction.get().getTag() + " §8» " + event.getPlayer().getDisplayName() + "§8: §7" + event.getMessage());
+                if(optionalFaction.isPresent()) {
+                    event.setFormat("§a" + optionalFaction.get().getTag() + " §8» " + event.getPlayer().getDisplayName() + "§8: §7" + event.getMessage());
+                } else {
+                    event.setFormat("§aKeine §8» " + event.getPlayer().getDisplayName() + "§8: §7" + event.getMessage());
+                }
             });
         });
     }

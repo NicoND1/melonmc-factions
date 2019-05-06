@@ -20,7 +20,7 @@ public class MessagesTest {
     public void testTooManyHomesMessage() {
         final String message = Messages.TOO_MANY_HOMES.getMessage(3);
         Assert.assertEquals("Message should be equal!",
-            "§8» §a§lFactions§8 ● §7Du hast bereits §e3 §7Homes§8.",
+            "§8» §a§lFraktionen§8 ● §7Du hast bereits §e3 §7Homes§8.",
             message);
     }
 
