@@ -65,6 +65,8 @@ public class Bootstrapable implements IBootstrapable {
         Bukkit.getPluginManager().registerEvents(new PlayerQuitListener(), Factions.getPlugin());
         Bukkit.getPluginManager().registerEvents(new PlayerChatListener(), Factions.getPlugin());
         Bukkit.getPluginManager().registerEvents(new DepositMoneyListener(), Factions.getPlugin());
+        Bukkit.getPluginManager().registerEvents(new PlayerRespawnListener(), Factions.getPlugin());
+
 
         Factions.getPlugin().getServer().getPluginCommand("spawn").setExecutor(new SpawnCommand());
 

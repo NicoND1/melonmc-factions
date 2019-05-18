@@ -107,6 +107,8 @@ public enum Messages {
     TRADE_REQUEST_PLAYER_OFFLINE("§7Der Spieler ist §cnicht §7mehr online§8.", true, true),
     TRADE_NO_REQUESTS_FROM("Dieser Spieler will mit dir §cnicht §7handeln§8.", true, true),
 
+    CHUNK_SETTINGS_ENTITY_DAMAGE_CANCEL("Hier kannst du §ckeine §7Tiere töten§8, §7da dieser Chunk einer anderen Fraktion gehört§8!", true, true),
+    CHUNK_SETTINGS_INTERACT_CANCEL("Hier kannst du §cnicht §7interagieren§8, §7da dieser Chunk einer anderen Fraktion gehört§8!", true, true),
     CHUNK_SETTINGS_BUILD_CANCEL("Hier kannst du §cnicht §7bauen§8, §7da dieser Chunk einer anderen Fraktion gehört§8!", true, true),
 
     PLAYER_JOIN("§3{0} §7hat Fraktionen §abetreten§8!", true, true),
@@ -143,5 +145,4 @@ public enum Messages {
         static final String ERROR = "§c";
 
     }
-
 }

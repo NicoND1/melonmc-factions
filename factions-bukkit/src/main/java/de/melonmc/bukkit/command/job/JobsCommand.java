@@ -60,7 +60,11 @@ public class JobsCommand implements ICommand<Player> {
                 if (hasJob) {
                     final Job job = jobPlayer.getJobs().stream().filter(job1 -> job1.getType() == type).findAny().get();
                     lore.add("§7Level§8: §e" + job.getLevel());
-                    lore.add("§7Aktionen bis zum Levelup§8: §e" + (JobPlayer.NEEDED_ACTION_FOR_LEVEL - job.getActions()));
+                    if(job.getLevel() <= 9) {
+                        lore.add("§7Aktionen bis zum Levelup§8: §e" + (JobPlayer.NEEDED_ACTION_FOR_LEVEL - job.getActions()));
+                    } else {
+                        lore.add("§7Maximales Level §aerreicht§8!");
+                    }
                     lore.add(" ");
                 }
                 lore.addAll(Arrays.asList(type.getDescription().split("\n")));

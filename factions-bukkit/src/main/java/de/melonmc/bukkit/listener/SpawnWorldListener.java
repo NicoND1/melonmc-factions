@@ -6,6 +6,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityInteractEvent;
 
 /**
  * @author Nico_ND1
@@ -30,6 +31,13 @@ public class SpawnWorldListener implements Listener {
 
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
+        if (event.getBlock().getLocation().getWorld().equals(this.world)) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onEntityInteract(EntityInteractEvent event) {
         if (event.getBlock().getLocation().getWorld().equals(this.world)) {
             event.setCancelled(true);
         }

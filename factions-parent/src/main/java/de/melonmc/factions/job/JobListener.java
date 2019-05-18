@@ -1,5 +1,6 @@
 package de.melonmc.factions.job;
 import de.melonmc.factions.Factions;
+import de.melonmc.factions.Messages;
 import de.melonmc.factions.job.Job.Type;
 import de.melonmc.factions.player.FactionsPlayer;
 import lombok.AllArgsConstructor;
@@ -48,11 +49,20 @@ public abstract class JobListener implements Listener {
             if (!optionalJob.isPresent()) return;
 
             final Job job = optionalJob.get();
+
             Factions.getInstance().getDatabaseSaver().loadJobPlayer(new FactionsPlayer(player), optionalJobPlayer -> {
                 if (!optionalJobPlayer.isPresent()) {
                     player.sendMessage("§cEs kam ein Fehler auf.");
                     return;
                 }
+                Factions.getInstance().getDatabaseSaver().incrementPlayerCoins(new FactionsPlayer(
+                    null,
+                    player.getName(),
+                    null,
+                    null,
+                    job.getCoinDiff()
+                ), () -> player.updateInventory());
+
                 Factions.getInstance().getJobManager().achieveAction(optionalJobPlayer.get(), job);
             });
         });

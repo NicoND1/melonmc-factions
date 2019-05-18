@@ -20,16 +20,15 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 public class DepositMoneyListener implements Listener {
     @EventHandler
-    public void onInteract(PlayerInteractEvent event){
+    public void onInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
-
-        if(event.getItem().getType().equals(Material.PAPER) && event.getItem().getItemMeta().getDisplayName().startsWith("§8» §aScheck")){
-            if(event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_AIR) {
+        if (event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_AIR) {
+            if (event.getItem().getType().equals(Material.PAPER) && event.getItem().getItemMeta().getDisplayName().startsWith("§8» §aScheck")) {
                 String amounttext = event.getItem().getItemMeta().getDisplayName().split("§2")[1];
                 int amount = Integer.parseInt(amounttext);
 
                 ItemStack steck = event.getItem();
-                if(steck.getAmount() > 1) {
+                if (steck.getAmount() > 1) {
                     steck.setAmount(steck.getAmount() - 1);
                 } else {
                     player.getInventory().setItemInHand(null);

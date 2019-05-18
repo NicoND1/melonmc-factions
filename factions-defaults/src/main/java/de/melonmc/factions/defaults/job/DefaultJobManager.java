@@ -28,9 +28,12 @@ public class DefaultJobManager implements JobManager {
         if (job.getActions() >= JobPlayer.NEEDED_ACTION_FOR_LEVEL) {
             job.setActions(0);
             job.setLevel(job.getLevel() + 1);
-
-            Bukkit.getPlayer(jobPlayer.getUuid()).sendMessage(Messages.JOB_LEVEL_ACHIEVED.getMessage(job.getType().getName(), job.getLevel()));
+            if(job.getLevel() <= 10) {
+                Bukkit.getPlayer(jobPlayer.getUuid()).sendMessage(Messages.JOB_LEVEL_ACHIEVED.getMessage(job.getType().getName(), job.getLevel()));
+                job.setCoinDiff(job.getCoinDiff() + (int) (JobPlayer.MONEY_PER_ACTION * (JobPlayer.MONEY_MULTIPLIER * job.getLevel() + 1)));
+            } else {
+                job.setLevel(10);
+            }
         }
-        job.setCoinDiff(job.getCoinDiff() + (int) (JobPlayer.MONEY_PER_ACTION * (JobPlayer.MONEY_MULTIPLIER * job.getLevel() + 1)));
     }
 }

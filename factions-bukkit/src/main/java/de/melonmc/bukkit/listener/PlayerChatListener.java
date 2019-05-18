@@ -1,7 +1,5 @@
 package de.melonmc.bukkit.listener;
 
-import de.melonmc.factions.Factions;
-import de.melonmc.factions.player.FactionsPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -17,16 +15,6 @@ public class PlayerChatListener implements Listener {
     @EventHandler
     public void onChat(AsyncPlayerChatEvent event) {
         final Player player = event.getPlayer();
-
-        Factions.getInstance().getDatabaseSaver().findPlayer(new FactionsPlayer(null, player.getName(), null), optionalFactionsPlayer -> {
-            final FactionsPlayer factionsPlayer = optionalFactionsPlayer.get();
-            Factions.getInstance().getDatabaseSaver().findFaction(factionsPlayer, optionalFaction -> {
-                if(optionalFaction.isPresent()) {
-                    event.setFormat("§a" + optionalFaction.get().getTag() + " §8» " + event.getPlayer().getDisplayName() + "§8: §7" + event.getMessage());
-                } else {
-                    event.setFormat("§aKeine §8» " + event.getPlayer().getDisplayName() + "§8: §7" + event.getMessage());
-                }
-            });
-        });
+        event.setFormat(player.getDisplayName() + "§8: §7" + event.getMessage());
     }
 }

@@ -147,6 +147,7 @@ public class ChestshopBuyListener implements Listener {
                         chestshop.getCosts(),
                         owner.getName()
                     )));
+                    player.updateInventory();
                 });
             });
         });

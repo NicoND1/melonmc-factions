@@ -10,7 +10,7 @@ commands:
         # TODO: Add permissions
     home:
     faction:
-        aliases: [f, fraktionen]
+        aliases: [f, fraktion]
     chunk:
     money:
     jobs:

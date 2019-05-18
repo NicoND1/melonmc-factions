@@ -1,4 +1,5 @@
 package de.melonmc.bukkit.listener.chunk.settings;
+import com.comphenix.protocol.PacketType;
 import de.melonmc.factions.Factions;
 import de.melonmc.factions.Messages;
 import de.melonmc.factions.chunk.ClaimableChunk;
@@ -13,7 +14,13 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Nico_ND1
@@ -45,8 +52,14 @@ public class ChunkSettingsListener implements Listener {
                 return;
             }
 
+            faction.getChunks().forEach((chunk) -> {
+                chunk.getFlags().put(flag, !chunk.isFlagSet(flag));
+            });
+
+            /*
             final ClaimableChunk claimableChunk = Factions.getInstance().getChunkManager().getClaimableChunk(player.getLocation().getChunk());
             claimableChunk.getFlags().put(flag, !claimableChunk.isFlagSet(flag));
+            */
 
             player.closeInventory();
 
@@ -55,12 +68,15 @@ public class ChunkSettingsListener implements Listener {
                 public void run() {
                     Factions.getInstance().getDatabaseSaver().saveFaction(faction, () -> player.performCommand("chunk settings"));
                 }
-            },1);
+            },10);
         });
     }
 
-    @EventHandler(priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onBlockPlace(BlockPlaceEvent event) {
+
+        if(event.isCancelled()) return;
+
         Player player = event.getPlayer();
 
         Factions.getInstance().getChunkManager().getFaction(new ClaimableChunk(player.getLocation().getChunk()), optionalFaction -> {
@@ -74,8 +90,11 @@ public class ChunkSettingsListener implements Listener {
         });
     }
 
-    @EventHandler(priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onBlockBreak(BlockBreakEvent event) {
+
+        if(event.isCancelled()) return;
+
         Player player = event.getPlayer();
 
         Factions.getInstance().getChunkManager().getFaction(new ClaimableChunk(player.getLocation().getChunk()), optionalFaction -> {
@@ -87,5 +106,45 @@ public class ChunkSettingsListener implements Listener {
                 }
             }
         });
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onInteract(PlayerInteractEvent event) {
+
+        if(event.isCancelled()) return;
+
+        Player player = event.getPlayer();
+
+        Factions.getInstance().getChunkManager().getFaction(new ClaimableChunk(player.getLocation().getChunk()), optionalFaction -> {
+            if (optionalFaction.isPresent()) {
+                final Faction faction = optionalFaction.get();
+                if (faction.getRank(new FactionsPlayer(player)) == Rank.UNKNOWN) {
+                    event.setCancelled(true);
+                    player.sendMessage(Messages.CHUNK_SETTINGS_INTERACT_CANCEL.getMessage());
+                }
+            }
+        });
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onDamage(EntityDamageByEntityEvent event) {
+
+        if(event.isCancelled()) return;
+
+        if(event.getEntity() instanceof Player) return;
+
+        if(event.getDamager() instanceof Player) {
+            Player player = (Player) event.getDamager();
+
+            Factions.getInstance().getChunkManager().getFaction(new ClaimableChunk(player.getLocation().getChunk()), optionalFaction -> {
+                if (optionalFaction.isPresent()) {
+                    final Faction faction = optionalFaction.get();
+                    if (faction.getRank(new FactionsPlayer(player)) == Rank.UNKNOWN) {
+                        event.setCancelled(true);
+                        player.sendMessage(Messages.CHUNK_SETTINGS_ENTITY_DAMAGE_CANCEL.getMessage());
+                    }
+                }
+            });
+        }
     }
 }
