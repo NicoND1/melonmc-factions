@@ -535,7 +535,7 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
             return;
         }
 
-        this.runAction(() -> {
+        //this.runAction(() -> {
             final MongoCollection<Document> collection = this.mongoDatabase.getCollection(FACTORY_COLLECTION);
             final FindIterable<Document> findIterable = collection.find(Filters.and(
                 Filters.eq("chunks.x", claimableChunk.getX()),
@@ -549,7 +549,7 @@ public class DefaultDatabaseSaver implements DatabaseSaver {
             }
 
             consumer.accept(Optional.of(this.fromFactionsDocument(document)));
-        });
+        //});
     }
 
     @Override

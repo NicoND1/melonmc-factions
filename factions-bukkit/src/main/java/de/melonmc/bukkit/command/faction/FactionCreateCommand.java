@@ -12,6 +12,9 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import static de.melonmc.factions.faction.Faction.MAX_TAG_LENGTH;
+import static de.melonmc.factions.faction.Faction.MIN_TAG_LENGTH;
+
 /**
  * @author Nico_ND1
  */
@@ -32,8 +35,8 @@ public class FactionCreateCommand implements ICommand<Player> {
 
         final String factionName = args[0];
         final String factionTag = args[1];
-        if (factionTag.length() < Faction.MIN_TAG_LENGTH || factionTag.length() > Faction.MAX_TAG_LENGTH) {
-            player.sendMessage(Messages.FACTION_INVALID_TAG.getMessage());
+        if (factionTag.length() < MIN_TAG_LENGTH || factionTag.length() > MAX_TAG_LENGTH) {
+            player.sendMessage(Messages.FACTION_INVALID_TAG.getMessage(MIN_TAG_LENGTH, MAX_TAG_LENGTH));
             return Result.OTHER;
         }
 

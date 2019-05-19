@@ -19,7 +19,14 @@ public class FactionTopListCommand implements ICommand<Player> {
 
     @Override
     public Result onExecute(Player player, String label, String[] args) { // TODO: Add real message
-        Factions.getInstance().getDatabaseSaver().loadTopTenFactions(factions -> factions.forEach(faction -> player.sendMessage(faction.getName())));
+
+        player.sendMessage("§8§m--------------§8[ §a§lTopClans §8]§8§m--------------");
+        player.sendMessage("");
+
+        Factions.getInstance().getDatabaseSaver().loadTopTenFactions(factions -> factions.forEach(faction -> player.sendMessage("§8» §2" + faction.getName() + " §8× §a" + faction.getEloPoints())));
+
+        player.sendMessage("");
+        player.sendMessage("§8§m----------------------------------------");
 
         return Result.SUCCESSFUL;
     }
