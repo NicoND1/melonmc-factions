@@ -12,7 +12,7 @@ import java.util.Optional;
 /**
  * @author Nico_ND1
  */
-public class SetHomeCommand implements ICommand<Player> {
+public class HomeSetCommand implements ICommand<Player> {
     @Override
     public String getName() {
         return "sethome";

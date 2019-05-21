@@ -8,15 +8,13 @@ import de.melonmc.bukkit.command.faction.*;
 import de.melonmc.bukkit.command.home.HomeCommand;
 import de.melonmc.bukkit.command.home.HomeListCommand;
 import de.melonmc.bukkit.command.home.HomeRemoveCommand;
-import de.melonmc.bukkit.command.home.SetHomeCommand;
+import de.melonmc.bukkit.command.home.HomeSetCommand;
 import de.melonmc.bukkit.command.job.JobsCommand;
 import de.melonmc.bukkit.command.money.*;
 import de.melonmc.bukkit.command.npc.NpcSetCommand;
 import de.melonmc.bukkit.command.spawn.SpawnCommand;
 import de.melonmc.bukkit.command.tpa.TpaAcceptCommand;
 import de.melonmc.bukkit.command.tpa.TpaCommand;
-import de.melonmc.bukkit.command.trade.TradeAcceptCommand;
-import de.melonmc.bukkit.command.trade.TradeCommand;
 import de.melonmc.bukkit.listener.*;
 import de.melonmc.bukkit.listener.chestshop.ChestshopBuyListener;
 import de.melonmc.bukkit.listener.chestshop.ChestshopCreateListener;
@@ -34,10 +32,8 @@ import de.melonmc.factions.database.NpcInformation;
 import lombok.Data;
 import lombok.Getter;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
-import org.bukkit.inventory.ItemStack;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
@@ -76,7 +72,7 @@ public class Bootstrapable implements IBootstrapable {
         final List<ICommand> homeCommands = Arrays.asList(
             new HomeListCommand(),
             new HomeRemoveCommand(),
-            new SetHomeCommand()
+            new HomeSetCommand()
         );
         Factions.getPlugin().getServer().getPluginCommand("home").setExecutor(new HomeCommand(
             homeCommands,

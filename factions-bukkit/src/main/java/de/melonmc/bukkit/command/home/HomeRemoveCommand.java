@@ -5,11 +5,12 @@ import de.melonmc.factions.command.ICommand;
 import de.melonmc.factions.home.Home;
 import de.melonmc.factions.player.FactionsPlayer;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 /**
  * @author Nico_ND1
  */
-public class HomeRemoveCommand implements ICommand<CommandSender> {
+public class HomeRemoveCommand implements ICommand<Player> {
     @Override
     public String getName() {
         return "remove";
@@ -21,30 +22,25 @@ public class HomeRemoveCommand implements ICommand<CommandSender> {
     }
 
     @Override
-    public Result onExecute(CommandSender commandSender, String label, String[] args) {
-        if (args.length != 2) return Result.WRONG_ARGUMENTS;
+    public Result onExecute(Player player, String label, String[] args) {
+        if (args.length != 1) return Result.WRONG_ARGUMENTS;
 
-        final String playerName = args[0];
-        final String homeName = args[1];
-
-        Factions.getInstance().getDatabaseSaver().findPlayerUuid(playerName, optionalFactionsPlayer -> {
-            if (optionalFactionsPlayer.isPresent() && optionalFactionsPlayer.get().getUuid() != null) {
+        final String homeName = args[0];
+        Factions.getInstance().getDatabaseSaver().findPlayerUuid(player.getUniqueId().toString(), optionalFactionsPlayer -> {
+            if (optionalFactionsPlayer.isPresent()) {
                 final FactionsPlayer factionsPlayer = optionalFactionsPlayer.get();
 
                 Factions.getInstance().getDatabaseSaver().findHome(factionsPlayer, homeName, optionalHome -> {
                     if (!optionalHome.isPresent()) {
-                        commandSender.sendMessage(Messages.HOME_NOT_FOUND.getMessage());
+                        player.sendMessage(Messages.HOME_NOT_FOUND.getMessage());
                         return;
                     }
 
                     final Home home = optionalHome.get();
-                    Factions.getInstance().getDatabaseSaver().deleteHome(home, () -> commandSender.sendMessage(Messages.HOME_DELETED.getMessage()));
+                    Factions.getInstance().getDatabaseSaver().deleteHome(home, () -> player.sendMessage(Messages.HOME_DELETED.getMessage()));
                 });
-            } else {
-                commandSender.sendMessage(Messages.PLAYER_NOT_FOUND.getMessage());
             }
         });
-
         return Result.SUCCESSFUL;
     }
 }

@@ -86,6 +86,7 @@ public class DefaultCommandExecutor extends AbstractCommandExecutor implements T
             commandSender.sendMessage("§8§m--------------§8[ §a§lHomeSystem §8]§8§m--------------");
             commandSender.sendMessage("");
             commandSender.sendMessage(" §a/home set NAME §8● §7Homepunkt setzen");
+            commandSender.sendMessage(" §a/home remove NAME §8● §7Homepunkt löschen");
             commandSender.sendMessage(" §a/home NAME §8● §7Zu einem Homepunkt teleportieren");
             commandSender.sendMessage(" §a/home list §8● §7Homepunkte anzeigen");
             commandSender.sendMessage("");
